@@ -40,7 +40,9 @@ const DashboardIDC = () => {
       .then((r) => {
         setDashboards(r);
       })
-      .catch((e) => onEvaError(e));
+      .catch((e) => {
+        if (e.code !== -32001) onEvaError(e);
+      });
   }, [force]);
 
   const engine = get_engine() as Eva;
@@ -57,19 +59,18 @@ const DashboardIDC = () => {
     [
       "",
       <div className="idc-btns-container">
-        <button className="idc-button btn-with-text btn-correct"
+        <button
+          className="idc-button btn-with-text btn-correct"
           onClick={() => {
             navigate(`?d=idc&i=&m=edit`);
           }}
         >
-             
           <AddBoxIcon style={{ fontSize: 15 }} />
-            new dashboard
-      
+          new dashboard
         </button>
         <button onClick={forceUpdate} className="idc-button">
-         <CachedIcon style={{ fontSize: 16 }}  />
-         </button>
+          <CachedIcon style={{ fontSize: 16 }} />
+        </button>
       </div>
     ]
   ];
