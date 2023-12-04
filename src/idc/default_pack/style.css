@@ -1,0 +1,278 @@
+.element-image {
+}
+
+.element-canvas {
+  border: 1px solid #555;
+}
+
+.element-chart {
+  background-color: #222;
+}
+
+.element-image-empty {
+  background-color: #777;
+}
+
+.element-group {
+  background-color: #191919;
+  z-index: -10;
+  padding-top: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.element-group-inner {
+  border-top: 2px solid #555;
+  width: 100%;
+  height: 100%;
+}
+
+.element-group-label {
+  display: inline;
+  background-color: #191919;
+  position: absolute;
+  top: 3px;
+  left: 30px;
+  padding: 8px;
+  font-size: 14px;
+}
+
+div.eva.button.container.toggle {
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+}
+div.eva.button.label.slider {
+  text-align: left;
+  display: inline-block;
+  margin-left: 65px;
+  margin-top: 4px;
+  width: 100%;
+  padding: 0px;
+}
+label.eva.button.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 24px;
+}
+label.eva.button.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+span.eva.button.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+  border-radius: 3px;
+}
+span.eva.button.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+input:checked + span.eva.button.slider {
+  background-color: #2196f3;
+}
+input:focus + span.eva.button.slider {
+  box-shadow: 0 0 1px #2196f3;
+}
+input:checked + span.eva.button.slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+div.eva.button.container.value {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+input.eva.button.value {
+  border: 0.5px solid #c1c1c1;
+  background-color: transparent;
+  color: #eee;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+
+  &:focus{
+    border: 0.5px solid #0085ff;
+    outline: none;
+  }
+
+  @include media(desktop){
+    font-size: 16px;
+  }
+}
+.eva.button.value.changed {
+  border: 1px solid orange;
+}
+button.eva.button.input.apply {
+  padding: 5px 10px;
+  font-family: "Open Sans",sans-serif;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 1;
+  border-radius: 2px;
+  background-color: #0085ff;
+  color: #eee;
+
+  &::before{
+    content: "Apply"
+  }
+
+  &:disabled{
+    background-color: #646464;
+  }
+}
+div.eva.button.container.run{
+  margin: 0;
+  padding: 0;
+}
+button.eva.button.run {
+  padding: 5px 20px;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 10px;
+  border-radius: 2px;
+  background-color: #0085ff;
+  color: #eee;
+
+  &:disabled{
+    background-color: #646464;
+  }
+}
+
+.eva.state.error {
+  color: red;
+  font-weight: bold;
+}
+
+.eva.state.disconnected {
+  color: darkgrey;
+  font-weight: normal;
+}
+.value-warn {
+  color: #f0e130;
+}
+
+.value-crit {
+  color: #e32636;
+}
+.gauge-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.gauge-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  box-shadow: 4px 4px 20px 0px rgba(10, 10, 10, 0.24);
+  padding: 20px;
+}
+
+.gauge-preview {
+  max-width: 100%;
+  overflow: visible;
+}
+
+.gauge-value {
+  margin-top: 30px;
+  font-size: 1rem;
+  font-weight: 500;
+  fill: #6b7280;
+  color: var(--idc-secondary-text-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gauge-label {
+  font-weight: normal;
+  margin-right: 5px;
+}
+
+.gauge-progress-background-color {
+  stroke: #f7fafc;
+}
+
+.gauge-text-default-color {
+  user-select: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  fill: #6b7280;
+}
+
+.gauge-middle-base-color {
+  fill: #d1d5db;
+}
+
+.gauge-midpoint-color {
+  fill: #ccc;
+}
+
+.gauge-tick-color {
+  stroke: #ccc;
+}
+
+.gauge-needle-color {
+  fill: #374151;
+}
+
+.gauge-progress-color {
+  stroke: #50c878;
+}
+
+.gauge-warning-progress-color {
+  stroke: #f0e130;
+}
+
+.gauge-critical-progress-color {
+  stroke: #e32636;
+}
+
+.gauge-label-circle {
+  position: absolute;
+  font-size: 20px;
+  font-weight: bold;
+  color: #c1c1c1;
+  top: 45%;
+  margin: 0;
+}
+
+.gauge-value-result {
+  position: absolute;
+  font-size: 16px;
+  color: #c1c1c1;
+  bottom: 35%;
+  margin: 0;
+}
+
+.eva.chart.container {
+  width: 100%;
+  height: 100%;
+}
