@@ -19,8 +19,8 @@ export const EditNumber = ({
   update_key?: any;
   current_value: number;
   setParam: (a: any) => void;
-    params?: any;
-  size:boolean
+  params?: any;
+  size?: boolean;
 }): JSX.Element => {
   const [input_value, setInputValue] = useState(
     current_value === undefined ? "" : current_value.toString()
@@ -54,7 +54,7 @@ export const EditNumber = ({
               }
             }
           }}
-         sx={{ width: size ? "auto" : "40px" }}
+          sx={{ width: size ? "auto" : "40px" }}
         />
       </ThemeProvider>
       {errorMessage && <ErrorBar message={errorMessage} />}

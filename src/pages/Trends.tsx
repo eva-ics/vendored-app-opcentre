@@ -15,6 +15,8 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import { SelectPeriod } from "../components/editors/select_period.tsx";
 import { Button, styled } from "@mui/material";
 
+type Timeout = ReturnType<typeof setTimeout>;
+
 const MAX_CHART_WIDTH = 1150;
 
 const SET_DELAY = 500;
@@ -162,12 +164,12 @@ const DashboardTrends = () => {
 
   const [prev_update, setPrevUpdate] = useState(1);
 
-  const dimensions_sd = useRef<number | undefined>(undefined);
+  const dimensions_sd = useRef<Timeout | undefined>(undefined);
 
-  const props_sd = useRef<number | undefined>(undefined);
+  const props_sd = useRef<Timeout | undefined>(undefined);
   const props_sdata = useRef<ChartProps | null>(null);
 
-  const items_sd = useRef<number | undefined>(undefined);
+  const items_sd = useRef<Timeout | undefined>(undefined);
   const items_sdata = useRef<Array<ChartItem> | null>(null);
 
   const [dimensions, setDimensions] = useState({
@@ -345,7 +347,7 @@ const DashboardTrends = () => {
                     params={{ min: 0 }}
                   />
                 </div>
-                 {prev_update > 0 && props.update == 0 ? (
+                {prev_update > 0 && props.update == 0 ? (
                   <ButtonTrend variant="outlined" onClick={play}>
                     <PlayArrowOutlinedIcon fontSize="small" />
                   </ButtonTrend>
