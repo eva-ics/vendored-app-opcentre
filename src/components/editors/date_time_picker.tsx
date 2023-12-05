@@ -28,7 +28,7 @@ const DateTimePickerSelect = ({
   };
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="de">
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DateTimePicker label="" value={value} onChange={handleChange} />
     </LocalizationProvider>
   );
