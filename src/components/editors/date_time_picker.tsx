@@ -29,7 +29,7 @@ const DateTimePickerSelect = ({
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DateTimePicker label="" value={value} onChange={handleChange} />
+      <DateTimePicker label="" value={value} onChange={handleChange} timeSteps={{minutes:1}} />
     </LocalizationProvider>
   );
 };
