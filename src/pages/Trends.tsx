@@ -1,4 +1,5 @@
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef, useReducer } from "react";
+import { Coords } from "bmat/dom";
 import { LineChart } from "@eva-ics/webengine-react";
 import { EditNumber } from "../components/editors/number.tsx";
 import { EditString } from "../components/editors/string.tsx";
@@ -18,6 +19,14 @@ import { Button, styled } from "@mui/material";
 type Timeout = ReturnType<typeof setTimeout>;
 
 const MAX_CHART_WIDTH = 1150;
+
+const calculateChartSize = (): Coords => {
+  let w = window.innerWidth - 50;
+  if (w > MAX_CHART_WIDTH) {
+    w = MAX_CHART_WIDTH;
+  }
+  return { x: Math.round(w), y: Math.round(w / 2) };
+};
 
 const SET_DELAY = 500;
 
@@ -164,7 +173,7 @@ const DashboardTrends = () => {
 
   const [prev_update, setPrevUpdate] = useState(1);
 
-  const dimensions_sd = useRef<Timeout | undefined>(undefined);
+  const size_sd = useRef<Timeout | undefined>(undefined);
 
   const props_sd = useRef<Timeout | undefined>(undefined);
   const props_sdata = useRef<ChartProps | null>(null);
@@ -172,18 +181,22 @@ const DashboardTrends = () => {
   const items_sd = useRef<Timeout | undefined>(undefined);
   const items_sdata = useRef<Array<ChartItem> | null>(null);
 
-  const [dimensions, setDimensions] = useState({
-    height: window.innerHeight,
-    width: window.innerWidth
-  });
+  const chartSize = useRef<Coords>(calculateChartSize());
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
+
+  const setChartSizeModified = (val: Coords) => {
+    if (val.x !== chartSize.current.x || val.y !== chartSize.current.y) {
+      chartSize.current = val;
+      forceUpdate();
+    }
+  };
 
   const handleResize = () => {
-    clearTimeout(dimensions_sd.current);
-    const dim = {
-      height: window.innerHeight,
-      width: window.innerWidth
-    };
-    dimensions_sd.current = setTimeout(() => setDimensions(dim), SET_DELAY);
+    clearTimeout(size_sd.current);
+    size_sd.current = setTimeout(
+      () => setChartSizeModified(calculateChartSize()),
+      SET_DELAY
+    );
   };
 
   useEffect(() => {
@@ -317,12 +330,6 @@ const DashboardTrends = () => {
     }
     setPropsDelayed(np);
   };
-
-  let chart_width = dimensions.width - 50;
-  if (chart_width > MAX_CHART_WIDTH) {
-    chart_width = MAX_CHART_WIDTH;
-  }
-  const chart_height = chart_width / 2;
 
   return (
     <div>
@@ -461,8 +468,8 @@ const DashboardTrends = () => {
                 colors={colors}
                 options={options}
                 className="chart-trends"
-                width={chart_width}
-                height={chart_height}
+                width={chartSize.current.x}
+                height={chartSize.current.y}
               />
             </div>
             <div>
