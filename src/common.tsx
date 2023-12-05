@@ -29,6 +29,7 @@ export const formatDashboardPath = (s?: string): string => {
 export const defaultIDCDashboard = () => {
   return {
     viewport: { x: 900, y: 700 },
+    scale: 1,
     grid: 20,
     name: "",
     state_updates: [],
