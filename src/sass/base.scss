@@ -130,3 +130,19 @@ div.eva.login.header {
   margin-bottom: 10px;
   margin-left: 10px;
 }
+
+.mobile-version{
+  display: block !important;
+
+  @include media(desktop){
+  display: none !important;
+  }
+ }
+
+.desktop-version{
+  display: none !important ;
+
+  @include media(desktop){
+  display: block !important;
+  }
+}
