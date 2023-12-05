@@ -89,3 +89,10 @@
   padding: 6px;
 }
 
+
+div {
+  & .MuiDialog-paper {
+    margin: 0px;
+    overflow-y: visible;
+  }
+}
