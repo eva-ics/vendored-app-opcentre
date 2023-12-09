@@ -43,6 +43,46 @@ const CoreInfoRow = ({
   );
 };
 
+const About = () => {
+  return (
+    <>
+      <div className="bmat-dashtable-title">About the application</div>
+      <div className="bmat-dashtable-container-inner">
+        <div className="text-overview text-about">
+          <img src="i/face2.jpg" className="image-about" />
+          <ul className="about-list">
+            <li>
+              EVA ICS operation centre is a vendored web application which
+              allows to create custom dashboards, perform typical monitoring and
+              analytics tasks.
+            </li>
+            <li>
+              Application help and tutorials are available in{" "} <a
+              href="https://info.bma.ai/en/actual/eva4/va/opcentre.html">
+                Bohemia Automation InfoSys
+              </a>
+              .
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div className="text-overview text-about">
+        <p>
+          &copy;{" "}
+          <a href="https://www.bohemia-automation.com/">
+            Bohemia Automation Limited
+          </a>
+          . All rights reserved. The application is available under{" "}
+          <a href="https://info.bma.ai/en/actual/eva4/license.html">
+            EVA ICS license
+          </a>{" "}
+          with no restrictions for both personal and commercial usage.
+        </p>
+      </div>
+    </>
+  );
+};
+
 const DashboardOverview = () => {
   const eva = useMemo(() => {
     return get_engine() as Eva;
@@ -82,41 +122,7 @@ const DashboardOverview = () => {
               </div>
             </div>
             <div className="bmat-dashtable-container desktop-version">
-              <div className="bmat-dashtable-title">About the application</div>
-              <div className="bmat-dashtable-container-inner">
-                <div className="text-overview text-about">
-                  <img src="i/face_transparent.png" className="image-about" />
-                  <ul className="about-list">
-                  <li>
-                    EVA ICS operation centre is a vendored web application which
-                    allows operators to create custom dashboards, perform
-                    typical monitoring and analytics tasks.
-                  </li>
-                  <li>
-                    More information, help and tutorials can be found at the
-                    application page in{" "}
-                    <a href="https://info.bma.ai/en/actual/eva4/va/opcentre.html">
-                      Bohemia Automation Information System
-                    </a>
-                    .
-                    </li>
-                    </ul>
-                </div>
-               
-              </div>
-               <div className="text-overview text-about">
-                  <p>
-                    &copy;{" "}
-                    <a href="https://www.bohemia-automation.com/">
-                      Bohemia Automation Limited
-                    </a>
-                    . All rights reserved. The application is available under{" "}
-                    <a href="https://info.bma.ai/en/actual/eva4/license.html">
-                      EVA ICS license
-                    </a>{" "}
-                    with no restrictions for both personal and commercial usage.
-                  </p>
-                </div>
+              <About />
             </div>
           </div>
           <div className="dashboard-main-wrapper-content__side-right">
@@ -145,43 +151,9 @@ const DashboardOverview = () => {
               );
             })}
           </div>
-          <div className="bmat-dashtable-container mobile-version"  >
-              <div className="bmat-dashtable-title">About the application</div>
-              <div className="bmat-dashtable-container-inner">
-                <div className="text-overview text-about">
-                  <img src="i/face_transparent.png" className="image-about" />
-                  <ul className="about-list">
-                  <li>
-                    EVA ICS operation centre is a vendored web application which
-                    allows operators to create custom dashboards, perform
-                    typical monitoring and analytics tasks.
-                  </li>
-                  <li>
-                    More information, help and tutorials can be found at the
-                    application page in{" "}
-                    <a href="https://info.bma.ai/en/actual/eva4/va/opcentre.html">
-                      Bohemia Automation Information System
-                    </a>
-                    .
-                    </li>
-                    </ul>
-                </div>
-               
-              </div>
-               <div className="text-overview text-about">
-                  <p>
-                    &copy;{" "}
-                    <a href="https://www.bohemia-automation.com/">
-                      Bohemia Automation Limited
-                    </a>
-                    . All rights reserved. The application is available under{" "}
-                    <a href="https://info.bma.ai/en/actual/eva4/license.html">
-                      EVA ICS license
-                    </a>{" "}
-                    with no restrictions for both personal and commercial usage.
-                  </p>
-                </div>
-            </div>
+          <div className="bmat-dashtable-container mobile-version">
+            <About />
+          </div>
         </div>
       </div>
     </div>
