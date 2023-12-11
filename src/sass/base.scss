@@ -6,144 +6,144 @@ $border-color: #373737;
 $cards-bg-color: #191d22;
 $table-header-gb: #0b1c3b;
 $main-blue-color: #0085ff;
+$secondary-blue-color: #0a214f;
 $menu-hover-color: #555;
+$nav-menu-bg-color: #0a214f;
 
 body {
-  font-family: "Roboto", sans-serif;
-  background-color: $body-bg-color;
-  color: $main-text-color;
-  overflow-x: hidden;
-  overscroll-behavior: auto;
+    font-family: "Roboto", sans-serif;
+    background-color: $body-bg-color;
+    color: $main-text-color;
+    overflow-x: hidden;
+    overscroll-behavior: auto;
 }
 
 button {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 .root-container {
-  width: 100%;
-  margin: 0 auto;
+    width: 100%;
+    margin: 0 auto;
     padding-bottom: 40px;
-    @include media(desktop){
-    padding-bottom: 0;
-  }
+    @include media(desktop) {
+        padding-bottom: 0;
+    }
 }
 
 div.eva.login.logo {
-  &:before {
-    content: url("../icon.svg");
-  }
+    &:before {
+        content: url("../icon.svg");
+    }
 }
 
 div.eva.login.header {
-  &:before {
-    content: "EVA ICS OpCentre";
-  }
+    &:before {
+        content: "EVA ICS OpCentre";
+    }
 }
 
 .idc-editor-help-table {
-  tr > td {
-    padding: 2px;
-  }
+    tr > td {
+        padding: 2px;
+    }
 }
 
 .idc-editor-elements-table {
-  tr > td {
-    padding: 2px;
-  }
+    tr > td {
+        padding: 2px;
+    }
 }
 
 .idc-editor-sidebar-table {
-  tr > td {
-    padding: 2px;
-  }
+    tr > td {
+        padding: 2px;
+    }
 }
 
 .idc-editor-sidebar-element-class {
-  font-size: 12px;
-  padding: 5px;
+    font-size: 12px;
+    padding: 5px;
 }
 
 .idc-elements-parameters-wrapper {
-  font-size: 12px;
+    font-size: 12px;
 }
 
 .idc-help-link {
-  color: blue;
-  text-decoration: underline;
-
-  :visited {
     color: blue;
-  }
+    text-decoration: underline;
+
+    :visited {
+        color: blue;
+    }
 }
 
 .image-overview {
-  width: 150px;
-  float: left;
-  margin-right: 20px;
-  border: 1px solid #333;
-  cursor: pointer;
-  margin-bottom: 20px;
+    width: 150px;
+    float: left;
+    margin-right: 20px;
+    border: 1px solid #333;
+    cursor: pointer;
+    margin-bottom: 20px;
 }
 
 .text-overview {
-  font-size: 14px;
-  display: inline;
-  
-  p {
-    margin-top: 10px;
-    margin-bottom: 10px;
-        }
+    font-size: 14px;
+    display: inline;
+
+    p {
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
 }
 
 .text-about {
-  display: flex;
-  flex-direction: column;
-  margin-top: 20px;
-  margin-left: 20px;
-  margin-right: 20px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
 
-  @include media(tablet){
-    flex-direction: row;
-  }
+    @include media(tablet) {
+        flex-direction: row;
+    }
 
-  a {
-    text-decoration: underline;
-  }
+    a {
+        text-decoration: underline;
+    }
 }
 
-.about-list{
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-
-
+.about-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .info-overview {
-  padding: 10px;
+    padding: 10px;
 }
 
 .image-about {
-  float: left;
-  width: 320px;
-  height: 140px;
-  margin-bottom: 10px;
-  margin-right: 20px;
+    float: left;
+    width: 320px;
+    height: 140px;
+    margin-bottom: 10px;
+    margin-right: 20px;
 }
 
-.mobile-version{
-  display: block !important;
+.mobile-version {
+    display: block !important;
 
-  @include media(desktop){
-  display: none !important;
-  }
- }
+    @include media(desktop) {
+        display: none !important;
+    }
+}
 
-.desktop-version{
-  display: none !important ;
+.desktop-version {
+    display: none !important ;
 
-  @include media(desktop){
-  display: block !important;
-  }
+    @include media(desktop) {
+        display: block !important;
+    }
 }
