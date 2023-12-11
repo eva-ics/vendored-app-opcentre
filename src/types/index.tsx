@@ -19,9 +19,15 @@ export interface HeaderProps {
   nav: Array<NavElement>
 }
 
+type SubmenuItem = {
+  value: string;
+  to: string;
+};
+
 export interface NavElement {
   value: any;
   to: string;
+  submenus?: SubmenuItem[];
 }
 
 export const DEFAULT_TITLE = "OpCentre";
