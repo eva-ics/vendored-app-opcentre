@@ -24,12 +24,6 @@ nav#header {
     }
     > ul > li {
         display: inline;
-
-        @media (hover: hover) and (pointer: fine) {
-            :hover {
-                // background-color: $menu-hover-color;
-            }
-        }
     }
 }
 
@@ -57,6 +51,12 @@ nav#header {
     > a {
         font-size: 16px;
         color: #999;
+
+        @media (hover: hover) and (pointer: fine) {
+            :hover {
+                background-color: #103b92;
+            }
+        }
     }
 }
 
@@ -81,6 +81,9 @@ nav#header {
 }
 .submenu-item {
     padding: 10px 20px;
+    &:hover {
+        background-color: #103b92;
+    }
 
     &.submenu-item-current {
         &:after {
@@ -90,14 +93,6 @@ nav#header {
             left: 0;
             width: 100%;
             border-bottom: 1px solid $secondary-text-color;
-        }
-    }
-}
-
-.submenu-link {
-    @media (hover: hover) and (pointer: fine) {
-        :hover {
-            background-color: $menu-hover-color;
         }
     }
 }

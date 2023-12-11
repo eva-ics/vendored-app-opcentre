@@ -43,10 +43,7 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                                     <ul className="submenu">
                                         {v.submenus.map((submenuItem, subIdx) => (
                                             <li className="submenu-item" key={subIdx}>
-                                                <NavLink
-                                                    to={submenuItem.to}
-                                                    className="submenu-link"
-                                                >
+                                                <NavLink to={submenuItem.to}>
                                                     {submenuItem.value}
                                                 </NavLink>
                                             </li>
