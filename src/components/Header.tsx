@@ -43,7 +43,13 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                                     <ul className="submenu">
                                         {v.submenus.map((submenuItem, subIdx) => (
                                             <li className="submenu-item" key={subIdx}>
-                                                <NavLink to={submenuItem.to}>
+                                                <NavLink
+                                                    to={submenuItem.to}
+                                                    onClick={() =>
+                                                        submenuItem.to === "logout" &&
+                                                        logout()
+                                                    }
+                                                >
                                                     {submenuItem.value}
                                                 </NavLink>
                                             </li>
@@ -53,16 +59,6 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                             </li>
                         );
                     })}
-                    <li className="nav-link" style={{ marginLeft: "30px" }}>
-                        <NavLink
-                            onClick={() => {
-                                logout();
-                            }}
-                            to="?"
-                        >
-                            <div className="nav-link-container">Logout</div>
-                        </NavLink>
-                    </li>
                 </ul>
             </nav>
         </header>
