@@ -31,6 +31,12 @@ nav#header {
     display: inline-block;
     padding: 10px 20px;
     color: $secondary-text-color;
+
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background-color: #103b92;
+        }
+    }
 }
 
 .nav-link-container-current {
@@ -79,8 +85,10 @@ nav#header {
 .submenu-item {
     user-select: none;
     padding: 10px 20px;
-    &:hover {
-        background-color: #103b92;
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background-color: #103b92;
+        }
     }
 
     &.submenu-item-current {
