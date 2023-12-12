@@ -71,7 +71,11 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                                             {v.submenus.map((submenuItem, subIdx) => (
                                                 <li className="submenu-item" key={subIdx}>
                                                     <NavLink
-                                                        to={submenuItem.to}
+                                                        to={
+                                                            submenuItem.to === "logout"
+                                                                ? ""
+                                                                : submenuItem.to
+                                                        }
                                                         onClick={() => {
                                                             if (
                                                                 submenuItem.to.startsWith(
