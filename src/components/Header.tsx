@@ -41,13 +41,20 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                             <li
                                 className={navLinkClass}
                                 key={idx}
-                                onClick={() =>
-                                    v.submenus &&
-                                    v.submenus.length > 0 &&
-                                    openSubMenu !== v.value
-                                        ? setOpenSubMenu(v.value)
-                                        : setOpenSubMenu(null)
-                                }
+                                onClick={() => {
+                                    if (
+                                        v.submenus &&
+                                        v.submenus.length > 0 &&
+                                        openSubMenu !== v.value
+                                    ) {
+                                        setOpenSubMenu(v.value);
+                                    } else {
+                                        setOpenSubMenu(null);
+                                        if (v.to?.startsWith("/")) {
+                                            document.location = v.to;
+                                        }
+                                    }
+                                }}
                             >
                                 {v.to ? (
                                     <NavLink key={idx} to={v.to}>
@@ -65,10 +72,21 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                                                 <li className="submenu-item" key={subIdx}>
                                                     <NavLink
                                                         to={submenuItem.to}
-                                                        onClick={() =>
-                                                            submenuItem.to === "logout" &&
-                                                            logout()
-                                                        }
+                                                        onClick={() => {
+                                                            if (
+                                                                submenuItem.to.startsWith(
+                                                                    "/"
+                                                                )
+                                                            ) {
+                                                                document.location =
+                                                                    submenuItem.to;
+                                                            } else if (
+                                                                submenuItem.to ===
+                                                                "logout"
+                                                            ) {
+                                                                logout();
+                                                            }
+                                                        }}
                                                     >
                                                         {submenuItem.value}
                                                     </NavLink>
