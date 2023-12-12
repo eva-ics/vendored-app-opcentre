@@ -73,7 +73,7 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
                                                                             to={
                                                                                 subItem.to ===
                                                                                 "logout"
-                                                                                    ? ""
+                                                                                    ? "?"
                                                                                     : subItem.to
                                                                             }
                                                                             onClick={() => {

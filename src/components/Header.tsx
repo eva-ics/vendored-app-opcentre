@@ -73,7 +73,7 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                                                     <NavLink
                                                         to={
                                                             submenuItem.to === "logout"
-                                                                ? ""
+                                                                ? "?"
                                                                 : submenuItem.to
                                                         }
                                                         onClick={() => {
