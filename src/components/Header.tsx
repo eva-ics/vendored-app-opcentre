@@ -6,6 +6,7 @@ import { NavLink } from "react-router-dom";
 
 const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
     const eva = get_engine() as Eva;
+
     return (
         <header className="header">
             <button className="menu-icon-btn" onClick={toggleMenu}>
@@ -23,20 +24,20 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
             <nav id="header">
                 <ul>
                     {nav.map((v, idx) => {
-                        let class_name = "nav-link";
-                        let class_name_container = "nav-link-container";
-                        let isCurrent = false;
+                        const isCurrent = current_page === v.value;
 
-                        if (current_page === v.value) {
-                            class_name += " nav-link-current";
-                            class_name_container += " nav-link-container-current";
-                            isCurrent = true;
-                        }
+                        const navLinkClass = isCurrent
+                            ? "nav-link nav-link-current"
+                            : "nav-link";
+
+                        const containerClass = isCurrent
+                            ? "nav-link-container nav-link-container-current"
+                            : "nav-link-container";
 
                         return (
-                            <li className={class_name} key={idx}>
+                            <li className={navLinkClass} key={idx}>
                                 <NavLink key={idx} to={v.to}>
-                                    <div className={class_name_container}>{v.value}</div>
+                                    <div className={containerClass}>{v.value}</div>
                                 </NavLink>
 
                                 {isCurrent && v.submenus && v.submenus.length > 0 && (
