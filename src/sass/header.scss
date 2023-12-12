@@ -48,6 +48,8 @@ nav#header {
 }
 
 .nav-link {
+    user-select: none;
+    cursor: pointer;
     > a {
         font-size: 16px;
         color: #999;
@@ -75,6 +77,7 @@ nav#header {
     background-color: $nav-menu-bg-color;
 }
 .submenu-item {
+    user-select: none;
     padding: 10px 20px;
     &:hover {
         background-color: #103b92;

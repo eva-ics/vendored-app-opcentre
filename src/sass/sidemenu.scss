@@ -1,7 +1,7 @@
-#sidebar > ul > li {
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
+// #sidebar > ul > li {
+//     margin-top: 20px;
+//     margin-bottom: 20px;
+// }
 
 .side-menu-wrapper {
     position: fixed;
@@ -60,20 +60,36 @@
 }
 
 .subitem-list {
-    margin-top: 15px;
+    margin-top: 5px;
     display: flex;
     flex-direction: column;
     gap: 5px;
     background-color: #0a214f6b;
 
     & > li {
+        user-select: none;
         font-size: 14px;
         color: $secondary-text-color;
         padding: 5px;
     }
 }
 
+.side-menu-list {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
 .side-menu-current {
-    padding: 5px 0;
-    border-bottom: 1px solid $main-blue-color;
+    user-select: none;
+    padding: 5px;
+    background-color: $secondary-blue-color;
+    color: $secondary-text-color;
+}
+
+.side-menu-item {
+    user-select: none;
+    font-size: 16px;
+    padding: 5px;
 }

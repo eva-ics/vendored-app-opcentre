@@ -44,7 +44,7 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                                 onClick={() =>
                                     v.submenus &&
                                     v.submenus.length > 0 &&
-                                    openSubMenu != v.value
+                                    openSubMenu !== v.value
                                         ? setOpenSubMenu(v.value)
                                         : setOpenSubMenu(null)
                                 }
@@ -54,12 +54,7 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                                         <div className={containerClass}>{v.value}</div>
                                     </NavLink>
                                 ) : (
-                                    <div
-                                        className={containerClass}
-                                        style={{ cursor: "pointer", userSelect: "none" }}
-                                    >
-                                        {v.value}
-                                    </div>
+                                    <div className={containerClass}>{v.value}</div>
                                 )}
 
                                 {openSubMenu == v.value &&
