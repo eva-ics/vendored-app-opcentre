@@ -10,10 +10,6 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
 
     const eva = get_engine() as Eva;
 
-    const toggleSubMenu = (menuItem: string) => {
-        openSubMenu === menuItem ? setOpenSubMenu(null) : setOpenSubMenu(menuItem);
-    };
-
     return (
         <header className="header">
             <button className="menu-icon-btn" onClick={toggleMenu}>
@@ -45,14 +41,28 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                             <li
                                 className={navLinkClass}
                                 key={idx}
-                                onClick={() => toggleSubMenu(v.value)}
+                                onClick={() =>
+                                    v.submenus &&
+                                    v.submenus.length > 0 &&
+                                    openSubMenu != v.value
+                                        ? setOpenSubMenu(v.value)
+                                        : setOpenSubMenu(null)
+                                }
                             >
-                                <NavLink key={idx} to={v.to}>
-                                    <div className={containerClass}>{v.value}</div>
-                                </NavLink>
+                                {v.to ? (
+                                    <NavLink key={idx} to={v.to}>
+                                        <div className={containerClass}>{v.value}</div>
+                                    </NavLink>
+                                ) : (
+                                    <div
+                                        className={containerClass}
+                                        style={{ cursor: "pointer", userSelect: "none" }}
+                                    >
+                                        {v.value}
+                                    </div>
+                                )}
 
-                                {openSubMenu &&
-                                    isCurrent &&
+                                {openSubMenu == v.value &&
                                     v.submenus &&
                                     v.submenus.length > 0 && (
                                         <ul className="submenu">

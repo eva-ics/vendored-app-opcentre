@@ -168,7 +168,6 @@ const Layout = ({ logout }: LayoutProps) => {
         { value: "Trends", to: "?d=trends" },
         {
             value: "Navigate",
-            to: "?d=navigate",
             submenus: [
                 { value: "Main app", to: "/" },
                 { value: "Vendored apps", to: "/va/" },

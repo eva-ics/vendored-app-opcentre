@@ -27,7 +27,7 @@ type SubmenuItem = {
 
 export interface NavElement {
     value: any;
-    to: string;
+    to?: string;
     submenus?: SubmenuItem[];
 }
 
