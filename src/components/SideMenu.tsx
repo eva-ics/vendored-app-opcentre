@@ -32,9 +32,10 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
                                                 {v.to ? (
                                                     <NavLink
                                                         to={v.to}
-                                                        onClick={() =>
-                                                            toggleSubMenu(v.value)
-                                                        }
+                                                        onClick={() => {
+                                                            toggleSubMenu(v.value);
+                                                            toggleMenu();
+                                                        }}
                                                     >
                                                         <div className={containerClass}>
                                                             {v.value}
@@ -73,6 +74,7 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
                                                                                 subItem.to ===
                                                                                     "logout" &&
                                                                                     logout();
+                                                                                toggleMenu();
                                                                             }}
                                                                         >
                                                                             {
