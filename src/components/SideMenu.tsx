@@ -51,7 +51,7 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
                                                                             className={
                                                                                 current_page ===
                                                                                 subItem.value
-                                                                                    ? "side-menu-current"
+                                                                                    ? "sub-menu-current"
                                                                                     : ""
                                                                             }
                                                                             to={

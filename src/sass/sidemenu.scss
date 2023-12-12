@@ -63,16 +63,18 @@
     margin-top: 15px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 5px;
     background-color: #0a214f6b;
-    padding: 5px;
 
     & > li {
         font-size: 14px;
         color: $secondary-text-color;
+        padding: 5px;
+
         @media (hover: hover) and (pointer: fine) {
-            :hover {
+            &:hover {
                 color: $main-text-color;
+                background-color: $secondary-blue-color;
             }
         }
     }
