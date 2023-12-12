@@ -70,13 +70,6 @@
         font-size: 14px;
         color: $secondary-text-color;
         padding: 5px;
-
-        @media (hover: hover) and (pointer: fine) {
-            &:hover {
-                color: $main-text-color;
-                background-color: $secondary-blue-color;
-            }
-        }
     }
 }
 
