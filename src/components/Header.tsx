@@ -3,9 +3,16 @@ import { HeaderProps } from "../types";
 import { Eva } from "@eva-ics/webengine";
 import { get_engine } from "@eva-ics/webengine-react";
 import { NavLink } from "react-router-dom";
+import { useState } from "react";
 
 const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
+    const [openSubMenu, setOpenSubMenu] = useState<string | null>(null);
+
     const eva = get_engine() as Eva;
+
+    const toggleSubMenu = (menuItem: string) => {
+        openSubMenu === menuItem ? setOpenSubMenu(null) : setOpenSubMenu(menuItem);
+    };
 
     return (
         <header className="header">
@@ -35,28 +42,35 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                             : "nav-link-container";
 
                         return (
-                            <li className={navLinkClass} key={idx}>
+                            <li
+                                className={navLinkClass}
+                                key={idx}
+                                onClick={() => toggleSubMenu(v.value)}
+                            >
                                 <NavLink key={idx} to={v.to}>
                                     <div className={containerClass}>{v.value}</div>
                                 </NavLink>
 
-                                {isCurrent && v.submenus && v.submenus.length > 0 && (
-                                    <ul className="submenu">
-                                        {v.submenus.map((submenuItem, subIdx) => (
-                                            <li className="submenu-item" key={subIdx}>
-                                                <NavLink
-                                                    to={submenuItem.to}
-                                                    onClick={() =>
-                                                        submenuItem.to === "logout" &&
-                                                        logout()
-                                                    }
-                                                >
-                                                    {submenuItem.value}
-                                                </NavLink>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                )}
+                                {openSubMenu &&
+                                    isCurrent &&
+                                    v.submenus &&
+                                    v.submenus.length > 0 && (
+                                        <ul className="submenu">
+                                            {v.submenus.map((submenuItem, subIdx) => (
+                                                <li className="submenu-item" key={subIdx}>
+                                                    <NavLink
+                                                        to={submenuItem.to}
+                                                        onClick={() =>
+                                                            submenuItem.to === "logout" &&
+                                                            logout()
+                                                        }
+                                                    >
+                                                        {submenuItem.value}
+                                                    </NavLink>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
                             </li>
                         );
                     })}
