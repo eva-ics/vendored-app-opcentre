@@ -35,6 +35,9 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
                                                         onClick={() => {
                                                             toggleSubMenu(v.value);
                                                             toggleMenu();
+                                                            if (v.to?.startsWith("/")) {
+                                                                document.location = v.to;
+                                                            }
                                                         }}
                                                     >
                                                         <div className={containerClass}>
@@ -71,10 +74,20 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
                                                                                 subItem.to
                                                                             }
                                                                             onClick={() => {
-                                                                                subItem.to ===
-                                                                                    "logout" &&
+                                                                                if (
+                                                                                    subItem.to.startsWith(
+                                                                                        "/"
+                                                                                    )
+                                                                                ) {
+                                                                                    document.location =
+                                                                                        subItem.to;
+                                                                                } else if (
+                                                                                    subItem.to ===
+                                                                                    "logout"
+                                                                                ) {
                                                                                     logout();
-                                                                                toggleMenu();
+                                                                                    toggleMenu();
+                                                                                }
                                                                             }}
                                                                         >
                                                                             {
