@@ -1,15 +1,13 @@
+import { useState } from "react";
 import { SideMenuProps } from "../types";
 import { AiOutlineClose } from "react-icons/ai";
 import { NavLink } from "react-router-dom";
 
 const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuProps) => {
-    const handleClickMenu = (value: string, to: string) => {
-        if (value !== "Navigate") {
-            toggleMenu();
-        }
-        if (to === "logout") {
-            logout();
-        }
+    const [openSubMenu, setOpenSubMenu] = useState<string | null>(null);
+
+    const toggleSubMenu = (menuItem: string) => {
+        openSubMenu === menuItem ? setOpenSubMenu(null) : setOpenSubMenu(menuItem);
     };
 
     return (
@@ -32,15 +30,14 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
                                                             ? "side-menu-current"
                                                             : ""
                                                     }
-                                                    onClick={() =>
-                                                        handleClickMenu(v.value, v.to)
-                                                    }
+                                                    onClick={() => toggleSubMenu(v.value)}
                                                     to={v.to}
                                                 >
                                                     {v.value}
                                                 </NavLink>
 
-                                                {current_page === v.value &&
+                                                {openSubMenu &&
+                                                    current_page === v.value &&
                                                     v.submenus &&
                                                     v.submenus.length > 0 && (
                                                         <ul className="subitem-list">
