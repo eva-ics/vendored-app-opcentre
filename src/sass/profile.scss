@@ -1,0 +1,49 @@
+.profile {
+    margin-top: 50px;
+    padding: 0 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    width: 100%;
+
+    @include media(tablet) {
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    }
+
+    &__block {
+        padding: 20px;
+        background-color: #191d22;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    &__content {
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        flex-direction: column;
+        gap: 20px;
+        width: 100%;
+    }
+}
+
+.profile-input-wrapper {
+    display: grid;
+    gap: 5px;
+    width: 100%;
+}
+
+.error-status {
+    width: 100%;
+    height: 20px;
+    color: #cd5c5c;
+}
+
+.success-status {
+    width: 100%;
+    height: 20px;
+    color: #4cbb17;
+}

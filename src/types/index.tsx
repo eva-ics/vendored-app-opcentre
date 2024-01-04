@@ -31,4 +31,9 @@ export interface NavElement {
     submenus?: SubmenuItem[];
 }
 
+export enum StatusType {
+    Error = "error",
+    Success = "success",
+}
+
 export const DEFAULT_TITLE = "OpCentre";
