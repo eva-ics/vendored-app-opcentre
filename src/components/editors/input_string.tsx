@@ -1,7 +1,7 @@
 import { TextField } from "@mui/material";
 import { useState } from "react";
 
-const ProfileEditor = ({
+const InputField = ({
     type,
     current_value,
     label,
@@ -28,4 +28,4 @@ const ProfileEditor = ({
     );
 };
 
-export default ProfileEditor;
+export default InputField;

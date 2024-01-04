@@ -1,5 +1,5 @@
 import { Button, styled } from "@mui/material";
-import ProfileEditor from "../components/editors/profile_string";
+import InputField from "../components/editors/input_string";
 
 //mui styles
 const ButtonProfile = styled(Button)({
@@ -18,16 +18,16 @@ const Profile = () => {
             <div className="profile__block">
                 <h3>Password</h3>
                 <div className="profile__content">
-                    <ProfileEditor type="number" label="Current password" />
-                    <ProfileEditor type="number" label="New password" />
-                    <ProfileEditor type="number" label="Confirm new password" />
+                    <InputField type="text" label="Current password" />
+                    <InputField type="text" label="New password" />
+                    <InputField type="text" label="Confirm new password" />
                     <ButtonProfile variant="outlined">Set</ButtonProfile>
                 </div>
             </div>
             <div className="profile__block">
                 <h3>Account details</h3>
                 <div className="profile__content">
-                    <ProfileEditor type="email" label="Email" />
+                    <InputField type="email" label="Email" />
                     <ButtonProfile variant="outlined">Set</ButtonProfile>
                 </div>
             </div>
