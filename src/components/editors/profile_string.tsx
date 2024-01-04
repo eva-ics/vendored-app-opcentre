@@ -14,7 +14,7 @@ const ProfileEditor = ({
 
     return (
         <div className="profile-input-wrapper">
-            <p className="page-label">{label}</p>
+            <p>{label}</p>
             <TextField
                 fullWidth
                 type={type}

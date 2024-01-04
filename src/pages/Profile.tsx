@@ -14,19 +14,19 @@ const ButtonProfile = styled(Button)({
 
 const Profile = () => {
     return (
-        <div className="profile-page-wrapper">
-            <div className="profile-page-wrapper__block">
+        <div className="profile">
+            <div className="profile__block">
                 <h3>Password</h3>
-                <div className="profile-page-wrapper__block-content">
+                <div className="profile__content">
                     <ProfileEditor type="number" label="Current password" />
                     <ProfileEditor type="number" label="New password" />
                     <ProfileEditor type="number" label="Confirm new password" />
                     <ButtonProfile variant="outlined">Set</ButtonProfile>
                 </div>
             </div>
-            <div className="profile-page-wrapper__block">
+            <div className="profile__block">
                 <h3>Account details</h3>
-                <div className="profile-page-wrapper__block-content">
+                <div className="profile__content">
                     <ProfileEditor type="email" label="Email" />
                     <ButtonProfile variant="outlined">Set</ButtonProfile>
                 </div>
