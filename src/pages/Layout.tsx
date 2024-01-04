@@ -22,6 +22,7 @@ import {
     onActionSuccess,
     onActionFail,
 } from "../common";
+import Profile from "./Profile.tsx";
 
 const allowedDashboardChars = /^[a-zA-Z0-9 ._-]+$/;
 
@@ -146,6 +147,10 @@ const Layout = ({ logout }: LayoutProps) => {
             content = <DashboardTrends />;
             current_page = "Trends";
             break;
+        case "profile":
+            content = <Profile />;
+            current_page = "Profile";
+            break;
         case "navigate":
             content = <DashboardOverview />;
             current_page = "Navigate";
@@ -166,6 +171,7 @@ const Layout = ({ logout }: LayoutProps) => {
         { value: "IDC", to: "?d=idc" },
         { value: "Items", to: "?d=items" },
         { value: "Trends", to: "?d=trends" },
+        { value: "Profile", to: "?d=profile" },
         {
             value: "Navigate",
             submenus: [

@@ -1,0 +1,20 @@
+.profile-page-wrapper {
+    margin-top: 50px;
+    padding: 0 40px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    width: 100%;
+    background-color: gray;
+
+    &__block {
+        background-color: red;
+        width: 100%;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        flex-direction: column;
+        gap: 20px;
+    }
+}
