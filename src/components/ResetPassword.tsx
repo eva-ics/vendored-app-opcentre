@@ -14,6 +14,8 @@ const ResetPassword = ({ logout }: { logout: FunctionLogout }) => {
     const [saved, setSaved] = useState(false);
     const [active, setActive] = useState(false);
 
+    const disabled = active;
+
     const onChangeOldPassword = (e: ChangeEvent<HTMLInputElement>) => {
         const val = e.target.value;
         setSaved(false);
@@ -36,6 +38,7 @@ const ResetPassword = ({ logout }: { logout: FunctionLogout }) => {
     };
 
     const onClick = () => {
+        if (disabled) return;
         setSaved(false);
         if (newPassword !== newPasswordConfirm) {
             setError("passwords do not match");
@@ -65,8 +68,6 @@ const ResetPassword = ({ logout }: { logout: FunctionLogout }) => {
                 setActive(false);
             });
     };
-
-    const disabled = active;
 
     return (
         <div className="profile__block">

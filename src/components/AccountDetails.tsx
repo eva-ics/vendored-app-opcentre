@@ -19,6 +19,8 @@ const AccountDetails = () => {
     const [saved, setSaved] = useState(false);
     const [active, setActive] = useState(false);
 
+    const disabled = !loaded || readonly || active;
+
     useEffect(() => {
         setInputValue("");
         setSaved(false);
@@ -42,6 +44,7 @@ const AccountDetails = () => {
     };
 
     const onClick = () => {
+        if (disabled) return;
         setActive(true);
         setError(null);
         setSaved(false);
@@ -58,8 +61,6 @@ const AccountDetails = () => {
                 setActive(false);
             });
     };
-
-    const disabled = !loaded || readonly || active;
 
     return (
         <div className="profile__block">
