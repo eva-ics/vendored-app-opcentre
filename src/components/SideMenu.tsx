@@ -90,6 +90,8 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
                                                                                 ) {
                                                                                     logout();
                                                                                     toggleMenu();
+                                                                                } else {
+                                                                                    toggleMenu();
                                                                                 }
                                                                             }}
                                                                         >
