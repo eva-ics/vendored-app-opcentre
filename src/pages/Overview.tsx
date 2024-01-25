@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 const TOOLS = [
     {
         id: "idc",
-        title: "Interactive creator",
+        title: "Interactive dashboard creator",
         text: "Create custom dashboards with an interactive editor and no coding.",
         link: "IDC",
     },
