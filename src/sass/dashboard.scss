@@ -83,7 +83,8 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    padding: 0 10px;
+    padding: 20px;
+    width: 100%;
 }
 
 .bmat-dashtable {
@@ -105,7 +106,6 @@
     font-weight: 300;
     line-height: 0.8;
     letter-spacing: 0.12px;
-    width: 100%;
 }
 
 .bmat-dashtable-row-even {
