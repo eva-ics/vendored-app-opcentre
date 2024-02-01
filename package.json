@@ -12,8 +12,8 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@eva-ics/webengine": "^0.6.1",
-    "@eva-ics/webengine-react": "^0.2.4",
+    "@eva-ics/webengine": "^0.6.2",
+    "@eva-ics/webengine-react": "^0.2.7",
     "@mui/icons-material": "^5.14.16",
     "@mui/material": "^5.14.17",
     "@mui/x-date-pickers": "^6.18.4",
