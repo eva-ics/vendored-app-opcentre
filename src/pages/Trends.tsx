@@ -132,7 +132,7 @@ const ChartItemEditor = ({
                     }
                 />
             </div>
-            <div className="oids-form-wrapper-item">
+            <div className="short-form-wrapper-item">
                 <p className="page-label">Label</p>
                 <EditString
                     element_id={`${id}-editlabel`}
@@ -142,7 +142,7 @@ const ChartItemEditor = ({
                     }
                 />
             </div>
-            <div className="oids-form-wrapper-item">
+            <div className="short-form-wrapper-item">
                 <p className="page-label">Formula</p>
                 <EditFormula
                     element_id={`${id}-editlabel`}
