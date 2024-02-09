@@ -25,6 +25,7 @@ export const CHART_TIME_FRAMES = [
 export const SizedLineChart = ({
   dragged,
   label,
+  formula,
   width,
   min,
   max,
@@ -37,6 +38,7 @@ export const SizedLineChart = ({
 }: {
   dragged: boolean;
   label: string;
+  formula: string,
   width: number;
   min: number;
   max: number;
@@ -66,6 +68,7 @@ export const SizedLineChart = ({
       <LineChart
         colors={[color]}
         labels={[label]}
+        formula={[formula]}
         update={update}
         fill={`${points}A:${dig}`}
         args={args}
