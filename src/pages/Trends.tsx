@@ -480,7 +480,8 @@ const DashboardTrends = () => {
                                 oid={oids}
                                 timeframe={timeframe}
                                 formula={formulas}
-                                fill={`${props.points}A:${props.digits}`}
+                                fill={`${props.points}A`}
+                                digits={props.digits}
                                 update={props.update || 86400}
                                 args={args}
                                 labels={labels}
