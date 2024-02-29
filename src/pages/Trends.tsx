@@ -1,6 +1,11 @@
 import { useState, useMemo, useEffect, useRef, useReducer } from "react";
 import { Coords } from "bmat/dom";
-import { LineChart } from "@eva-ics/webengine-react";
+import {
+    LineChart,
+    StateHistoryOIDColMapping,
+    generateStateHistoryCSV,
+} from "@eva-ics/webengine-react";
+import { downloadCSV } from "bmat/dom";
 import { EditNumber } from "../components/editors/number.tsx";
 import { EditString } from "../components/editors/string.tsx";
 import { EditFormula } from "../components/editors/formula.tsx";
@@ -12,6 +17,7 @@ import { rangeArray } from "bmat/numbers";
 import { useQueryParams } from "bmat/hooks";
 import PauseOutlinedIcon from "@mui/icons-material/PauseOutlined";
 import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
+import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { SelectPeriod } from "../components/editors/select_period.tsx";
@@ -20,6 +26,8 @@ import { Button, styled } from "@mui/material";
 type Timeout = ReturnType<typeof setTimeout>;
 
 const MAX_CHART_WIDTH = 1150;
+
+let current_data: any = null;
 
 const calculateChartSize = (): Coords => {
     let w = window.innerWidth - 50;
@@ -171,6 +179,22 @@ const ChartItemEditor = ({
             </div>
         </div>
     );
+};
+
+const downloadTrendsCSV = (items: ChartItem[]) => {
+    try {
+        const mapping: StateHistoryOIDColMapping[] = items.map((i) => {
+            return {
+                oid: i.oid,
+                name: i.label || i.oid,
+                formula: i.formula,
+            };
+        });
+        const content = generateStateHistoryCSV({ data: current_data, mapping });
+        content ? downloadCSV(content, "trends.csv") : alert("No data available");
+    } catch (err) {
+        alert(err);
+    }
 };
 
 const DashboardTrends = () => {
@@ -325,6 +349,7 @@ const DashboardTrends = () => {
     );
 
     if (!loaded) {
+        current_data = null;
         return <></>;
     }
 
@@ -370,13 +395,18 @@ const DashboardTrends = () => {
                                     />
                                 </div>
                                 {prev_update > 0 && props.update == 0 ? (
-                                    <ButtonTrend variant="outlined" onClick={play}>
+                                    <ButtonTrend
+                                        title="Start chart updates"
+                                        variant="outlined"
+                                        onClick={play}
+                                    >
                                         <PlayArrowOutlinedIcon fontSize="small" />
                                     </ButtonTrend>
                                 ) : null}
                                 {props.update > 0 ? (
                                     <ButtonTrend
                                         variant="outlined"
+                                        title="Pause chart updates"
                                         onClick={() => pause(props)}
                                     >
                                         <PauseOutlinedIcon fontSize="small" />
@@ -462,7 +492,7 @@ const DashboardTrends = () => {
                             </div>
                             <div className="form-list-wrapper-item">
                                 <p className="page-label">Database</p>
-                                <div>
+                                <div className="form-select-database">
                                     <EditSelectDatabase
                                         current_value={props.database}
                                         setParam={(s: string) => {
@@ -474,8 +504,20 @@ const DashboardTrends = () => {
                                     />
                                 </div>
                             </div>
+                            <div className="form-list-wrapper-item">
+                                <ButtonTrend
+                                    title="Download CSV"
+                                    variant="outlined"
+                                    disabled={oids.length === 0}
+                                    onClick={() => {
+                                        downloadTrendsCSV(items);
+                                    }}
+                                >
+                                    <FileDownloadOutlinedIcon fontSize="small" />
+                                </ButtonTrend>
+                            </div>
                         </div>
-                        <div>
+                        <div style={{ display: oids.length === 0 ? "none" : "block" }}>
                             <LineChart
                                 oid={oids}
                                 timeframe={timeframe}
@@ -490,6 +532,9 @@ const DashboardTrends = () => {
                                 className="chart-trends"
                                 width={chartSize.current.x}
                                 height={chartSize.current.y}
+                                data_callback={(data) => {
+                                    current_data = data;
+                                }}
                             />
                         </div>
                         <div>
