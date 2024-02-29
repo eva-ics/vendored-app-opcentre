@@ -18,7 +18,7 @@
     "@mui/material": "^5.14.17",
     "@mui/x-date-pickers": "^6.18.4",
     "@types/uuid": "^9.0.7",
-    "bmat": "^0.1.15",
+    "bmat": "^0.1.17",
     "chart.js": "^4.4.0",
     "chartjs-adapter-date-fns": "^3.0.0",
     "dayjs": "^1.11.10",
