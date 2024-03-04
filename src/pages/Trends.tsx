@@ -380,8 +380,6 @@ const DashboardTrends = () => {
         setPropsDelayed(np);
     };
 
-    console.log(state);
-
     return (
         <div>
             <div className="dashboard-main-wrapper">
@@ -591,6 +589,18 @@ const DataTable = ({
     data: any;
     props: ChartProps;
 }) => {
+    const getValue = (item: ChartItem, idx: number) => {
+        const tf = data[0];
+        if (tf) {
+            const vals = tf[`${item.oid}/value`];
+            if (vals) {
+                return (calculateFormula(item.formula, vals[idx]) as number)?.toFixed(
+                    props.digits
+                );
+            }
+        }
+    };
+
     return data ? (
         <table className="trends-values">
             <tbody>
@@ -605,12 +615,7 @@ const DataTable = ({
                         <td className="col-fit">{new Timestamp(t).toRFC3339()}</td>
                         {items.map((item, i) => (
                             <td className="col-fit" key={i}>
-                                {(
-                                    calculateFormula(
-                                        item.formula,
-                                        data[0][`${item.oid}/value`][i]
-                                    ) as number
-                                )?.toFixed(props.digits)}
+                                {getValue(item, i)}
                             </td>
                         ))}
                         <td> </td>
