@@ -4,7 +4,9 @@ import {
     LineChart,
     StateHistoryOIDColMapping,
     generateStateHistoryCSV,
+    useEvaStateHistory,
 } from "@eva-ics/webengine-react";
+import { StateProp } from "@eva-ics/webengine";
 import { downloadCSV } from "bmat/dom";
 import { EditNumber } from "../components/editors/number.tsx";
 import { EditString } from "../components/editors/string.tsx";
@@ -13,7 +15,7 @@ import { EditSelectNumber } from "../components/editors/select_number.tsx";
 import { EditSelectOID } from "../components/editors/select_oid.tsx";
 import { EditSelectColor } from "../components/editors/select_color.tsx";
 import { EditSelectDatabase } from "../components/editors/select_database.tsx";
-import { rangeArray } from "bmat/numbers";
+import { rangeArray, calculateFormula } from "bmat/numbers";
 import { useQueryParams } from "bmat/hooks";
 import PauseOutlinedIcon from "@mui/icons-material/PauseOutlined";
 import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
@@ -22,12 +24,11 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { SelectPeriod } from "../components/editors/select_period.tsx";
 import { Button, styled } from "@mui/material";
+import { Timestamp } from "bmat/time";
 
 type Timeout = ReturnType<typeof setTimeout>;
 
 const MAX_CHART_WIDTH = 1150;
-
-let current_data: any = null;
 
 const calculateChartSize = (): Coords => {
     let w = window.innerWidth - 50;
@@ -181,7 +182,7 @@ const ChartItemEditor = ({
     );
 };
 
-const downloadTrendsCSV = (items: ChartItem[]) => {
+const downloadTrendsCSV = (items: ChartItem[], data: any) => {
     try {
         const mapping: StateHistoryOIDColMapping[] = items.map((i) => {
             return {
@@ -190,7 +191,7 @@ const downloadTrendsCSV = (items: ChartItem[]) => {
                 formula: i.formula,
             };
         });
-        const content = generateStateHistoryCSV({ data: current_data, mapping });
+        const content = generateStateHistoryCSV({ data: data, mapping });
         content ? downloadCSV(content, "trends.csv") : alert("No data available");
     } catch (err) {
         alert(err);
@@ -207,6 +208,33 @@ const DashboardTrends = () => {
     });
 
     const [items, setItems] = useState<Array<ChartItem>>([]);
+
+    const hookProps = useMemo(() => {
+        let oids: Array<string> = [];
+
+        items.forEach((i) => {
+            const oid = i.oid.trim();
+            if (oid) {
+                oids.push(oid);
+            }
+        });
+
+        let args: any = {};
+        if (props.database) {
+            args.database = props.database;
+        }
+        return {
+            oid: oids,
+            timeframe: props.timeframe,
+            update: props.update,
+            prop: StateProp.Value,
+            fill: `${props.points}A`,
+            digits: props.digits,
+            args: args,
+        };
+    }, [props.timeframe, props.update, props.digits, props.database, items]);
+
+    const state = useEvaStateHistory(hookProps);
 
     const [prev_update, setPrevUpdate] = useState(1);
 
@@ -256,27 +284,9 @@ const DashboardTrends = () => {
         return { ...chart_opts, scale: { y: { min: props.min, max: props.max } } };
     }, [chart_opts, props.min, props.max]);
 
-    const args = useMemo(() => {
-        let args: any = {};
-        if (props.database) {
-            args.database = props.database;
-        }
-        return args;
-    }, [props.database]);
-
-    let oids: Array<string> = [];
-
-    items.forEach((i) => {
-        const oid = i.oid.trim();
-        if (oid) {
-            oids.push(oid);
-        }
-    });
-
     const labels = items.map((i) => i.label || i.oid);
     const formulas = items.map((i) => i.formula);
     const colors = items.map((i) => i.color);
-    const timeframe = props.timeframe;
 
     const setChartItemPropDelayed = (
         prop: ChartItemProperty,
@@ -349,7 +359,6 @@ const DashboardTrends = () => {
     );
 
     if (!loaded) {
-        current_data = null;
         return <></>;
     }
 
@@ -371,12 +380,14 @@ const DashboardTrends = () => {
         setPropsDelayed(np);
     };
 
+    console.log(state);
+
     return (
         <div>
             <div className="dashboard-main-wrapper">
                 <div className="dashboard-main-wrapper-content">
                     <div className="trends-container">
-                        Trends
+                        <div className="page-title">Trends</div>
                         <div className="form-list-wrapper">
                             <div className="form-list-wrapper-item">
                                 <p className="page-label">Update</p>
@@ -508,63 +519,106 @@ const DashboardTrends = () => {
                                 <ButtonTrend
                                     title="Download CSV"
                                     variant="outlined"
-                                    disabled={oids.length === 0}
+                                    disabled={!state?.data}
                                     onClick={() => {
-                                        downloadTrendsCSV(items);
+                                        downloadTrendsCSV(items, state.data);
                                     }}
                                 >
                                     <FileDownloadOutlinedIcon fontSize="small" />
                                 </ButtonTrend>
                             </div>
                         </div>
-                        <div style={{ display: oids.length === 0 ? "none" : "block" }}>
+                        <div
+                            style={{
+                                display: hookProps.oid.length === 0 ? "none" : "block",
+                            }}
+                        >
                             <LineChart
-                                oid={oids}
-                                timeframe={timeframe}
+                                oid={hookProps.oid}
+                                state={state}
+                                timeframe={props.timeframe}
                                 formula={formulas}
                                 fill={`${props.points}A`}
                                 digits={props.digits}
                                 update={props.update || 86400}
-                                args={args}
                                 labels={labels}
                                 colors={colors}
                                 options={options}
                                 className="chart-trends"
                                 width={chartSize.current.x}
                                 height={chartSize.current.y}
-                                data_callback={(data) => {
-                                    current_data = data;
-                                }}
                             />
                         </div>
-                        <div>
-                            {items.map((item, i) => {
-                                return (
-                                    <ChartItemEditor
-                                        key={i}
-                                        id={i}
-                                        item={item}
-                                        deleteChartItem={() => deleteChartItem(i)}
-                                        setChartItemProp={(
-                                            prop: ChartItemProperty,
-                                            val: string
-                                        ) => setChartItemPropDelayed(prop, val, i)}
-                                    />
-                                );
-                            })}
+                        <div className="trends-editor">
+                            <div>
+                                {items.map((item, i) => {
+                                    return (
+                                        <ChartItemEditor
+                                            key={i}
+                                            id={i}
+                                            item={item}
+                                            deleteChartItem={() => deleteChartItem(i)}
+                                            setChartItemProp={(
+                                                prop: ChartItemProperty,
+                                                val: string
+                                            ) => setChartItemPropDelayed(prop, val, i)}
+                                        />
+                                    );
+                                })}
+                            </div>
+                            <ButtonTrend
+                                variant="outlined"
+                                sx={{ marginTop: "20px" }}
+                                onClick={addChartItem}
+                            >
+                                <AddIcon />
+                            </ButtonTrend>
                         </div>
-                        <ButtonTrend
-                            variant="outlined"
-                            sx={{ marginTop: "20px" }}
-                            onClick={addChartItem}
-                        >
-                            <AddIcon />
-                        </ButtonTrend>
+                        <DataTable props={props} items={items} data={state.data} />
                     </div>
                 </div>
             </div>
         </div>
     );
+};
+
+const DataTable = ({
+    items,
+    data,
+    props,
+}: {
+    items: ChartItem[];
+    data: any;
+    props: ChartProps;
+}) => {
+    return data ? (
+        <table className="trends-values">
+            <tbody>
+                <tr>
+                    <th className="col-fit">Time</th>
+                    {items.map((item, i) => (
+                        <th key={i}>{item.label || item.oid}</th>
+                    ))}
+                </tr>
+                {data.t.map((t: number, i: number) => (
+                    <tr key={i}>
+                        <td className="col-fit">{new Timestamp(t).toRFC3339()}</td>
+                        {items.map((item, i) => (
+                            <td className="col-fit" key={i}>
+                                {(
+                                    calculateFormula(
+                                        item.formula,
+                                        data[0][`${item.oid}/value`][i]
+                                    ) as number
+                                )?.toFixed(props.digits)}
+                            </td>
+                        ))}
+                        <td> </td>
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+    ) : null;
 };
 
 export default DashboardTrends;

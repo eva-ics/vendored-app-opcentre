@@ -1,5 +1,8 @@
 .header {
     padding: 11px 0;
+    @media print {
+      display: none;
+    }
 }
 
 .header-info {
