@@ -1,3 +1,20 @@
+.time-info {
+  display: none;
+  margin-top: 10px;
+  margin-left: 10px;
+  color: black;
+  font-size: 8px;
+  @media print {
+    display: block;
+  }
+}
+
+.current-user {
+  @media print {
+    display: none;
+  }
+}
+
 .dash-info {
   display: flex;
   align-items: center;
@@ -454,7 +471,11 @@ td {
     padding: 0px;
     border: 1px solid black;
   }
-  tbody > tr > th {
+  thead > tr {
+    padding: 0px;
+    border: 2px solid black;
+  }
+  thead > tr > th {
     text-align: left;
     font-size: 14px;
     padding: 10px;
@@ -478,6 +499,8 @@ td {
   width: 100%;
   max-width: 1100px;
   padding: 15px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .trends-editor {

@@ -1,7 +1,7 @@
 .header {
     padding: 11px 0;
     @media print {
-      display: none;
+      padding-bottom: 2em;
     }
 }
 
@@ -13,6 +13,10 @@
         position: relative;
         top: 0px;
         padding-left: 30px;
+    }
+    @media print {
+      padding: 0px;
+      color: black;
     }
 }
 
@@ -27,6 +31,9 @@ nav#header {
     }
     > ul > li {
         display: inline;
+    }
+    @media print {
+      display: none;
     }
 }
 

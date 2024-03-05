@@ -607,13 +607,15 @@ const DataTable = ({
 
     return data ? (
         <table className="trends-values">
-            <tbody>
+            <thead>
                 <tr>
                     <th className="col-fit">Time</th>
                     {items.map((item, i) => (
                         <th key={i}>{item.label || item.oid}</th>
                     ))}
                 </tr>
+            </thead>
+            <tbody>
                 {data.t.map((t: number, idx: number) => (
                     <tr key={idx}>
                         <td className="col-fit">{new Timestamp(t).toRFC3339()}</td>
