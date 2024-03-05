@@ -363,9 +363,17 @@ td {
   @include media(tablet) {
     padding-left: 20px;
   }
+  @media print {
+    padding-bottom: 10px;
+  }
 }
 
 .item-watch-container {
+  @media print {
+    display: block;
+    border: 0px;
+    overflow: visible;
+  }
   display: inline-block;
   width: 300px;
   margin-right: 10px;
@@ -401,6 +409,9 @@ td {
 }
 
 .item-watch-chart-close-button {
+  @media print {
+    display: none;
+  }
   position: absolute;
   top: 5px;
   right: 5px;
