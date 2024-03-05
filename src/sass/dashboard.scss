@@ -645,6 +645,12 @@ td {
   padding: 20px;
 }
 
+.idc-dashboard-viewer-close-button {
+  @media print {
+    display: none;
+  }
+}
+
 .idc-dashboard-loading {
   padding: 20px;
 }
