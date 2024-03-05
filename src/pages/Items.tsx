@@ -8,6 +8,8 @@ import { get_engine, useEvaStateUpdates, useEvaAPICall } from "@eva-ics/webengin
 import { Eva, ItemState } from "@eva-ics/webengine";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import PrintOutlinedIcon from "@mui/icons-material/PrintOutlined";
+import { ButtonStyled } from "../common.tsx";
 
 const item_kinds = ["", "+", "lvar", "sensor", "unit", "#"];
 
@@ -298,16 +300,21 @@ const DashboardItems = () => {
                     value={params.full_id || ""}
                     onChange={(e) => setFullId(e.target.value)}
                 />
-                <button onClick={copyOID}>
+                <ButtonStyled variant="outlined" onClick={copyOID}>
                     <ContentCopyIcon style={{ fontSize: 15 }} />
-                </button>
-                <button
+                </ButtonStyled>
+                <ButtonStyled
+                    variant="outlined"
                     onClick={() =>
                         window.open("https://info.bma.ai/en/actual/eva4/items.html#oid")
                     }
                 >
                     <HelpOutlineIcon style={{ fontSize: 15 }} />
-                </button>
+                </ButtonStyled>
+                <div style={{ display: "inline", marginLeft: 20 }}></div>
+                <ButtonStyled variant="outlined" onClick={window.print}>
+                    <PrintOutlinedIcon style={{ fontSize: 15 }} />
+                </ButtonStyled>
             </>,
         ],
     ];
@@ -341,19 +348,26 @@ const DashboardItems = () => {
                     className: "col-fit",
                 },
                 {
-                    value: <button onClick={() => setFullId(state.oid)}>filter</button>,
-                    className: "col-fit print-hidden",
+                    value: (
+                        <div className="print-hidden">
+                            <button onClick={() => setFullId(state.oid)}>filter</button>
+                        </div>
+                    ),
+                    className: "col-fit",
                 },
                 {
                     value: (
-                        <button
-                            disabled={!state.connected}
-                            onClick={() => watchItem(state.oid)}
-                        >
-                            watch
-                        </button>
+                        <div className="print-hidden">
+                            <button
+                                className="print-hidden"
+                                disabled={!state.connected}
+                                onClick={() => watchItem(state.oid)}
+                            >
+                                watch
+                            </button>
+                        </div>
                     ),
-                    className: "col-fit print-hidden",
+                    className: "col-fit",
                 },
                 {
                     value: <DrawStatus state={state} />,

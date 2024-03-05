@@ -417,6 +417,30 @@ td {
   }
 }
 
+.bmat-dashtable {
+  @media print {
+    color: black;
+    border-collapse: collapse;
+    border: 1px solid black;
+    tbody > tr {
+      padding: 0px;
+      border: 1px solid black;
+    }
+    thead > tr {
+      padding: 0px;
+      border: 2px solid black;
+    }
+    thead > tr > th {
+      text-align: center;
+      font-size: 14px;
+      padding: 10px;
+    }
+    tbody > tr > td {
+      padding: 10px;
+    }
+  }
+}
+
 .trends-values {
   @media print {
     display: block;
@@ -436,14 +460,13 @@ td {
     padding: 10px;
   }
   tbody > tr > td {
-    text-align: center;
     padding: 10px;
   }
 }
 
 .chart-trends {
   @media print {
-    width: 100%!important;
+    width: 100% !important;
     border-top: 1px solid black;
     border-bottom: 1px solid black;
   }
