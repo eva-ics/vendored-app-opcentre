@@ -37,6 +37,12 @@
   font-size: 14px;
 }
 
+div.eva.button.container {
+  @media print {
+    display: none;
+  }
+}
+
 div.eva.button.container.toggle {
   margin: 0;
   padding: 0;
