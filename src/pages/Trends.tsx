@@ -201,6 +201,8 @@ const DashboardTrends = () => {
         database: "default",
     });
 
+    const [prev_update, setPrevUpdate] = useState(1);
+
     const [items, setItems] = useState<Array<ChartItem>>([]);
 
     const hookProps = useMemo(() => {
@@ -220,7 +222,7 @@ const DashboardTrends = () => {
         return {
             oid: oids,
             timeframe: props.timeframe,
-            update: props.update,
+            update: props.update || 86400 * 365 * 100,
             prop: StateProp.Value,
             fill: `${props.points}A`,
             digits: props.digits,
@@ -229,8 +231,6 @@ const DashboardTrends = () => {
     }, [props.timeframe, props.update, props.digits, props.database, items]);
 
     const state = useEvaStateHistory(hookProps);
-
-    const [prev_update, setPrevUpdate] = useState(1);
 
     const size_sd = useRef<Timeout | undefined>(undefined);
 
