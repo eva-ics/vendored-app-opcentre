@@ -1,16 +1,23 @@
 .element-image {
 }
 
+.element-image-empty {
+  background-color: #777;
+}
+
+.element-iframe {
+}
+
+.element-iframe-empty {
+  background-color: #777;
+}
+
 .element-canvas {
   border: 1px solid #555;
 }
 
 .element-chart {
   background-color: #222;
-}
-
-.element-image-empty {
-  background-color: #777;
 }
 
 .element-group {

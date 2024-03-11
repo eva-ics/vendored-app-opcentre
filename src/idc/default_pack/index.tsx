@@ -1,5 +1,6 @@
 import { Label } from "./label";
 import { SizedImage } from "./sized_image";
+import { SizedIFrame } from "./sized_iframe";
 import { ItemValueWithLabel } from "./item_value_with_label";
 import { SizedCanvas } from "./sized_canvas";
 import { SizedLineChart } from "./sized_line_chart";
@@ -19,6 +20,7 @@ import { TextFormatOutlined, CheckBoxOutlineBlankOutlined } from "@mui/icons-mat
 
 import LooksOneOutlinedIcon from "@mui/icons-material/LooksOneOutlined";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import WebAssetOutlinedIcon from "@mui/icons-material/WebAssetOutlined";
 
 enum ElementKind {
     Label = "label",
@@ -28,6 +30,7 @@ enum ElementKind {
     Canvas = "canvas",
     Image = "image",
     Frame = "frame",
+    IFrame = "iframe",
     ControlButtonToggle = "control_button_toggle",
     ControlButtonValue = "control_button_value",
     ControlButtonRun = "control_button_run",
@@ -54,6 +57,10 @@ const EnterValueIcon = () => {
 
 const RunIcon = () => {
     return <PlayArrowIcon style={{ fontSize: 25 }} />;
+};
+
+const IFrameIcon = () => {
+    return <WebAssetOutlinedIcon style={{ fontSize: 25 }} />;
 };
 
 const ELEMENT_CLASSES: Map<ElementKind, ElementClass> = new Map();
@@ -115,6 +122,46 @@ ELEMENT_CLASSES.set(ElementKind.Image, {
         },
     ],
     default_size: { x: 20, y: 20 },
+    boxed: true,
+    actions: false,
+});
+ELEMENT_CLASSES.set(ElementKind.IFrame, {
+    description: "IFrame",
+    group: ElementGroup.UI,
+    IconDraw: IFrameIcon,
+    defaults: {
+        image: undefined,
+        width: 300,
+        height: 300,
+        update: 0,
+    },
+    props: [
+        {
+            id: uuidv4(),
+            name: "url",
+            kind: PropertyKind.String,
+            params: { size: 40 },
+        },
+        {
+            id: uuidv4(),
+            name: "width",
+            kind: PropertyKind.Number,
+            params: { size: 5, min: 20 },
+        },
+        {
+            id: uuidv4(),
+            name: "height",
+            kind: PropertyKind.Number,
+            params: { size: 5, min: 20 },
+        },
+        {
+            id: uuidv4(),
+            name: "update",
+            kind: PropertyKind.Number,
+            params: { size: 2, min: 0 },
+        },
+    ],
+    default_size: { x: 300, y: 300 },
     boxed: true,
     actions: false,
 });
@@ -600,6 +647,8 @@ const Viewer = ({
             return <Frame {...(params as any)} />;
         case ElementKind.Image:
             return <SizedImage {...(params as any)} />;
+        case ElementKind.IFrame:
+            return <SizedIFrame {...(params as any)} />;
         case ElementKind.ControlButtonToggle:
             return <ControlButtonToggle {...(params as any)} />;
         case ElementKind.ControlButtonValue:
