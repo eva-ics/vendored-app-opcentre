@@ -5,7 +5,22 @@
   background-color: #777;
 }
 
+.element-button {
+  color: #121721;
+  padding: 10px;
+  background-color: #0085ff;
+  padding: 5px 10px;
+  border-radius: 2px;
+  border: none;
+}
+
 .element-iframe {
+}
+
+.element-iframe-edit {
+  background-color: #444;
+  padding: 10px;
+  text-align: center;
 }
 
 .element-iframe-empty {
@@ -126,12 +141,12 @@ input.eva.button.value {
   font-style: normal;
   font-weight: 400;
 
-  &:focus{
+  &:focus {
     border: 0.5px solid #0085ff;
     outline: none;
   }
 
-  @include media(desktop){
+  @include media(desktop) {
     font-size: 16px;
   }
 }
@@ -140,7 +155,7 @@ input.eva.button.value {
 }
 button.eva.button.input.apply {
   padding: 5px 10px;
-  font-family: "Open Sans",sans-serif;
+  font-family: "Open Sans", sans-serif;
   font-size: 10px;
   font-style: normal;
   font-weight: 600;
@@ -149,15 +164,15 @@ button.eva.button.input.apply {
   background-color: #0085ff;
   color: #eee;
 
-  &::before{
-    content: "Apply"
+  &::before {
+    content: "Apply";
   }
 
-  &:disabled{
+  &:disabled {
     background-color: #646464;
   }
 }
-div.eva.button.container.run{
+div.eva.button.container.run {
   margin: 0;
   padding: 0;
 }
@@ -171,7 +186,7 @@ button.eva.button.run {
   background-color: #0085ff;
   color: #eee;
 
-  &:disabled{
+  &:disabled {
     background-color: #646464;
   }
 }

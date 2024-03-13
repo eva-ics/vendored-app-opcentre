@@ -1,4 +1,5 @@
 import { Label } from "./label";
+import { Button } from "./button";
 import { SizedImage } from "./sized_image";
 import { SizedIFrame } from "./sized_iframe";
 import { ItemValueWithLabel } from "./item_value_with_label";
@@ -21,6 +22,7 @@ import { TextFormatOutlined, CheckBoxOutlineBlankOutlined } from "@mui/icons-mat
 import LooksOneOutlinedIcon from "@mui/icons-material/LooksOneOutlined";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import WebAssetOutlinedIcon from "@mui/icons-material/WebAssetOutlined";
+import TouchAppOutlinedIcon from "@mui/icons-material/TouchAppOutlined";
 
 enum ElementKind {
     Label = "label",
@@ -31,6 +33,7 @@ enum ElementKind {
     Image = "image",
     Frame = "frame",
     IFrame = "iframe",
+    Button = "button",
     ControlButtonToggle = "control_button_toggle",
     ControlButtonValue = "control_button_value",
     ControlButtonRun = "control_button_run",
@@ -61,6 +64,10 @@ const RunIcon = () => {
 
 const IFrameIcon = () => {
     return <WebAssetOutlinedIcon style={{ fontSize: 25 }} />;
+};
+
+const ButtonIcon = () => {
+    return <TouchAppOutlinedIcon style={{ fontSize: 25 }} />;
 };
 
 const ELEMENT_CLASSES: Map<ElementKind, ElementClass> = new Map();
@@ -163,7 +170,33 @@ ELEMENT_CLASSES.set(ElementKind.IFrame, {
     ],
     default_size: { x: 300, y: 300 },
     boxed: true,
-    actions: false,
+    actions: true,
+});
+ELEMENT_CLASSES.set(ElementKind.Button, {
+    description: "Button",
+    group: ElementGroup.UI,
+    IconDraw: ButtonIcon,
+    defaults: {
+        text: "Click me",
+        action: "https://www.bohemia-automation.com/",
+    },
+    props: [
+        {
+            id: uuidv4(),
+            name: "text",
+            kind: PropertyKind.String,
+            params: { size: 40 },
+        },
+        {
+            id: uuidv4(),
+            name: "action",
+            kind: PropertyKind.String,
+            params: { size: 40 },
+        },
+    ],
+    default_size: { x: 50, y: 20 },
+    boxed: true,
+    actions: true,
 });
 ELEMENT_CLASSES.set(ElementKind.ItemValue, {
     description: "Item value",
@@ -649,6 +682,8 @@ const Viewer = ({
             return <SizedImage {...(params as any)} />;
         case ElementKind.IFrame:
             return <SizedIFrame {...(params as any)} />;
+        case ElementKind.Button:
+            return <Button {...(params as any)} />;
         case ElementKind.ControlButtonToggle:
             return <ControlButtonToggle {...(params as any)} />;
         case ElementKind.ControlButtonValue:
