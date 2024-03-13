@@ -49,7 +49,7 @@ export const SizedIFrame = ({
         return disabled_actions ? (
             <div className="element-iframe-edit" style={{ width: width, height: height }}>
                 <div>IFrame source: {url}</div>
-                <div>(not displayed in editor mode)</div>
+                <div>(not displayed in the editor mode)</div>{" "}
             </div>
         ) : (
             <iframe
