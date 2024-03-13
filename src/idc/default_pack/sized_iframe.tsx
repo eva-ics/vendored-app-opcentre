@@ -7,11 +7,13 @@ export const SizedIFrame = ({
     height,
     url,
     update,
+    disabled_actions,
 }: {
     width: number;
     height: number;
     url: string;
     update: number;
+    disabled_actions?: boolean;
 }) => {
     const [frameUrl, setFrameUrl] = useState(url);
     const visible = useRef(false);
@@ -44,7 +46,12 @@ export const SizedIFrame = ({
     }, [url, update, updateData]);
 
     if (frameUrl) {
-        return (
+        return disabled_actions ? (
+            <div className="element-iframe-edit" style={{ width: width, height: height }}>
+                <div>IFrame source: {url}</div>
+                <div>(not displayed in editor mode)</div>
+            </div>
+        ) : (
             <iframe
                 className="element-iframe"
                 draggable={false}
