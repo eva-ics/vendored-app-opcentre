@@ -32,6 +32,8 @@
   -moz-hyphens: auto;
   -webkit-hyphens: auto;
   hyphens: auto;
+  overflow: hidden;
+  font-size: 10px;
 }
 
 .element-iframe-empty {
