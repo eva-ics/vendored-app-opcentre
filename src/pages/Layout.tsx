@@ -6,6 +6,7 @@ import { LayoutProps } from "../types";
 import { useSearchParams } from "react-router-dom";
 import DashboardOverview from "../pages/Overview.tsx";
 import DashboardItems from "../pages/Items.tsx";
+import DashboardDataObjects from "../pages/DataObjects.tsx";
 import DashboardTrends from "../pages/Trends.tsx";
 import DashboardIDC from "../pages/IDC.tsx";
 import { element_pack } from "../idc/default_pack";
@@ -147,6 +148,10 @@ const Layout = ({ logout }: LayoutProps) => {
             content = <DashboardTrends />;
             current_page = "Trends";
             break;
+        case "dobj":
+            content = <DashboardDataObjects />;
+            current_page = "Data objects";
+            break;
         case "profile":
             content = <Profile logout={logout} />;
             current_page = "Profile";
@@ -170,6 +175,7 @@ const Layout = ({ logout }: LayoutProps) => {
         { value: "Overview", to: "?" },
         { value: "IDC", to: "?d=idc" },
         { value: "Items", to: "?d=items" },
+        { value: "Data objects", to: "?d=dobj" },
         { value: "Trends", to: "?d=trends" },
         {
             value: "Navigate",

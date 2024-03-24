@@ -41,6 +41,19 @@
   }
 }
 
+.eva-error {
+  color: #ee5555;
+  padding-left: 20px;
+  padding-top: 10px;
+  font-weight: bold;
+  a {
+    text-decoration: underline;
+  }
+  a:hover {
+    color: orange;
+  }
+}
+
 .dashboard-main-wrapper-small {
   padding: 0 20px;
   max-width: 1300px;
@@ -122,6 +135,41 @@
   }
 }
 
+.dobj-code-button {
+  background-color: $connection-color;
+  border: 0px;
+  font-size: 14px;
+  margin-left: 10px;
+  @media print {
+    display: none;
+  }
+  justify-content: center;
+  cursor: pointer;
+  padding: 1px 5px;
+  border-radius: 2px;
+  border: none;
+}
+
+.dobj-code-pre {
+  font-size: 14px;
+  @media print {
+    color: black;
+  }
+  background-color: #111;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.button-bar {
+  margin-left: 10px;
+  @include media(tablet) {
+    margin-left: 20px;
+  }
+  @media print {
+    display: none;
+  }
+}
+
 .info-table {
   border: 0.5px solid $border-color;
   font-size: 12px;
@@ -148,6 +196,37 @@
   @include media(tablet) {
     padding: 20px;
   }
+}
+
+.table-dobj {
+  .bmat-dashtable-container-inner {
+    @include media(tablet) {
+      width: 650px;
+      overflow-x: auto;
+    }
+  }
+}
+
+.dobj-field-type {
+  @include media(tablet) {
+    width: 120px;
+  }
+  @media print {
+    width: 120px;
+  }
+}
+
+.dobj-lang-select {
+  margin-top: 10px;
+}
+
+.dobj-lang-select-label {
+  display: inline;
+  margin-right: 5px;
+}
+
+.dobj-field-row {
+  background-color: #14181d;
 }
 
 .content-longtable {
@@ -421,6 +500,17 @@ td {
   cursor: pointer;
 }
 
+.dobj-close-button {
+  @media print {
+    display: none;
+  }
+  background-color: #222;
+  float: right;
+  border: 0px;
+  color: #eee;
+  cursor: pointer;
+}
+
 .working {
   @include media(tablet) {
     padding: 30px;
@@ -429,7 +519,9 @@ td {
 
 .bmat-dashtable-title {
   @media print {
-    display: none;
+    color: black;
+    font-size: 18px;
+    font-weight: bold;
   }
 }
 
