@@ -207,6 +207,12 @@
   }
 }
 
+.dobj-view-container {
+    @include media(tablet) {
+      max-width: 650px;
+    }
+}
+
 .dobj-field-type {
   @include media(tablet) {
     width: 120px;

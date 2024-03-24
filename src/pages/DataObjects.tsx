@@ -75,7 +75,7 @@ const DataObjectViewer = ({
         }
         const lang_select = (
             <div className="dobj-lang-select">
-            <div className="dobj-lang-select-label">Lang:</div>
+                <div className="dobj-lang-select-label">Lang:</div>
                 <Select
                     sx={{ minWidth: "200px" }}
                     value={params.lang}
@@ -134,7 +134,7 @@ const DataObjectViewer = ({
         );
     }
     return (
-        <div className="bmat-dashtable-container">
+        <div className="bmat-dashtable-container dobj-view-container">
             <div className="bmat-dashtable-title">
                 {params.name}
                 <button className="dobj-close-button" onClick={() => remove(params.name)}>
