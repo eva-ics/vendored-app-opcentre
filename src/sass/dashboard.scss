@@ -60,12 +60,18 @@
   @include media(tablet) {
     padding: 0 40px;
   }
+  @media print {
+    padding: 0px;
+  }
 }
 
 .dashboard-main-wrapper-big {
   padding: 0 0px;
   @include media(desktop) {
     padding: 0 40px;
+  }
+  @media print {
+    padding: 0px;
   }
 }
 
@@ -177,6 +183,9 @@
   font-weight: 300;
   line-height: 0.8;
   letter-spacing: 0.12px;
+  @media print {
+    color: black;
+  }
 }
 
 .bmat-dashtable-row-even {
