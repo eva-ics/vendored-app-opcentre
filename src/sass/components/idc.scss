@@ -68,3 +68,15 @@
         display: block;
     }
 }
+
+.btn-with-text {
+    flex-direction: row-reverse;
+    gap: 5px;
+}
+
+.btn-correct {
+    margin-left: 35px;
+    @include media(tablet) {
+        margin-left: 0;
+    }
+}

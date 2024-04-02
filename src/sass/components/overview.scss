@@ -79,8 +79,18 @@
     }
 }
 
-.dashboard-main-content-block__header {
-    padding: 10px 5px;
+
+
+.info-table {
+    border: 0.5px solid $border-color;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 0.8;
+    letter-spacing: 0.12px;
+    @media print {
+        color: black;
+    }
 }
 
 .mobile-version {

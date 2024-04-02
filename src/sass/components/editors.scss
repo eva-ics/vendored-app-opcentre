@@ -1,0 +1,26 @@
+.period-select-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.period-select-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.form-select {
+  width: 80px;
+}
+
+.form-error {
+  color: red;
+  font-size: 10px;
+  position: absolute;
+  z-index: 999;
+}

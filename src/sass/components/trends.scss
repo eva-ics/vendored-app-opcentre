@@ -41,3 +41,140 @@
 .eva.chart.loading.chart-trends {
   padding: 20px;
 }
+
+.trends-values {
+  @media print {
+    display: block;
+  }
+  display: none;
+  margin-top: 20px;
+  color: black;
+  border-collapse: collapse;
+  border: 2px solid black;
+  tbody > tr {
+    padding: 0px;
+    border: 1px solid black;
+  }
+  thead > tr {
+    padding: 0px;
+    border: 2px solid black;
+  }
+  thead > tr > th {
+    text-align: left;
+    font-size: 14px;
+    padding: 10px;
+  }
+  tbody > tr > td {
+    padding: 10px;
+  }
+}
+
+.form-list-wrapper {
+  margin-top: 30px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 10px;
+
+  @media print {
+    display: none;
+  }
+
+  @include media(tablet) {
+    flex-direction: row;
+  }
+
+  &-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 5px;
+  }
+}
+
+.short-form-wrapper-item {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-direction: column;
+  gap: 5px;
+
+  @include media(tablet) {
+    width: 350px;
+  }
+}
+
+.oids-form-wrapper {
+  width: 100%;
+  margin-top: 30px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-direction: column;
+  gap: 10px;
+
+  @include media(tablet) {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  &-item {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+
+    &-color {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 10px;
+    }
+  }
+}
+
+.page-label {
+  width: 70px;
+
+  @include media(tablet) {
+    width: auto;
+  }
+}
+
+.trends-values {
+  @media print {
+    display: block;
+  }
+  display: none;
+  margin-top: 20px;
+  color: black;
+  border-collapse: collapse;
+  border: 2px solid black;
+  tbody > tr {
+    padding: 0px;
+    border: 1px solid black;
+  }
+  thead > tr {
+    padding: 0px;
+    border: 2px solid black;
+  }
+  thead > tr > th {
+    text-align: left;
+    font-size: 14px;
+    padding: 10px;
+  }
+  tbody > tr > td {
+    padding: 10px;
+  }
+}
+
+.page-title {
+  @media print {
+    display: none;
+  }
+}
