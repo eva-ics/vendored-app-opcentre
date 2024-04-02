@@ -110,3 +110,36 @@ nav#header {
         }
     }
 }
+
+.time-info {
+    display: none;
+    margin-top: 10px;
+    margin-left: 10px;
+    color: black;
+    font-size: 8px;
+    @media print {
+        display: block;
+    }
+}
+
+.current-user {
+    @media print {
+        display: none;
+    }
+}
+
+.dash-info {
+    display: flex;
+    align-items: center;
+}
+
+.dash-logo {
+    width: 30px;
+    height: 30px;
+    margin-right: 5px;
+    display: inline-block;
+}
+
+.dash-title {
+    display: inline-block;
+}

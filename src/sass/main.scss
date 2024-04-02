@@ -8,9 +8,13 @@
 @import "./mui/mui_reset.scss";
 @import "./mui/mui_styles.scss";
 @import "./mui/idc_mui_styles.scss";
-@import "./common/common.scss";
+@import "./components/login.scss";
+@import "components/overview";
 @import "./components/header.scss";
 @import "./components/sidemenu.scss";
 @import "./components/profile.scss";
+@import "./components/items.scss";
+@import "./components/trends.scss";
 @import "./components/dashboard.scss";
+@import "./components/gauges.scss";
 @import "./components/idc.scss";

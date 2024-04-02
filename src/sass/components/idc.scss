@@ -33,3 +33,38 @@
         color: blue;
     }
 }
+
+.d-idc-preparing {
+    padding: 20px;
+}
+
+.idc-dashboard-viewer-close-button {
+    @media print {
+        display: none;
+    }
+}
+
+.idc-dashboard-loading {
+    padding: 20px;
+}
+
+.idc-btns-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.idc-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #eee;
+    border: none;
+    padding: 2.5px 5px;
+    svg {
+        display: block;
+    }
+}

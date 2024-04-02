@@ -1,15 +1,3 @@
-div.eva.login.logo {
-    &:before {
-        content: url("../icon.svg");
-    }
-}
-
-div.eva.login.header {
-    &:before {
-        content: "EVA ICS OpCentre";
-    }
-}
-
 .overview-link-box {
     display: flex;
     align-items: flex-start;
@@ -82,6 +70,17 @@ div.eva.login.header {
     height: auto;
     margin-bottom: 10px;
     margin-right: 20px;
+}
+
+.content-info {
+    height: 100%;
+    @include media(tablet) {
+        padding: 20px;
+    }
+}
+
+.dashboard-main-content-block__header {
+    padding: 10px 5px;
 }
 
 .mobile-version {

@@ -1,0 +1,43 @@
+.chart-trends {
+  width: 100%;
+  max-width: 1000px;
+  @media print {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+  }
+}
+
+.trends-container {
+  background-color: #191d22;
+  width: 100%;
+  max-width: 1100px;
+  padding: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.trends-editor {
+  @media print {
+    display: none;
+  }
+}
+
+.eva.chart.container {
+  position: relative;
+}
+
+.eva.chart.error {
+  font-size: 18px;
+  color: red;
+  padding-top: 20px;
+}
+
+.eva.chart.loading.chart-trends:before {
+  content: "Loading...";
+  color: #555;
+  font-size: 20px;
+}
+
+.eva.chart.loading.chart-trends {
+  padding: 20px;
+}

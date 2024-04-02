@@ -1,0 +1,11 @@
+div.eva.login.logo {
+  &:before {
+    content: url("../icon.svg");
+  }
+}
+
+div.eva.login.header {
+  &:before {
+    content: "EVA ICS OpCentre";
+  }
+}
