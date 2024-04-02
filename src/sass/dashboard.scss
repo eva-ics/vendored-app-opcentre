@@ -286,6 +286,9 @@ td {
   padding: 7px;
   font-size: 10px;
 
+  @media print {
+    white-space: normal;
+  }
   white-space: nowrap;
 
   @include media(tablet) {
@@ -451,6 +454,9 @@ td {
 .col-fit {
   width: 1%;
   white-space: nowrap;
+  @media print {
+    white-space: normal;
+  }
 }
 
 .item-watch {
