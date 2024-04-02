@@ -1,0 +1,16 @@
+body {
+    font-family: "Roboto", sans-serif;
+    background-color: $body-bg-color;
+    color: $main-text-color;
+    overflow-x: hidden;
+    overscroll-behavior: auto;
+}
+
+.root-container {
+    width: 100%;
+    margin: 0 auto;
+    padding-bottom: 40px;
+    @include media(desktop) {
+        padding-bottom: 0;
+    }
+}

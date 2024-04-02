@@ -1,0 +1,82 @@
+.MuiAccordionSummary-content.Mui-expanded.MuiAccordionSummary-contentGutters,
+.MuiAccordionSummary-content.MuiAccordionSummary-contentGutters {
+    margin: 0;
+}
+
+.MuiButtonBase-root.MuiAccordionSummary-root.Mui-expanded.MuiAccordionSummary-gutters,
+.MuiButtonBase-root.MuiAccordionSummary-root.MuiAccordionSummary-gutters {
+    min-height: 0;
+    padding-top: 5px;
+    padding: 5px 15px;
+}
+
+.MuiAccordionDetails-root {
+    padding: 0 10px 5px;
+}
+
+.MuiSelect-select.MuiSelect-outlined.MuiInputBase-input.MuiOutlinedInput-input {
+    padding: 3px 6px;
+    font-size: 12px; /* Merged the font-size to the larger one */
+    background-color: white;
+    color: black;
+}
+
+.MuiInputBase-input.MuiOutlinedInput-input {
+    font-size: 12px;
+    padding: 7px 5px; /* Merged to have both padding and font-size */
+    min-height: 0;
+}
+
+.MuiInputBase-input.MuiInput-input {
+    padding: 5px;
+    width: 70px;
+}
+
+.MuiInputBase-input.MuiOutlinedInput-input.MuiInputBase-inputAdornedStart {
+    font-size: 12px;
+    padding: 8px 5px;
+}
+
+.MuiBox-root {
+    margin: 0;
+    margin-left: 0;
+}
+
+.MuiButtonBase-root.MuiButton-root.MuiButton-text.MuiButton-textPrimary.MuiButton-sizeMedium.MuiButton-textSizeMedium {
+    width: 12px;
+    height: 15px;
+}
+
+.MuiInputBase-colorPrimary {
+    background-color: white;
+    border-radius: 4px;
+}
+
+.MuiFormControl-root.MuiFormControl-fullWidth.MuiTextField-root {
+    padding: 0;
+}
+
+.MuiFormControl-root.MuiTextField-root {
+    vertical-align: middle;
+
+    @include media(tablet) {
+        margin-left: 5px;
+    }
+}
+
+.MuiButtonBase-root.MuiCheckbox-root.MuiCheckbox-colorPrimary.MuiCheckbox-sizeMedium.PrivateSwitchBase-root {
+    padding-left: 0;
+}
+
+.MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium.MuiSelect-icon.MuiSelect-iconOutlined {
+    fill: black;
+}
+
+.MuiInputBase-input.MuiInput-input.MuiInputBase-inputTypeSearch.MuiAutocomplete-input.MuiAutocomplete-inputFocused {
+    padding: 6px;
+}
+
+div .MuiDialog-paper {
+    margin: 0px;
+    overflow-y: visible;
+}

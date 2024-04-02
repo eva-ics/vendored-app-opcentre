@@ -1,0 +1,35 @@
+.idc-editor-help-table {
+    tr > td {
+        padding: 2px;
+    }
+}
+
+.idc-editor-elements-table {
+    tr > td {
+        padding: 2px;
+    }
+}
+
+.idc-editor-sidebar-table {
+    tr > td {
+        padding: 2px;
+    }
+}
+
+.idc-editor-sidebar-element-class {
+    font-size: 12px;
+    padding: 5px;
+}
+
+.idc-elements-parameters-wrapper {
+    font-size: 12px;
+}
+
+.idc-help-link {
+    color: blue;
+    text-decoration: underline;
+
+    :visited {
+        color: blue;
+    }
+}

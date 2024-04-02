@@ -1,36 +1,3 @@
-$body-bg-color: #111;
-$main-text-color: #eee;
-$secondary-text-color: #d0d0d0;
-$connection-color: #0085ff;
-$border-color: #373737;
-$cards-bg-color: #191d22;
-$table-header-gb: #0b1c3b;
-$main-blue-color: #0085ff;
-$secondary-blue-color: #0a214f;
-$menu-hover-color: #555;
-$nav-menu-bg-color: #0a214f;
-
-body {
-    font-family: "Roboto", sans-serif;
-    background-color: $body-bg-color;
-    color: $main-text-color;
-    overflow-x: hidden;
-    overscroll-behavior: auto;
-}
-
-button {
-    cursor: pointer;
-}
-
-.root-container {
-    width: 100%;
-    margin: 0 auto;
-    padding-bottom: 40px;
-    @include media(desktop) {
-        padding-bottom: 0;
-    }
-}
-
 div.eva.login.logo {
     &:before {
         content: url("../icon.svg");
@@ -40,42 +7,6 @@ div.eva.login.logo {
 div.eva.login.header {
     &:before {
         content: "EVA ICS OpCentre";
-    }
-}
-
-.idc-editor-help-table {
-    tr > td {
-        padding: 2px;
-    }
-}
-
-.idc-editor-elements-table {
-    tr > td {
-        padding: 2px;
-    }
-}
-
-.idc-editor-sidebar-table {
-    tr > td {
-        padding: 2px;
-    }
-}
-
-.idc-editor-sidebar-element-class {
-    font-size: 12px;
-    padding: 5px;
-}
-
-.idc-elements-parameters-wrapper {
-    font-size: 12px;
-}
-
-.idc-help-link {
-    color: blue;
-    text-decoration: underline;
-
-    :visited {
-        color: blue;
     }
 }
 
@@ -169,3 +100,4 @@ div.eva.login.header {
         display: block !important;
     }
 }
+
