@@ -527,7 +527,6 @@ tr.log-record-error {
     line-height: 18px;
 
     > pre {
-        font-family: "Roboto", sans-serif;
         font-size: 10px;
         @include media(tablet) {
             font-size: 12px;
