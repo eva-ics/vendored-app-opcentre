@@ -60,8 +60,14 @@
   cursor: pointer;
 }
 
+.content-longtable {
+  height: 100%;
+  overflow: auto;
+}
+
 .print-hidden {
   @media print {
     display: none;
   }
 }
+

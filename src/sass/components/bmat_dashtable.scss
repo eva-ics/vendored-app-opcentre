@@ -145,3 +145,45 @@
     white-space: nowrap;
   }
 }
+
+th {
+  background-color: $table-header-gb;
+}
+
+td {
+  padding: 7px;
+  font-size: 10px;
+
+  @media print {
+    white-space: normal;
+  }
+  white-space: nowrap;
+
+  @include media(tablet) {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+
+td.col-fit {
+  width: 1%;
+  white-space: nowrap;
+}
+
+td.col-uptime {
+  width: 150px;
+  white-space: nowrap;
+  @media print {
+    white-space: normal;
+  }
+}
+
+td.col-time {
+  width: 230px;
+  white-space: nowrap;
+  @media print {
+    white-space: normal;
+  }
+}
+
+
