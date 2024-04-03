@@ -138,3 +138,10 @@
     display: none;
   }
 }
+
+.never-wrap {
+  white-space: nowrap;
+  @media print {
+    white-space: nowrap;
+  }
+}
