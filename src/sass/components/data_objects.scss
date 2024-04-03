@@ -1,3 +1,12 @@
+/**
+ * Data Object Component Styles
+ *
+ * This stylesheet defines the appearance and layout of data object  components
+ * within the application, including tables, views, fields, language selectors, and error messages.
+ * Responsive and print-specific styles are applied to ensure usability across different devices
+ * and media types.
+ */
+
 .table-dobj {
     .bmat-dashtable-container-inner {
         @include media(tablet) {

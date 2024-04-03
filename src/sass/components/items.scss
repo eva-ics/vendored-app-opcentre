@@ -1,3 +1,11 @@
+/**
+ * Item Watch Component Styles
+ *
+ * These styles cater to the item watch feature, optimizing its layout and visibility
+ * across different devices and ensuring it is print-friendly. The design focuses on
+ * responsiveness, clarity, and usability.
+ */
+
 .item-watch {
   @include media(tablet) {
     padding-left: 20px;

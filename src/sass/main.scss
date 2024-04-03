@@ -1,24 +1,67 @@
+// Import variables such as colors, fonts, and breakpoints to maintain consistency throughout the styles.
 @import "./utils/variables.scss";
 @import "./utils/mixins.scss";
 @import "./base/fonts.scss";
+
+// Import a reset stylesheet to ensure a consistent styling baseline across different browsers.
 @import "./base/reset.scss";
+
+// Import base styles for common elements to establish a consistent look and feel.
 @import "./base/base.scss";
+
+// Import custom table styles from BMAT package for consistent table layouts.
 @import "../../node_modules/bmat/sass/dashtable.scss";
+
+// Import styles for the Eva login component from BMAT package.
 @import "../../node_modules/bmat/sass/eva_login.scss";
+
+// Import reset styles for Material-UI components to override default Material-UI styles.
 @import "./mui/mui_reset.scss";
+
+// Import custom Material-UI styles to customize the appearance of Material-UI components.
 @import "./mui/mui_styles.scss";
+
+// Import custom Material-UI styles specific to the IDC project.
 @import "./mui/idc_mui_styles.scss";
+
+// Import styles specific to the login component for a customized login interface.
 @import "./components/login.scss";
+
+// Import overview component styles to style the overview section of the application.
 @import "components/overview";
+
+// Import header component styles for styling the application’s header.
 @import "./components/header.scss";
+
+// Import side menu component styles for styling the navigation sidebar.
 @import "./components/sidemenu.scss";
+
+// Import profile component styles for styling user profile related elements.
 @import "./components/profile.scss";
+
+// Import item component styles for styling various items or lists in the application.
 @import "./components/items.scss";
+
+// Import trends component styles for styling the trends and analytics sections.
 @import "./components/trends.scss";
+
+// Import dashboard component styles for styling the main dashboard view.
 @import "./components/dashboard.scss";
+
+// Import BMAT dashboard table styles for specific dashboard table layouts.
 @import "./components/bmat_dashtable";
+
+// Import gauges component styles for styling gauge widgets like gauges or meters.
 @import "./components/gauges.scss";
+
+// Import editor component styles for editors.
 @import "./components/editors.scss";
+
+// Import data objects component styles for styling representations of data objects.
 @import "./components/data_objects.scss";
+
+// Import common component styles for styling shared elements across different components.
 @import "components/common";
+
+// Import IDC-specific component styles for custom styling of IDC project components.
 @import "./components/idc.scss";
