@@ -454,9 +454,6 @@ td {
 .col-fit {
   width: 1%;
   white-space: nowrap;
-  @media print {
-    white-space: normal;
-  }
 }
 
 .item-watch {
