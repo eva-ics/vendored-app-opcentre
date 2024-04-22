@@ -6,7 +6,11 @@ const Profile = ({ logout }: { logout: FunctionLogout }) => {
     return (
         <div className="profile">
             <ResetPassword logout={logout} />
-            <AccountDetails />
+            <div className="profile__block">
+                <h3>Account details</h3>
+                <AccountDetails field="email" />
+                <AccountDetails field="phone" />
+            </div>
         </div>
     );
 };
