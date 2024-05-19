@@ -125,13 +125,45 @@ const DashboardAlarmState = () => {
         setFilterParams(np);
     };
 
+    const active_label = (
+        <div className="bmat-dashtable-filter-label-container">
+            <span className="bmat-dashtable-filter-label-container">state</span>{" "}
+        </div>
+    );
+    const active_select = (
+        <select
+            onChange={(e) => {
+                let val: boolean | null = null;
+                if (e.target.value === "active") {
+                    val = true;
+                } else if (e.target.value === "inactive") {
+                    val = false;
+                }
+                setStateFilterParams({
+                    active: val,
+                });
+            }}
+            value={
+                filterParams.active === true
+                    ? "active"
+                    : filterParams.active === false
+                      ? "inactive"
+                      : ""
+            }
+        >
+            <option value=""></option>
+            <option value="active">active</option>
+            <option value="inactive">inactive</option>
+        </select>
+    );
+
     const filter: DashTableFilter = createRichFilter({
         cols,
         setCols,
         params: params.filter,
         setParams: setStateFilterParams,
         removeButton,
-    });
+    }).concat([[active_label, active_select]]);
 
     const alarm_states: any = useEvaAPICall({
         method: loaded ? "x::eva.alarm.default::state" : undefined,
