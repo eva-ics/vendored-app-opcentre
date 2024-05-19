@@ -59,7 +59,7 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
             <nav id="header">
                 <ul>
                     {nav.map((v, idx) => {
-                        const isCurrent = current_page === v.value;
+                        const isCurrent = (current_page === v.compare_value || current_page === v.value);
 
                         const navLinkClass = isCurrent
                             ? "nav-link nav-link-current"
