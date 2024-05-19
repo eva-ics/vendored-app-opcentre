@@ -24,6 +24,7 @@ import {
     defaultIDCDashboard,
     onActionSuccess,
     onActionFail,
+    DEFAULT_ALARM_SVC,
 } from "../common";
 import Profile from "./Profile.tsx";
 
@@ -31,7 +32,7 @@ const allowedDashboardChars = /^[a-zA-Z0-9 ._-]+$/;
 
 const AlarmSummary = () => {
     const summary = useEvaAPICall({
-        method: "x::eva.alarm.default::summary",
+        method: `x::${DEFAULT_ALARM_SVC}::summary`,
         update: 1,
     });
     if (summary?.data?.active > 0) {

@@ -15,7 +15,7 @@ import {
 import { useQueryParams } from "bmat/hooks";
 import { addButton, removeButton } from "../components/common.tsx";
 import { useEvaAPICall, EvaErrorMessage } from "@eva-ics/webengine-react";
-import { ButtonStyled } from "../common.tsx";
+import { ButtonStyled, DEFAULT_ALARM_SVC } from "../common.tsx";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import PrintOutlinedIcon from "@mui/icons-material/PrintOutlined";
 
@@ -166,7 +166,7 @@ const DashboardAlarmState = () => {
     }).concat([[active_label, active_select]]);
 
     const alarm_states: any = useEvaAPICall({
-        method: loaded ? "x::eva.alarm.default::state" : undefined,
+        method: loaded ? `x::${DEFAULT_ALARM_SVC}::state` : undefined,
         params,
         update: 1,
     });
@@ -239,7 +239,7 @@ const DashboardAlarmState = () => {
                 <EvaErrorMessage error={alarm_states.error} />
                 {alarm_states?.error?.code === -32113 ? (
                     <div className="eva-error">
-                        Unable to call eva.alarm.default service. Read{" "}
+                        Unable to call ${DEFAULT_ALARM_SVC}. Read{" "}
                         <a
                             target="_blank"
                             href="https://info.bma.ai/en/actual/eva4/svc/eva-svc-alarms.html"
