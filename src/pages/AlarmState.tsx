@@ -14,10 +14,11 @@ import {
 } from "bmat/dashtable";
 import { useQueryParams } from "bmat/hooks";
 import { addButton, removeButton } from "../components/common.tsx";
-import { useEvaAPICall, EvaErrorMessage } from "@eva-ics/webengine-react";
-import { ButtonStyled, DEFAULT_ALARM_SVC } from "../common.tsx";
+import { useEvaAPICall, EvaErrorMessage, get_engine } from "@eva-ics/webengine-react";
+import { ButtonStyled, DEFAULT_ALARM_SVC, onEvaError } from "../common.tsx";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import PrintOutlinedIcon from "@mui/icons-material/PrintOutlined";
+import { Eva } from "@eva-ics/webengine";
 
 const ALARM_OPS = ["TT", "TL", "LL", "SS", "SD", "OS", "CC", "AA", "US", "RD", "IS"];
 const ALARM_CURRENT = ["TT", "TL", "LL", "SS", "SD", "OS", "CC", "AA"];
@@ -171,6 +172,12 @@ const DashboardAlarmState = () => {
         update: 1,
     });
 
+    const alarmCall = (oid: string, method: string) => {
+        const eva = get_engine() as Eva;
+        const svc_method = `x::${DEFAULT_ALARM_SVC}::${method}`;
+        eva.call(svc_method, oid).catch((e) => onEvaError(e));
+    };
+
     const data: DashTableData = alarm_states?.data?.map((state: any) => {
         const colsData: DashTableColData[] = [];
         pushRichColData({
@@ -219,10 +226,64 @@ const DashboardAlarmState = () => {
             className: "col-fit",
             addButton,
         });
-        return {
-            data: colsData.concat({
+        let extra: DashTableColData[] = [
+            {
                 value: state.description,
-            }),
+            },
+        ];
+        if (state.current === "TL" || state.current === "LL" || state.current === "TT") {
+            extra.push({
+                value: (
+                    <div className="print-hidden">
+                        <button
+                            title="Acknowledge"
+                            className="btn-alarm-ack"
+                            onClick={() => alarmCall(state.oid, "ack")}
+                        >
+                            Ack
+                        </button>
+                    </div>
+                ),
+                className: "col-fit",
+            });
+        } else {
+            extra.push({
+                value: "",
+            });
+        }
+        if (state.current === "SS") {
+            extra.push({
+                value: (
+                    <div className="print-hidden">
+                        <button
+                            title="Unshelve (resume)"
+                            className="btn-alarm-unshelve"
+                            onClick={() => alarmCall(state.oid, "unshelv")}
+                        >
+                            Unshelve
+                        </button>
+                    </div>
+                ),
+                className: "col-fit",
+            });
+        } else {
+            extra.push({
+                value: (
+                    <div className="print-hidden">
+                        <button
+                            title="Shelve (suspend)"
+                            className="btn-alarm-shelve"
+                            onClick={() => alarmCall(state.oid, "shelv")}
+                        >
+                            Shelve
+                        </button>
+                    </div>
+                ),
+                className: "col-fit",
+            });
+        }
+        return {
+            data: colsData.concat(extra),
         };
     });
 
@@ -230,7 +291,7 @@ const DashboardAlarmState = () => {
         ? cols
               .filter((column) => column.enabled)
               .map((column) => column.name)
-              .concat(["description"])
+              .concat(["description", "", ""])
         : [];
 
     let header = (
