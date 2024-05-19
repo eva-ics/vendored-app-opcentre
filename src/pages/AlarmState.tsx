@@ -65,7 +65,7 @@ const DashboardAlarmState = () => {
             id: "level",
             name: "level",
             enabled: true,
-            filterInputSize: 6,
+            filterInputSize: 2,
             columnType: DashTableColType.Integer,
         },
         { id: "group", name: "group", enabled: true, filterInputSize: 20 },
