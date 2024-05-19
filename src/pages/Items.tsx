@@ -274,11 +274,14 @@ const DashboardItems = () => {
         [params, watchedItems]
     );
 
-    const states = useEvaAPICall({
-        method: loaded ? "item.state" : undefined,
-        params: callParams,
-        update: 1,
-    });
+    const states = useEvaAPICall(
+        {
+            method: loaded ? "item.state" : undefined,
+            params: callParams,
+            update: 1,
+        },
+        [loaded, callParams]
+    );
 
     const filter: DashTableFilter = [
         [

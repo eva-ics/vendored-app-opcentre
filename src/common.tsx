@@ -30,6 +30,8 @@ export const ButtonStyled = styled(Button)({
 
 const DASHBOARDS_DIR = "vendored-apps/opcentre/idc/dashboards";
 
+export const DEFAULT_ALARM_SVC = "eva.alarm.default";
+
 export const formatDashboardPath = (s?: string): string => {
     return s ? `${DASHBOARDS_DIR}/${s}.json` : DASHBOARDS_DIR;
 };

@@ -6,14 +6,17 @@ import { LayoutProps } from "../types";
 import { useSearchParams } from "react-router-dom";
 import DashboardOverview from "../pages/Overview.tsx";
 import DashboardItems from "../pages/Items.tsx";
+import DashboardAlarmState from "../pages/AlarmState.tsx";
+import DashboardAlarmHistory from "../pages/AlarmHistory.tsx";
 import DashboardDataObjects from "../pages/DataObjects.tsx";
 import DashboardTrends from "../pages/Trends.tsx";
 import DashboardIDC from "../pages/IDC.tsx";
 import { element_pack } from "../idc/default_pack";
 import { v4 as uuidv4 } from "uuid";
 import { DashboardData, DashboardEditor, DashboardViewer } from "idc-core";
-import { get_engine } from "@eva-ics/webengine-react";
+import { get_engine, useEvaAPICall } from "@eva-ics/webengine-react";
 import { Eva } from "@eva-ics/webengine";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import {
     onSuccess,
     onError,
@@ -22,10 +25,37 @@ import {
     defaultIDCDashboard,
     onActionSuccess,
     onActionFail,
+    DEFAULT_ALARM_SVC,
 } from "../common";
 import Profile from "./Profile.tsx";
 
 const allowedDashboardChars = /^[a-zA-Z0-9 ._-]+$/;
+
+const AlarmSummary = () => {
+    const [method, setMethod] = useState<string | undefined>(
+        `x::${DEFAULT_ALARM_SVC}::summary`
+    );
+    const summary = useEvaAPICall(
+        {
+            method,
+            update: 1,
+        },
+        [method]
+    );
+    if (summary?.data?.active > 0) {
+        return (
+            <div className="alarm-count">
+                <NotificationsActiveIcon style={{ fontSize: 16 }} /> {summary.data.active}
+            </div>
+        );
+    } else {
+        if (summary.error?.code == -32113 && method) {
+            // service not registered
+            setMethod(undefined);
+        }
+        return <></>;
+    }
+};
 
 const Layout = ({ logout }: LayoutProps) => {
     const [isOpenMenu, setIsOpenMenu] = useState(false);
@@ -164,6 +194,14 @@ const Layout = ({ logout }: LayoutProps) => {
             content = <DashboardOverview />;
             current_page = "Main app";
             break;
+        case "alarm_state":
+            content = <DashboardAlarmState />;
+            current_page = "Alarms";
+            break;
+        case "alarm_history":
+            content = <DashboardAlarmHistory />;
+            current_page = "Alarms";
+            break;
         default:
             current_page = "Overview";
             content = <DashboardOverview />;
@@ -175,6 +213,19 @@ const Layout = ({ logout }: LayoutProps) => {
         { value: "Overview", to: "?" },
         { value: "IDC", to: "?d=idc" },
         { value: "Items", to: "?d=items" },
+        {
+            value: (
+                <>
+                    Alarms
+                    <AlarmSummary />
+                </>
+            ),
+            compare_value: "Alarms",
+            submenus: [
+                { value: "States", to: "?d=alarm_state" },
+                { value: "History", to: "?d=alarm_history" },
+            ],
+        },
         { value: "Data objects", to: "?d=dobj" },
         { value: "Trends", to: "?d=trends" },
         {

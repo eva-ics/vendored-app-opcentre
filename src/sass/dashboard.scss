@@ -125,7 +125,6 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  padding: 20px;
   width: 100%;
 }
 
@@ -217,9 +216,9 @@
 }
 
 .dobj-view-container {
-    @include media(tablet) {
-      max-width: 650px;
-    }
+  @include media(tablet) {
+    max-width: 650px;
+  }
 }
 
 .dobj-field-type {
@@ -544,9 +543,74 @@ td {
 }
 
 .bmat-dashtable-filter {
+  > div {
+    padding: 5px;
+  }
   @media print {
     display: none;
   }
+}
+
+.bmat-dashtable-filter-label {
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid #999;
+  padding: 2px;
+  background-color: #222;
+  border-radius: 4px;
+}
+
+.bmat-dashtable-filter-label-off {
+  color: #555;
+  text-decoration: line-through;
+  border: 1px solid #555;
+}
+
+.bmat-dashtable-filter-label-button {
+  display: inline-block;
+  position: relative;
+  top: 1px;
+  padding: 4px;
+  width: 25px;
+  height: 25px;
+  margin-right: 5px;
+}
+
+.bmat-dashtable-filter-label-container {
+  display: inline-block;
+}
+
+.bmat-dashtable-filter-spacer {
+  display: inline-block;
+  width: 14px;
+}
+
+
+.filter-label-disabled {
+  color: #555;
+}
+
+.bmat-dashtable-filter > div > label > input {
+  margin-right: 2px;
+}
+
+.bmat-dashtable-col:hover .bmat-dashtable-filter-button-add {
+  visibility: visible;
+}
+
+.bmat-dashtable-filter-button-add {
+  display: inline-block;
+  width: 5px;
+  margin-left: 2px;
+  color: #117711;
+  cursor: pointer;
+  visibility: hidden;
+}
+
+.bmat-dashtable-filter-button-remove {
+  display: inline-block;
+  color: #ee2222;
+  cursor: pointer;
 }
 
 .print-hidden {
@@ -797,4 +861,84 @@ td {
   @include media(tablet) {
     margin-left: 0;
   }
+}
+
+.alarm-count {
+  display: inline-block;
+  color: red;
+  margin-left: 5px;
+}
+
+.alarm-tt {
+  color: red;
+}
+
+.alarm-tl {
+  color: red;
+}
+
+.alarm-ll {
+  color: red;
+}
+
+.alarm-ss {
+  color: gray;
+}
+
+.alarm-os {
+  color: red;
+}
+
+.alarm-cc {
+}
+
+.alarm-aa {
+  color: #9cf;
+}
+
+.alarm-is {
+  color: green;
+}
+
+.alarm-subscribed {
+  color: #ee5;
+  cursor: pointer;
+  @media print {
+    display: none;
+  }
+}
+
+.alarm-not-subscribed {
+  color: #555;
+  cursor: pointer;
+  @media print {
+    display: none;
+  }
+}
+
+.btn-alarm-ack {
+  background-color: #df8a00 !important;
+}
+
+.btn-alarm-shelve {
+  background-color: #5a2 !important;
+}
+
+.btn-alarm-unshelve {
+  background-color: #999 !important;
+}
+
+.col-ack-hidden {
+  width: 50px;
+}
+
+.print-info-bar {
+  @media print {
+    display: block;
+    white-space: normal;
+  }
+  display: none;
+  white-space: nowrap;
+  padding-left: 10px;
+  color: black;
 }

@@ -230,7 +230,7 @@ const DashboardTrends = () => {
         };
     }, [props.timeframe, props.update, props.digits, props.database, items]);
 
-    const state = useEvaStateHistory(hookProps);
+    const state = useEvaStateHistory(hookProps, [hookProps]);
 
     const size_sd = useRef<Timeout | undefined>(undefined);
 
