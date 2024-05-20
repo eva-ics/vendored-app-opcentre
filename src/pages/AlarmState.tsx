@@ -275,6 +275,7 @@ const DashboardAlarmState = () => {
         } else {
             extra.push({
                 value: "",
+                className: "col-ack-hidden",
             });
         }
         if (state.current === "SS") {
