@@ -18,6 +18,7 @@ import { useEvaAPICall, EvaErrorMessage, get_engine } from "@eva-ics/webengine-r
 import { ButtonStyled, DEFAULT_ALARM_SVC, onEvaError } from "../common.tsx";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import PrintOutlinedIcon from "@mui/icons-material/PrintOutlined";
+import EmailIcon from "@mui/icons-material/Email";
 import { Eva } from "@eva-ics/webengine";
 
 const ALARM_OPS = ["TT", "TL", "LL", "SS", "SD", "OS", "CC", "AA", "US", "RD", "IS"];
@@ -169,13 +170,24 @@ const DashboardAlarmState = () => {
     const alarm_states: any = useEvaAPICall({
         method: loaded ? `x::${DEFAULT_ALARM_SVC}::state` : undefined,
         params,
-        update: 1,
+        update: 0.5,
     });
 
     const alarmCall = (oid: string, method: string) => {
         const eva = get_engine() as Eva;
         const svc_method = `x::${DEFAULT_ALARM_SVC}::${method}`;
         eva.call(svc_method, oid).catch((e) => onEvaError(e));
+    };
+
+    const alarmSubscribe = (oid: string, sub: boolean) => {
+        const eva = get_engine() as Eva;
+        const method = sub ? "subscribe" : "unsubscribe";
+        const svc_method = `x::${DEFAULT_ALARM_SVC}::${method}`;
+        eva.call(svc_method, {
+            oid_mask: oid,
+            nk: "M",
+            op: ["TT", "TL", "IS", "OS"],
+        }).catch((e) => onEvaError(e));
     };
 
     const data: DashTableData = alarm_states?.data?.map((state: any) => {
@@ -226,9 +238,23 @@ const DashboardAlarmState = () => {
             className: "col-fit",
             addButton,
         });
+        const subscribed = state.subscribed_email?.length > 0;
         let extra: DashTableColData[] = [
             {
                 value: state.description,
+            },
+            {
+                value: (
+                    <span title={subscribed ? "Unsubscribe" : "Subscribe"}>
+                        <EmailIcon
+                            onClick={() => alarmSubscribe(state.oid, !subscribed)}
+                        />
+                    </span>
+                ),
+                sort_value: subscribed,
+                className:
+                    "col-fit " +
+                    (subscribed ? "alarm-subscribed" : "alarm-not-subscribed"),
             },
         ];
         if (state.current === "TL" || state.current === "LL" || state.current === "TT") {
@@ -291,7 +317,7 @@ const DashboardAlarmState = () => {
         ? cols
               .filter((column) => column.enabled)
               .map((column) => column.name)
-              .concat(["description", "", ""])
+              .concat(["description", "", "", ""])
         : [];
 
     let header = (

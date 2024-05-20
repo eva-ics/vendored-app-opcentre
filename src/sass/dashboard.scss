@@ -901,6 +901,22 @@ td {
   color: green;
 }
 
+.alarm-subscribed {
+  color: #ee5;
+  cursor: pointer;
+  @media print {
+    display: none;
+  }
+}
+
+.alarm-not-subscribed {
+  color: #555;
+  cursor: pointer;
+  @media print {
+    display: none;
+  }
+}
+
 .btn-alarm-ack {
   background-color: #3b5 !important;
 }
