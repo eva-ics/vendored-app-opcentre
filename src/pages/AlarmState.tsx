@@ -375,7 +375,7 @@ const DashboardAlarmState = () => {
                         <DashTable
                             id="alst"
                             header={header}
-                            title="Alarms states"
+                            title="Alarm states"
                             cols={colsToShow}
                             filter={filter}
                             data={data}
