@@ -7,6 +7,7 @@ import { useSearchParams } from "react-router-dom";
 import DashboardOverview from "../pages/Overview.tsx";
 import DashboardItems from "../pages/Items.tsx";
 import DashboardAlarmState from "../pages/AlarmState.tsx";
+import DashboardAlarmHistory from "../pages/AlarmHistory.tsx";
 import DashboardDataObjects from "../pages/DataObjects.tsx";
 import DashboardTrends from "../pages/Trends.tsx";
 import DashboardIDC from "../pages/IDC.tsx";
@@ -31,8 +32,11 @@ import Profile from "./Profile.tsx";
 const allowedDashboardChars = /^[a-zA-Z0-9 ._-]+$/;
 
 const AlarmSummary = () => {
+    const [method, setMethod] = useState<string | undefined>(
+        `x::${DEFAULT_ALARM_SVC}::summary`
+    );
     const summary = useEvaAPICall({
-        method: `x::${DEFAULT_ALARM_SVC}::summary`,
+        method,
         update: 1,
     });
     if (summary?.data?.active > 0) {
@@ -42,6 +46,10 @@ const AlarmSummary = () => {
             </div>
         );
     } else {
+        if (summary.error?.code == -32113 && method) {
+            // service not registered
+            setMethod(undefined);
+        }
         return <></>;
     }
 };
@@ -185,6 +193,10 @@ const Layout = ({ logout }: LayoutProps) => {
             break;
         case "alarm_state":
             content = <DashboardAlarmState />;
+            current_page = "Alarms";
+            break;
+        case "alarm_history":
+            content = <DashboardAlarmHistory />;
             current_page = "Alarms";
             break;
         default:

@@ -21,8 +21,10 @@ import PrintOutlinedIcon from "@mui/icons-material/PrintOutlined";
 import EmailIcon from "@mui/icons-material/Email";
 import { Eva } from "@eva-ics/webengine";
 
-const ALARM_OPS = ["TT", "TL", "LL", "SS", "SD", "OS", "CC", "AA", "US", "RD", "IS"];
+export const ALARM_OPS = ["TT", "TL", "LL", "SS", "SD", "OS", "CC", "AA", "US", "RD", "IS"];
 const ALARM_CURRENT = ["TT", "TL", "LL", "SS", "SD", "OS", "CC", "AA"];
+
+export const ALARM_SOURCE_KINDS = ["U", "P", "R"];
 
 const ALARM_OP_NAMES = new Map();
 ALARM_OP_NAMES.set("TT", "TRIGGERED");
@@ -37,7 +39,12 @@ ALARM_OP_NAMES.set("US", "UNSHELVED");
 ALARM_OP_NAMES.set("RD", "RESUMED-BY-DESIGN");
 ALARM_OP_NAMES.set("IS", "IN-SERVICE");
 
-const formatAlarmValue = (value: string, _current?: boolean) => {
+const ALARM_SOURCE_KIND_NAMES = new Map();
+ALARM_SOURCE_KIND_NAMES.set("U", "User");
+ALARM_SOURCE_KIND_NAMES.set("P", "Program");
+ALARM_SOURCE_KIND_NAMES.set("R", "Rule");
+
+export const formatAlarmValue = (value: string, _current?: boolean) => {
     if (ALARM_OPS.includes(value)) {
         const name = ALARM_OP_NAMES.get(value);
         const class_name = `alarm-${value.toLowerCase()}`;
@@ -50,6 +57,11 @@ const formatAlarmValue = (value: string, _current?: boolean) => {
         return value;
     }
 };
+
+export const formatAlarmSourceKind = (value: string) => {
+    const name = ALARM_SOURCE_KIND_NAMES.get(value);
+    return name ? `${name} (${value})` : value;
+}
 
 const DashboardAlarmState = () => {
     const [filterParams, setFilterParams] = useState({
@@ -198,7 +210,6 @@ const DashboardAlarmState = () => {
             value: state.node,
             setParams: setStateFilterParams,
             cols,
-            className: "col-fit",
             addButton,
         });
         pushRichColData({
@@ -216,7 +227,6 @@ const DashboardAlarmState = () => {
             value: state.group,
             setParams: setStateFilterParams,
             cols,
-            className: "col-fit",
             addButton,
         });
         pushRichColData({
@@ -225,7 +235,6 @@ const DashboardAlarmState = () => {
             value: state.id,
             setParams: setStateFilterParams,
             cols,
-            className: "col-fit",
             addButton,
         });
         pushRichColData({
@@ -235,7 +244,7 @@ const DashboardAlarmState = () => {
             filter_value: state.current,
             setParams: setStateFilterParams,
             cols,
-            className: "col-fit",
+            className: "col-fit never-wrap",
             addButton,
         });
         const subscribed = state.subscribed_email?.length > 0;
@@ -346,7 +355,7 @@ const DashboardAlarmState = () => {
                             data: alarm_states.data,
                             cols,
                         });
-                        downloadCSV(csvContent, "alarms-states.csv");
+                        downloadCSV(csvContent, "alarm-states.csv");
                     }}
                 >
                     <FileDownloadOutlinedIcon fontSize="small" />

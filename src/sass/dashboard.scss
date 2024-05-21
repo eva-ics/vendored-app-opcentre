@@ -125,7 +125,6 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  padding: 20px;
   width: 100%;
 }
 
@@ -931,4 +930,15 @@ td {
 
 .col-ack-hidden {
   width: 50px;
+}
+
+.print-info-bar {
+  @media print {
+    display: block;
+    white-space: normal;
+  }
+  display: none;
+  white-space: nowrap;
+  padding-left: 10px;
+  color: black;
 }
