@@ -243,19 +243,6 @@ const DashboardAlarmState = () => {
             {
                 value: state.description,
             },
-            {
-                value: (
-                    <span title={subscribed ? "Unsubscribe" : "Subscribe"}>
-                        <EmailIcon
-                            onClick={() => alarmSubscribe(state.oid, !subscribed)}
-                        />
-                    </span>
-                ),
-                sort_value: subscribed,
-                className:
-                    "col-fit " +
-                    (subscribed ? "alarm-subscribed" : "alarm-not-subscribed"),
-            },
         ];
         if (state.current === "TL" || state.current === "LL" || state.current === "TT") {
             extra.push({
@@ -309,6 +296,16 @@ const DashboardAlarmState = () => {
                 className: "col-fit",
             });
         }
+        extra.push({
+            value: (
+                <span title={subscribed ? "Unsubscribe" : "Subscribe"}>
+                    <EmailIcon onClick={() => alarmSubscribe(state.oid, !subscribed)} />
+                </span>
+            ),
+            sort_value: subscribed,
+            className:
+                "col-fit " + (subscribed ? "alarm-subscribed" : "alarm-not-subscribed"),
+        });
         return {
             data: colsData.concat(extra),
         };
