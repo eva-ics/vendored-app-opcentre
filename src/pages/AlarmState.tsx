@@ -21,7 +21,19 @@ import PrintOutlinedIcon from "@mui/icons-material/PrintOutlined";
 import EmailIcon from "@mui/icons-material/Email";
 import { Eva } from "@eva-ics/webengine";
 
-export const ALARM_OPS = ["TT", "TL", "LL", "SS", "SD", "OS", "CC", "AA", "US", "RD", "IS"];
+export const ALARM_OPS = [
+    "TT",
+    "TL",
+    "LL",
+    "SS",
+    "SD",
+    "OS",
+    "CC",
+    "AA",
+    "US",
+    "RD",
+    "IS",
+];
 const ALARM_CURRENT = ["TT", "TL", "LL", "SS", "SD", "OS", "CC", "AA"];
 
 export const ALARM_SOURCE_KINDS = ["U", "P", "R"];
@@ -61,7 +73,7 @@ export const formatAlarmValue = (value: string, _current?: boolean) => {
 export const formatAlarmSourceKind = (value: string) => {
     const name = ALARM_SOURCE_KIND_NAMES.get(value);
     return name ? `${name} (${value})` : value;
-}
+};
 
 const DashboardAlarmState = () => {
     const [filterParams, setFilterParams] = useState({
@@ -179,11 +191,14 @@ const DashboardAlarmState = () => {
         removeButton,
     }).concat([[active_label, active_select]]);
 
-    const alarm_states: any = useEvaAPICall({
-        method: loaded ? `x::${DEFAULT_ALARM_SVC}::state` : undefined,
-        params,
-        update: 0.5,
-    });
+    const alarm_states: any = useEvaAPICall(
+        {
+            method: loaded ? `x::${DEFAULT_ALARM_SVC}::state` : undefined,
+            params,
+            update: 0.5,
+        },
+        [loaded, params]
+    );
 
     const alarmCall = (oid: string, method: string) => {
         const eva = get_engine() as Eva;

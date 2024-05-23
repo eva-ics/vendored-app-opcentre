@@ -53,11 +53,14 @@ const DataObjectViewer = ({
         }
         return p;
     }, [params.name, params.asCode, params.lang]);
-    const dobj_data = useEvaAPICall({
-        method: params.asCode ? "dobj.generate_struct_code" : "dobj.get_struct",
-        params: call_params,
-        update: 10,
-    });
+    const dobj_data = useEvaAPICall(
+        {
+            method: params.asCode ? "dobj.generate_struct_code" : "dobj.get_struct",
+            params: call_params,
+            update: 10,
+        },
+        [params.asCode, call_params]
+    );
     let viewer;
     let switchButton;
     const copyCode = () => {
@@ -212,10 +215,13 @@ const DashboardDataObjects = () => {
         [viewed]
     );
 
-    const data_objects = useEvaAPICall({
-        method: loaded ? "dobj.list" : undefined,
-        update: 10,
-    });
+    const data_objects = useEvaAPICall(
+        {
+            method: loaded ? "dobj.list" : undefined,
+            update: 10,
+        },
+        [loaded]
+    );
 
     const data: DashTableData = data_objects?.data?.map((dobj: any) => {
         return {

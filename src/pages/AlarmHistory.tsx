@@ -133,11 +133,14 @@ const DashboardAlarmHistory = () => {
         return { filter: f };
     }, [params]);
 
-    const records = useEvaAPICall({
-        method: loaded ? `x::${DEFAULT_ALARM_SVC}::history` : undefined,
-        params: callParams,
-        update: updateInterval,
-    });
+    const records = useEvaAPICall(
+        {
+            method: loaded ? `x::${DEFAULT_ALARM_SVC}::history` : undefined,
+            params: callParams,
+            update: updateInterval,
+        },
+        [loaded, callParams, updateInterval]
+    );
 
     const setLogFilterParams = (p: object) => {
         let np: any = { ...filterParams };

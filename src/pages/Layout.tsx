@@ -35,10 +35,13 @@ const AlarmSummary = () => {
     const [method, setMethod] = useState<string | undefined>(
         `x::${DEFAULT_ALARM_SVC}::summary`
     );
-    const summary = useEvaAPICall({
-        method,
-        update: 1,
-    });
+    const summary = useEvaAPICall(
+        {
+            method,
+            update: 1,
+        },
+        [method]
+    );
     if (summary?.data?.active > 0) {
         return (
             <div className="alarm-count">

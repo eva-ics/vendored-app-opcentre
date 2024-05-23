@@ -94,7 +94,7 @@ const DashboardOverview = () => {
     const server_info = useEvaAPICall({
         method: "test",
         update: 1,
-    });
+    },[]);
 
     const server_info_data = [
         ["Name", eva?.system_name()],
