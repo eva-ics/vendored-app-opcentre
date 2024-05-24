@@ -19,42 +19,20 @@ import { ButtonStyled, DEFAULT_ALARM_SVC, onEvaError } from "../common.tsx";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import PrintOutlinedIcon from "@mui/icons-material/PrintOutlined";
 import EmailIcon from "@mui/icons-material/Email";
+import StorageIcon from "@mui/icons-material/Storage";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import PauseCircleOutlineIcon from "@mui/icons-material/PauseCircleOutline";
+import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import { Eva } from "@eva-ics/webengine";
-
-export const ALARM_OPS = [
-    "TT",
-    "TL",
-    "LL",
-    "SS",
-    "SD",
-    "OS",
-    "CC",
-    "AA",
-    "US",
-    "RD",
-    "IS",
-];
-const ALARM_CURRENT = ["TT", "TL", "LL", "SS", "SD", "OS", "CC", "AA"];
-
-export const ALARM_SOURCE_KINDS = ["U", "P", "R"];
-
-const ALARM_OP_NAMES = new Map();
-ALARM_OP_NAMES.set("TT", "TRIGGERED");
-ALARM_OP_NAMES.set("TL", "TRIG+LATCHED");
-ALARM_OP_NAMES.set("LL", "LATCHED");
-ALARM_OP_NAMES.set("SS", "SHELVED");
-ALARM_OP_NAMES.set("SD", "SUSPENDED-BY-DESIGN");
-ALARM_OP_NAMES.set("OS", "OUT-OF-SERVICE");
-ALARM_OP_NAMES.set("CC", "CLEARED");
-ALARM_OP_NAMES.set("AA", "ACKNOWLEDGED");
-ALARM_OP_NAMES.set("US", "UNSHELVED");
-ALARM_OP_NAMES.set("RD", "RESUMED-BY-DESIGN");
-ALARM_OP_NAMES.set("IS", "IN-SERVICE");
-
-const ALARM_SOURCE_KIND_NAMES = new Map();
-ALARM_SOURCE_KIND_NAMES.set("U", "User");
-ALARM_SOURCE_KIND_NAMES.set("P", "Program");
-ALARM_SOURCE_KIND_NAMES.set("R", "Rule");
+import { NavLink } from "react-router-dom";
+import {
+    ALARM_OPS,
+    ALARM_OP_NAMES,
+    ALARM_SOURCE_KIND_NAMES,
+    ALARM_CURRENT,
+    defaultFilterParams,
+    historyColsEnabledPacked,
+} from "../components/alarms.tsx";
 
 export const formatAlarmValue = (value: string, _current?: boolean) => {
     if (ALARM_OPS.includes(value)) {
@@ -263,9 +241,30 @@ const DashboardAlarmState = () => {
             addButton,
         });
         const subscribed = state.subscribed_email?.length > 0;
+        const history_filter = encodeURIComponent(
+            JSON.stringify(
+                Object.assign(defaultFilterParams(), {
+                    node: state.node,
+                    level: state.level,
+                    group: state.group,
+                    id: state.id,
+                })
+            )
+        );
         let extra: DashTableColData[] = [
             {
                 value: state.description,
+            },
+            {
+                value: (
+                    <NavLink
+                        title="History"
+                        to={`?d=alarm_history&filter=${history_filter}&cols=${historyColsEnabledPacked}`}
+                    >
+                        <StorageIcon />
+                    </NavLink>
+                ),
+                className: "col-fit",
             },
         ];
         if (state.current === "TL" || state.current === "LL" || state.current === "TT") {
@@ -277,7 +276,7 @@ const DashboardAlarmState = () => {
                             className="btn-alarm-ack"
                             onClick={() => alarmCall(state.oid, "ack")}
                         >
-                            Ack
+                            <CheckCircleOutlineIcon />
                         </button>
                     </div>
                 ),
@@ -298,7 +297,7 @@ const DashboardAlarmState = () => {
                             className="btn-alarm-unshelve"
                             onClick={() => alarmCall(state.oid, "unshelv")}
                         >
-                            Unshelve
+                            <PlayCircleIcon />
                         </button>
                     </div>
                 ),
@@ -313,7 +312,7 @@ const DashboardAlarmState = () => {
                             className="btn-alarm-shelve"
                             onClick={() => alarmCall(state.oid, "shelv")}
                         >
-                            Shelve
+                            <PauseCircleOutlineIcon />
                         </button>
                     </div>
                 ),
@@ -339,7 +338,7 @@ const DashboardAlarmState = () => {
         ? cols
               .filter((column) => column.enabled)
               .map((column) => column.name)
-              .concat(["description", "", "", ""])
+              .concat(["description", "", "", "", ""])
         : [];
 
     let header = (

@@ -6,10 +6,8 @@ import {
     DashTable,
     DashTableFilter,
     DashTableData,
-    DashTableColType,
     DashTableColData,
     ColumnRichInfo,
-    DashTableFilterFieldInput,
     pushRichColData,
     createRichFilter,
     generateDashTableRichCSV,
@@ -21,58 +19,24 @@ import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import PrintOutlinedIcon from "@mui/icons-material/PrintOutlined";
 import { addButton, removeButton } from "../components/common.tsx";
 import { ButtonStyled, DEFAULT_ALARM_SVC } from "../common.tsx";
+import { formatAlarmValue, formatAlarmSourceKind } from "./AlarmState.tsx";
 import {
-    ALARM_OPS,
-    ALARM_SOURCE_KINDS,
-    formatAlarmValue,
-    formatAlarmSourceKind,
-} from "./AlarmState.tsx";
+    FilterParams,
+    defaultFilterParams,
+    defaultHistoryCols,
+} from "../components/alarms.tsx";
 
 const DEFAULT_FRAME_SEC = 3600;
 const SVC_ID = "eva.aaa.accounting";
 
 const DashboardAlarmHistory = () => {
-    const [filterParams, setFilterParams] = useState({
-        t_start: null as number | null,
-        t_end: null as number | null,
-        node: null as string | null,
-        level: null as number | null,
-        group: null as string | null,
-        id: null as string | null,
-        lo: null as string | null,
-        losk: null as string | null,
-        los: null as string | null,
-    });
+    const [filterParams, setFilterParams] = useState<FilterParams>(defaultFilterParams());
 
-    const [cols, setCols] = useState<ColumnRichInfo[]>([
-        { id: "node", name: "node", enabled: true, filterInputSize: 6 },
-        {
-            id: "level",
-            name: "level",
-            enabled: true,
-            filterInputSize: 2,
-            columnType: DashTableColType.Integer,
-        },
-        { id: "group", name: "group", enabled: true, filterInputSize: 20 },
-        { id: "id", name: "id", enabled: true, filterInputSize: 10 },
-        {
-            id: "lo",
-            name: "last op",
-            enabled: true,
-            filterInputSize: 1,
-            filterFieldInput: DashTableFilterFieldInput.SelectWithEmpty,
-            filterFieldSelectValues: ALARM_OPS,
-        },
-        {
-            id: "losk",
-            name: "src.kind",
-            enabled: true,
-            filterInputSize: 1,
-            filterFieldInput: DashTableFilterFieldInput.SelectWithEmpty,
-            filterFieldSelectValues: ALARM_SOURCE_KINDS,
-        },
-        { id: "los", name: "src", enabled: true, filterInputSize: 10 },
-    ]);
+    const [cols, setCols] = useState<ColumnRichInfo[]>(defaultHistoryCols());
+
+    const setFilterParamsSafe = (data: FilterParams) => {
+        setFilterParams(Object.assign(defaultFilterParams(), data));
+    };
 
     const colsEnabled = useMemo<string[]>(() => {
         return cols
@@ -85,7 +49,7 @@ const DashboardAlarmHistory = () => {
             {
                 name: "filter",
                 value: filterParams,
-                setter: setFilterParams,
+                setter: setFilterParamsSafe,
                 pack_json: true,
             },
             {
