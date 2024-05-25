@@ -560,6 +560,11 @@ td {
   border-radius: 4px;
 }
 
+.bmat-dashtable-filter-only-label {
+  user-select: none;
+  padding: 2px;
+}
+
 .bmat-dashtable-filter-label-off {
   color: #555;
   text-decoration: line-through;

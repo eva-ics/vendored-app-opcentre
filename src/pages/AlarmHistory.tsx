@@ -22,7 +22,7 @@ import { ButtonStyled, DEFAULT_ALARM_SVC } from "../common.tsx";
 import { formatAlarmValue, formatAlarmSourceKind } from "./AlarmState.tsx";
 import {
     FilterParams,
-    defaultFilterParams,
+    defaultHistoryFilterParams,
     defaultHistoryCols,
 } from "../components/alarms.tsx";
 
@@ -30,12 +30,12 @@ const DEFAULT_FRAME_SEC = 3600;
 const SVC_ID = "eva.aaa.accounting";
 
 const DashboardAlarmHistory = () => {
-    const [filterParams, setFilterParams] = useState<FilterParams>(defaultFilterParams());
+    const [filterParams, setFilterParams] = useState<FilterParams>(defaultHistoryFilterParams());
 
     const [cols, setCols] = useState<ColumnRichInfo[]>(defaultHistoryCols());
 
     const setFilterParamsSafe = (data: FilterParams) => {
-        setFilterParams(Object.assign(defaultFilterParams(), data));
+        setFilterParams(Object.assign(defaultHistoryFilterParams(), data));
     };
 
     const colsEnabled = useMemo<string[]>(() => {
@@ -92,7 +92,6 @@ const DashboardAlarmHistory = () => {
     const callParams = useMemo(() => {
         const f: any = { ...params.filter };
         f.level_min = f.level;
-        f.level_max = f.level;
         delete f.level;
         return { filter: f };
     }, [params]);

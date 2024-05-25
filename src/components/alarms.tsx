@@ -46,6 +46,7 @@ export interface FilterParams {
     t_end: number | null;
     node: string | null;
     level: number | null;
+    level_max: number | null;
     group: string | null;
     id: string | null;
     lo: string | null;
@@ -53,12 +54,13 @@ export interface FilterParams {
     los: string | null;
 }
 
-export const defaultFilterParams = (): FilterParams => {
+export const defaultHistoryFilterParams = (): FilterParams => {
     return {
         t_start: null,
         t_end: null,
         node: null,
         level: null,
+        level_max: null,
         group: null,
         id: null,
         lo: null,
@@ -76,7 +78,15 @@ export const defaultHistoryCols = (): ColumnRichInfo[] => {
             enabled: true,
             filterInputSize: 2,
             columnType: DashTableColType.Integer,
-            filterActionKind: DashTableFilterActionKind.Equal
+            filterActionKind: DashTableFilterActionKind.GreaterEqual
+        },
+        {
+            id: "level_max",
+            name: "level.max",
+            filterOnly: true,
+            filterInputSize: 2,
+            columnType: DashTableColType.Integer,
+            filterActionKind: DashTableFilterActionKind.LessEqual,
         },
         { id: "group", name: "group", enabled: true, filterInputSize: 20 },
         { id: "id", name: "id", enabled: true, filterInputSize: 10 },

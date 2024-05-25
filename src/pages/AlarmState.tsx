@@ -11,6 +11,7 @@ import {
     pushRichColData,
     generateDashTableRichCSV,
     DashTableFilterFieldInput,
+    DashTableFilterActionKind,
 } from "bmat/dashtable";
 import { useQueryParams } from "bmat/hooks";
 import { addButton, removeButton } from "../components/common.tsx";
@@ -30,7 +31,7 @@ import {
     ALARM_OP_NAMES,
     ALARM_SOURCE_KIND_NAMES,
     ALARM_CURRENT,
-    defaultFilterParams,
+    defaultHistoryFilterParams,
     historyColsEnabledPacked,
 } from "../components/alarms.tsx";
 
@@ -57,6 +58,7 @@ const DashboardAlarmState = () => {
     const [filterParams, setFilterParams] = useState({
         node: null as string | null,
         level: null as number | null,
+        level_max: null as number | null,
         group: null as string | null,
         id: null as string | null,
         active: true as boolean | null,
@@ -71,6 +73,15 @@ const DashboardAlarmState = () => {
             enabled: true,
             filterInputSize: 2,
             columnType: DashTableColType.Integer,
+            filterActionKind: DashTableFilterActionKind.GreaterEqual,
+        },
+        {
+            id: "level_max",
+            name: "level.max",
+            filterOnly: true,
+            filterInputSize: 2,
+            columnType: DashTableColType.Integer,
+            filterActionKind: DashTableFilterActionKind.LessEqual,
         },
         { id: "group", name: "group", enabled: true, filterInputSize: 20 },
         { id: "id", name: "id", enabled: true, filterInputSize: 10 },
@@ -115,7 +126,9 @@ const DashboardAlarmState = () => {
     );
 
     const params = useMemo(() => {
-        const f = { ...filterParams };
+        const f: any = { ...filterParams };
+        f.level_min = f.level;
+        delete f.level;
         return {
             filter: f,
         };
@@ -164,7 +177,7 @@ const DashboardAlarmState = () => {
     const filter: DashTableFilter = createRichFilter({
         cols,
         setCols,
-        params: params.filter,
+        params: filterParams,
         setParams: setStateFilterParams,
         removeButton,
     }).concat([[active_label, active_select]]);
@@ -243,9 +256,10 @@ const DashboardAlarmState = () => {
         const subscribed = state.subscribed_email?.length > 0;
         const history_filter = encodeURIComponent(
             JSON.stringify(
-                Object.assign(defaultFilterParams(), {
+                Object.assign(defaultHistoryFilterParams(), {
                     node: state.node,
                     level: state.level,
+                    level_max: state.level,
                     group: state.group,
                     id: state.id,
                 })
