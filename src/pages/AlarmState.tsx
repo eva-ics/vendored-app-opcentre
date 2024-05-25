@@ -191,7 +191,7 @@ const DashboardAlarmState = () => {
         eva.call(svc_method, {
             oid_mask: oid,
             nk: "M",
-            op: ["TT", "TL", "IS", "OS"],
+            op: ["TT", "TL", "OS"],
         }).catch((e) => onEvaError(e));
     };
 
