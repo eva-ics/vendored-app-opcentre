@@ -4,7 +4,7 @@ import OpCentre from "./opcn.tsx";
 import "./sass/main.scss";
 import "../node_modules/idc-core/dist/style.css";
 import "./idc/default_pack/style.css";
-import { Eva, IntervalKind } from "@eva-ics/webengine";
+import { Eva, IntervalKind, disableTabFreeze } from "@eva-ics/webengine";
 import { set_engine, LoginProps, HMIApp } from "@eva-ics/webengine-react";
 import { DEFAULT_TITLE } from "./types/index.tsx";
 import "chartjs-adapter-date-fns";
@@ -33,6 +33,8 @@ ChartJS.register(
     Tooltip,
     Legend
 );
+
+disableTabFreeze();
 
 const eva = new Eva();
 set_engine(eva);
