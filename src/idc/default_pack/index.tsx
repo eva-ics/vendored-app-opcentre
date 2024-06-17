@@ -220,7 +220,7 @@ ELEMENT_CLASSES.set(ElementKind.ItemValue, {
         {
             id: uuidv4(),
             name: "oid",
-            kind: PropertyKind.OID,
+            kind: PropertyKind.OIDSubscribed,
             params: { size: 40 },
         },
         {
@@ -317,7 +317,7 @@ ELEMENT_CLASSES.set(ElementKind.Gauge, {
         {
             id: uuidv4(),
             name: "oid",
-            kind: PropertyKind.OID,
+            kind: PropertyKind.OIDSubscribed,
             params: { size: 40 },
         },
         {
@@ -583,7 +583,7 @@ ELEMENT_CLASSES.set(ElementKind.ControlButtonToggle, {
         {
             id: uuidv4(),
             name: "oid",
-            kind: PropertyKind.OID,
+            kind: PropertyKind.OIDSubscribed,
             params: { kind: "unit" },
         },
         {
@@ -610,7 +610,7 @@ ELEMENT_CLASSES.set(ElementKind.ControlButtonValue, {
         {
             id: uuidv4(),
             name: "oid",
-            kind: PropertyKind.OID,
+            kind: PropertyKind.OIDSubscribed,
             params: { kind: "unit" },
         },
         {
