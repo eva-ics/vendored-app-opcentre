@@ -21,6 +21,8 @@ import {
     TimeScale,
     Title,
     Tooltip,
+    BarElement,
+    BarController,
 } from "chart.js";
 
 ChartJS.register(
@@ -31,7 +33,9 @@ ChartJS.register(
     TimeScale,
     Title,
     Tooltip,
-    Legend
+    Legend,
+    BarElement,
+    BarController,
 );
 
 disableTabFreeze();

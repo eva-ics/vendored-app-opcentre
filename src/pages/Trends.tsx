@@ -1,7 +1,8 @@
 import { useState, useMemo, useEffect, useRef, useReducer } from "react";
 import { Coords } from "bmat/dom";
 import {
-    LineChart,
+    Chart,
+    ChartKind,
     StateHistoryOIDColMapping,
     generateStateHistoryCSV,
     useEvaStateHistory,
@@ -11,12 +12,11 @@ import { downloadCSV } from "bmat/dom";
 import { EditNumber } from "../components/editors/number.tsx";
 import { EditString } from "../components/editors/string.tsx";
 import { EditFormula } from "../components/editors/formula.tsx";
-import { EditSelectNumber } from "../components/editors/select_number.tsx";
 import { EditSelectString } from "../components/editors/select_string.tsx";
 import { EditSelectOID } from "../components/editors/select_oid.tsx";
 import { EditSelectColor } from "../components/editors/select_color.tsx";
 import { EditSelectDatabase } from "../components/editors/select_database.tsx";
-import { rangeArray, calculateFormula } from "bmat/numbers";
+import { calculateFormula } from "bmat/numbers";
 import { useQueryParams } from "bmat/hooks";
 import PauseOutlinedIcon from "@mui/icons-material/PauseOutlined";
 import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
@@ -42,10 +42,9 @@ const calculateChartSize = (): Coords => {
 
 const SET_DELAY = 500;
 
-//mui styles
-const POINTS = rangeArray(10, 120, 10);
-
 const VFN = ["mean", "sum"];
+
+const CHART_KINDS = [ChartKind.Line, ChartKind.Bar];
 
 const DEFAULT_CHART_COLOR = "#336699";
 
@@ -73,6 +72,7 @@ const CHART_COLORS_LIST = [
 ];
 
 interface ChartProps {
+    kind: ChartKind;
     points: number;
     digits: number;
     min?: number;
@@ -198,6 +198,7 @@ const downloadTrendsCSV = (items: ChartItem[], data: any) => {
 
 const DashboardTrends = () => {
     const [props, setProps] = useState<ChartProps>({
+        kind: ChartKind.Line,
         points: 60,
         digits: 5,
         update: 1,
@@ -235,7 +236,15 @@ const DashboardTrends = () => {
             digits: props.digits,
             args: args,
         };
-    }, [props.timeframe, props.update, props.digits, props.database, props.vfn, items]);
+    }, [
+        props.timeframe,
+        props.update,
+        props.digits,
+        props.points,
+        props.database,
+        props.vfn,
+        items,
+    ]);
 
     const state = useEvaStateHistory(hookProps, [hookProps]);
 
@@ -442,7 +451,8 @@ const DashboardTrends = () => {
                             <div className="form-list-wrapper-item">
                                 <p className="page-label">Points</p>
                                 <div>
-                                    <EditSelectNumber
+                                    <EditNumber
+                                        element_id="trends-points"
                                         current_value={props.points}
                                         setParam={(n: number) => {
                                             setPropsDelayed({
@@ -450,7 +460,7 @@ const DashboardTrends = () => {
                                                 points: n,
                                             });
                                         }}
-                                        params={POINTS}
+                                        params={{ min: 2, max: 500 }}
                                     />
                                 </div>
                             </div>
@@ -466,6 +476,21 @@ const DashboardTrends = () => {
                                             });
                                         }}
                                         params={VFN}
+                                    />
+                                </div>
+                            </div>
+                            <div className="form-list-wrapper-item">
+                                <p className="page-label">Kind</p>
+                                <div>
+                                    <EditSelectString
+                                        current_value={props.kind}
+                                        setParam={(n: string) => {
+                                            setPropsDelayed({
+                                                ...(props_sdata.current || props),
+                                                kind: n as ChartKind,
+                                            });
+                                        }}
+                                        params={CHART_KINDS}
                                     />
                                 </div>
                             </div>
@@ -557,7 +582,7 @@ const DashboardTrends = () => {
                                 display: hookProps.oid.length === 0 ? "none" : "block",
                             }}
                         >
-                            <LineChart
+                            <Chart
                                 oid={hookProps.oid}
                                 state={state}
                                 timeframe={props.timeframe}
@@ -571,6 +596,7 @@ const DashboardTrends = () => {
                                 className="chart-trends"
                                 width={chartSize.current.x}
                                 height={chartSize.current.y}
+                                kind={props.kind}
                             />
                         </div>
                         <div className="trends-editor">
