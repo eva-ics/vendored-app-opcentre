@@ -14,7 +14,7 @@ import {
 } from "@eva-ics/webengine-react";
 import { PropertyKind } from "idc-core";
 import { GaugeType } from "@eva-ics/webengine-react";
-import { CHART_POINTS, CHART_TIME_FRAMES } from "./sized_line_chart";
+import { CHART_TIME_FRAMES, CHART_KINDS, VALUE_FN } from "./sized_line_chart";
 import { ElementClass, ElementPack } from "idc-core";
 import { v4 as uuidv4 } from "uuid";
 import { TextFormatOutlined, CheckBoxOutlineBlankOutlined } from "@mui/icons-material";
@@ -426,6 +426,8 @@ ELEMENT_CLASSES.set(ElementKind.LineChart, {
         max: undefined,
         digits: 2,
         update: 10,
+        kind: CHART_KINDS[0],
+        vfn: VALUE_FN[0],
         database: undefined,
     },
     props: [
@@ -453,7 +455,19 @@ ELEMENT_CLASSES.set(ElementKind.LineChart, {
             kind: PropertyKind.SelectNumberSlider,
             params: { min: 250, max: 700, step: 50 },
         },
+        {
+            id: uuidv4(),
+            name: "type",
+            kind: PropertyKind.SelectString,
+            params: CHART_KINDS,
+        },
         { id: uuidv4(), name: "color", kind: PropertyKind.SelectColor },
+        {
+            id: uuidv4(),
+            name: "vfn",
+            kind: PropertyKind.SelectString,
+            params: VALUE_FN,
+        },
         {
             id: uuidv4(),
             name: "formula",
@@ -499,8 +513,8 @@ ELEMENT_CLASSES.set(ElementKind.LineChart, {
         {
             id: uuidv4(),
             name: "points",
-            kind: PropertyKind.SelectNumber,
-            params: CHART_POINTS,
+            kind: PropertyKind.Number,
+            params: { min: 2, max: 200 },
         },
     ],
     default_size: { x: 250, y: 125 },
