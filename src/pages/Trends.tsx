@@ -12,6 +12,7 @@ import { EditNumber } from "../components/editors/number.tsx";
 import { EditString } from "../components/editors/string.tsx";
 import { EditFormula } from "../components/editors/formula.tsx";
 import { EditSelectNumber } from "../components/editors/select_number.tsx";
+import { EditSelectString } from "../components/editors/select_string.tsx";
 import { EditSelectOID } from "../components/editors/select_oid.tsx";
 import { EditSelectColor } from "../components/editors/select_color.tsx";
 import { EditSelectDatabase } from "../components/editors/select_database.tsx";
@@ -43,6 +44,8 @@ const SET_DELAY = 500;
 
 //mui styles
 const POINTS = rangeArray(10, 120, 10);
+
+const VFN = ["mean", "sum"];
 
 const DEFAULT_CHART_COLOR = "#336699";
 
@@ -77,6 +80,7 @@ interface ChartProps {
     update: number;
     timeframe: string;
     database: string;
+    vfn: string;
 }
 
 enum ChartItemProperty {
@@ -199,6 +203,7 @@ const DashboardTrends = () => {
         update: 1,
         timeframe: "1H",
         database: "default",
+        vfn: "mean",
     });
 
     const [prev_update, setPrevUpdate] = useState(1);
@@ -215,7 +220,9 @@ const DashboardTrends = () => {
             }
         });
 
-        let args: any = {};
+        let args: any = {
+            xopts: { vfn: props.vfn },
+        };
         if (props.database) {
             args.database = props.database;
         }
@@ -228,7 +235,7 @@ const DashboardTrends = () => {
             digits: props.digits,
             args: args,
         };
-    }, [props.timeframe, props.update, props.digits, props.database, items]);
+    }, [props.timeframe, props.update, props.digits, props.database, props.vfn, items]);
 
     const state = useEvaStateHistory(hookProps, [hookProps]);
 
@@ -444,6 +451,21 @@ const DashboardTrends = () => {
                                             });
                                         }}
                                         params={POINTS}
+                                    />
+                                </div>
+                            </div>
+                            <div className="form-list-wrapper-item">
+                                <p className="page-label">Fn</p>
+                                <div>
+                                    <EditSelectString
+                                        current_value={props.vfn}
+                                        setParam={(n: string) => {
+                                            setPropsDelayed({
+                                                ...(props_sdata.current || props),
+                                                vfn: n,
+                                            });
+                                        }}
+                                        params={VFN}
                                     />
                                 </div>
                             </div>
