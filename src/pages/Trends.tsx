@@ -46,6 +46,17 @@ const VFN = ["mean", "sum"];
 
 const CHART_KINDS = [ChartKind.Line, ChartKind.Bar];
 
+const FILL_UNITS = ["A", "S", "T", "H", "D", "W"];
+const FILL_UNIT_NAMES = ["point", "sec", "min", "hour", "day", "week"];
+
+const getFillUnitName = (unit: string) => {
+  return FILL_UNIT_NAMES[FILL_UNITS.indexOf(unit)];
+}
+
+const getFillUnitCode = (name: string) => {
+  return FILL_UNITS[FILL_UNIT_NAMES.indexOf(name)];
+}
+
 const DEFAULT_CHART_COLOR = "#336699";
 
 const CHART_COLORS_LIST = [
@@ -74,6 +85,7 @@ const CHART_COLORS_LIST = [
 interface ChartProps {
     kind: ChartKind;
     points: number;
+    fill_units: string;
     digits: number;
     min?: number;
     max?: number;
@@ -200,6 +212,7 @@ const DashboardTrends = () => {
     const [props, setProps] = useState<ChartProps>({
         kind: ChartKind.Line,
         points: 60,
+        fill_units: "A",
         digits: 5,
         update: 1,
         timeframe: "1H",
@@ -232,7 +245,7 @@ const DashboardTrends = () => {
             timeframe: props.timeframe,
             update: props.update || 86400 * 365 * 100,
             prop: StateProp.Value,
-            fill: `${props.points}A`,
+            fill: `${props.points}${props.fill_units || "A"}`,
             digits: props.digits,
             args: args,
         };
@@ -241,6 +254,7 @@ const DashboardTrends = () => {
         props.update,
         props.digits,
         props.points,
+        props.fill_units,
         props.database,
         props.vfn,
         items,
@@ -449,7 +463,7 @@ const DashboardTrends = () => {
                                 </div>
                             </div>
                             <div className="form-list-wrapper-item">
-                                <p className="page-label">Points</p>
+                                <p className="page-label">Fill</p>
                                 <div>
                                     <EditNumber
                                         element_id="trends-points"
@@ -460,7 +474,19 @@ const DashboardTrends = () => {
                                                 points: n,
                                             });
                                         }}
-                                        params={{ min: 2, max: 500 }}
+                                        params={{ min: 1, max: 1000 }}
+                                    />
+                                </div>
+                                <div>
+                                    <EditSelectString
+                                        current_value={getFillUnitName(props.fill_units || "A")}
+                                        setParam={(n: string) => {
+                                            setPropsDelayed({
+                                                ...(props_sdata.current || props),
+                                                fill_units: getFillUnitCode(n),
+                                            });
+                                        }}
+                                        params={FILL_UNIT_NAMES}
                                     />
                                 </div>
                             </div>
