@@ -34,7 +34,9 @@ export const SizedLineChart = ({
     min,
     max,
     color,
-    points,
+    points, // deprecated
+    fill,
+    fill_units,
     digits,
     update,
     database,
@@ -49,11 +51,14 @@ export const SizedLineChart = ({
     min: number;
     max: number;
     color: string;
-    points: number;
+    points?: number;
+    fill?: number;
+    fill_units?: string;
     digits: number;
     update: number;
     database?: string;
 }) => {
+    const fill_n = fill || points || 30;
     const dig = useMemo(() => (digits === undefined ? 2 : digits), [digits]);
     const args = useMemo(() => {
         let args: any = {
@@ -81,7 +86,7 @@ export const SizedLineChart = ({
                 labels={[label]}
                 formula={[formula]}
                 update={update}
-                fill={`${points}A:${dig}`}
+                fill={`${fill_n}${fill_units || "A"}:${dig}`}
                 args={args}
                 options={{
                     responsive: true,

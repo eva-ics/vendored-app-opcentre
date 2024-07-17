@@ -46,6 +46,8 @@ enum ElementGroup {
     Action = "Item actions",
 }
 
+const FILL_UNITS = ["A", "S", "T", "H", "D", "W"];
+
 const LabelIcon = () => {
     return <TextFormatOutlined style={{ fontSize: 25 }} />;
 };
@@ -421,12 +423,13 @@ ELEMENT_CLASSES.set(ElementKind.LineChart, {
         width: 400,
         color: "lightblue",
         timeframe: "1H",
-        points: 30,
+        fill: 30,
+        fill_units: FILL_UNITS[0],
         min: undefined,
         max: undefined,
         digits: 2,
         update: 10,
-        kind: CHART_KINDS[0],
+        type: CHART_KINDS[0],
         vfn: VALUE_FN[0],
         database: undefined,
     },
@@ -512,9 +515,15 @@ ELEMENT_CLASSES.set(ElementKind.LineChart, {
         },
         {
             id: uuidv4(),
-            name: "points",
+            name: "fill",
             kind: PropertyKind.Number,
-            params: { min: 2, max: 200 },
+            params: { min: 1, max: 1000 },
+        },
+        {
+            id: uuidv4(),
+            name: "fill_units",
+            kind: PropertyKind.SelectString,
+            params: FILL_UNITS,
         },
     ],
     default_size: { x: 250, y: 125 },
