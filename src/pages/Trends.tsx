@@ -50,12 +50,12 @@ const FILL_UNITS = ["A", "S", "T", "H", "D", "W"];
 const FILL_UNIT_NAMES = ["point", "sec", "min", "hour", "day", "week"];
 
 const getFillUnitName = (unit: string) => {
-  return FILL_UNIT_NAMES[FILL_UNITS.indexOf(unit)];
-}
+    return FILL_UNIT_NAMES[FILL_UNITS.indexOf(unit)];
+};
 
 const getFillUnitCode = (name: string) => {
-  return FILL_UNITS[FILL_UNIT_NAMES.indexOf(name)];
-}
+    return FILL_UNITS[FILL_UNIT_NAMES.indexOf(name)];
+};
 
 const DEFAULT_CHART_COLOR = "#336699";
 
@@ -425,6 +425,7 @@ const DashboardTrends = () => {
                                             });
                                         }}
                                         params={{ min: 0 }}
+                                        // size
                                     />
                                 </div>
                                 {prev_update > 0 && props.update == 0 ? (
@@ -479,7 +480,9 @@ const DashboardTrends = () => {
                                 </div>
                                 <div>
                                     <EditSelectString
-                                        current_value={getFillUnitName(props.fill_units || "A")}
+                                        current_value={getFillUnitName(
+                                            props.fill_units || "A"
+                                        )}
                                         setParam={(n: string) => {
                                             setPropsDelayed({
                                                 ...(props_sdata.current || props),

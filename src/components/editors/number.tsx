@@ -50,7 +50,7 @@ export const EditNumber = ({
                             setErrorMessage(e.toString());
                         }
                     }}
-                    sx={{ width: size ? "auto" : "40px" }}
+                    sx={{ minWidth: size ? "auto" : "40px" }}
                 />
             </ThemeProvider>
             {errorMessage && <ErrorBar message={errorMessage} />}
