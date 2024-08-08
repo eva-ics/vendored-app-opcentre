@@ -37,6 +37,32 @@ div.eva.login.logo {
     }
 }
 
+div.eva.login.progress {
+    width: 50px;
+    height: 50px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    color: transparent;
+    transform: translate(-50%, -50%);
+    background-color: #003499;
+    box-shadow: 1em 0 0 currentcolor;
+    border-radius: 50%;
+    animation: loader 1s ease-in-out infinite alternate;
+
+    @keyframes loader {
+        0% {
+            opacity: 0.1;
+            transform: rotate(0deg) scale(0.5);
+        }
+
+        100% {
+            opacity: 1;
+            transform: rotate(360deg) scale(1.2);
+        }
+    }
+}
+
 div.eva.login.header {
     &:before {
         content: "EVA ICS OpCentre";
