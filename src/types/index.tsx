@@ -20,7 +20,7 @@ export interface HeaderProps {
     nav: Array<NavElement>;
 }
 
-type SubmenuItem = {
+export type SubmenuItem = {
     value: string;
     to: string;
 };

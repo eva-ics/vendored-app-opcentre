@@ -9,6 +9,7 @@ import { Timestamp } from "bmat/time";
 const TimeInfo = () => {
     const [time, setTime] = useState(new Date());
     const timeWorker = useRef<any>(null);
+
     useEffect(() => {
         if (!timeWorker.current) {
             timeWorker.current = setInterval(() => setTime(new Date()), 1000);
@@ -59,7 +60,8 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
             <nav id="header">
                 <ul>
                     {nav.map((v, idx) => {
-                        const isCurrent = (current_page === v.compare_value || current_page === v.value);
+                        const isCurrent =
+                            current_page === v.compare_value || current_page === v.value;
 
                         const navLinkClass = isCurrent
                             ? "nav-link nav-link-current"
@@ -73,17 +75,23 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                             <li
                                 className={navLinkClass}
                                 key={idx}
-                                onClick={() => {
-                                    if (
-                                        v.submenus &&
-                                        v.submenus.length > 0 &&
-                                        openSubMenu !== v.value
-                                    ) {
-                                        setOpenSubMenu(v.value);
-                                    } else {
-                                        setOpenSubMenu(null);
+                                onClick={(event) => {
+                                    if (event.shiftKey) {
                                         if (v.to?.startsWith("/")) {
-                                            document.location = v.to;
+                                            window.open(v.to, "_blank");
+                                        }
+                                    } else {
+                                        if (
+                                            v.submenus &&
+                                            v.submenus.length > 0 &&
+                                            openSubMenu !== v.value
+                                        ) {
+                                            setOpenSubMenu(v.value);
+                                        } else {
+                                            setOpenSubMenu(null);
+                                            if (v.to?.startsWith("/")) {
+                                                window.location.href = v.to;
+                                            }
                                         }
                                     }
                                 }}
