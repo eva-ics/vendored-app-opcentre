@@ -73,17 +73,23 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                             <li
                                 className={navLinkClass}
                                 key={idx}
-                                onClick={() => {
-                                    if (
-                                        v.submenus &&
-                                        v.submenus.length > 0 &&
-                                        openSubMenu !== v.value
-                                    ) {
-                                        setOpenSubMenu(v.value);
-                                    } else {
-                                        setOpenSubMenu(null);
+                                onClick={(event) => {
+                                    if (event.shiftKey) {
                                         if (v.to?.startsWith("/")) {
-                                            document.location = v.to;
+                                            window.open(v.to, "_blank");
+                                        }
+                                    } else {
+                                        if (
+                                            v.submenus &&
+                                            v.submenus.length > 0 &&
+                                            openSubMenu !== v.value
+                                        ) {
+                                            setOpenSubMenu(v.value);
+                                        } else {
+                                            setOpenSubMenu(null);
+                                            if (v.to?.startsWith("/")) {
+                                                window.location.href = v.to;
+                                            }
                                         }
                                     }
                                 }}
