@@ -50,7 +50,7 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                 <div className="dash-info">
                     <img src="icon.svg" className="dash-logo" />
                     <div className="dash-title">
-                        EVA ICS OpCentre. Node: {eva.system_name()}{" "}
+                        EVA ICS System dashboard. Node: {eva.system_name()}{" "}
                         <span className="current-user">[{eva?.server_info?.aci.u}]</span>
                     </div>
                 </div>
@@ -59,7 +59,7 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
             <nav id="header">
                 <ul>
                     {nav.map((v, idx) => {
-                        const isCurrent = (current_page === v.compare_value || current_page === v.value);
+                        const isCurrent = current_page === v.value;
 
                         const navLinkClass = isCurrent
                             ? "nav-link nav-link-current"
