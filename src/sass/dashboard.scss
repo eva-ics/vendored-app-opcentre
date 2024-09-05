@@ -145,24 +145,25 @@
     border: 0px;
     font-size: 14px;
     margin-left: 10px;
-    @media print {
-        display: none;
-    }
     justify-content: center;
     cursor: pointer;
     padding: 1px 5px;
     border-radius: 2px;
     border: none;
+
+    @media print {
+        display: none;
+    }
 }
 
 .dobj-code-pre {
     font-size: 14px;
-    @media print {
-        color: black;
-    }
     background-color: #111;
     padding: 10px;
     border-radius: 5px;
+    @media print {
+        color: black;
+    }
 }
 
 .button-bar {
@@ -284,11 +285,10 @@ th {
 td {
     padding: 7px;
     font-size: 10px;
-
+    white-space: nowrap;
     @media print {
         white-space: normal;
     }
-    white-space: nowrap;
 
     @include media(tablet) {
         font-size: 14px;
@@ -436,6 +436,7 @@ td {
 }
 
 .item-state-buttons {
+    width: 120px;
     button {
         float: left;
         margin-right: 5px;
@@ -447,7 +448,6 @@ td {
             margin-bottom: 0px;
         }
     }
-    width: 120px;
 }
 
 .col-fit {
@@ -465,24 +465,26 @@ td {
 }
 
 .item-watch-container {
+    display: inline-block;
+    width: 300px;
+    margin-right: 10px;
+    margin-top: 10px;
+    border: 1px solid #555;
+    padding: 5px 5px 5px 5px;
+    position: relative;
+
     @media print {
         display: block;
         border: 0px;
         overflow: visible;
     }
-    display: inline-block;
-    width: 300px;
-    margin-right: 10px;
-    margin-top: 10px;
+
     @include media(tablet) {
         width: 370px;
     }
     @include media(desktop) {
         width: 390px;
     }
-    border: 1px solid #555;
-    padding: 5px 5px 5px 5px;
-    position: relative;
 }
 
 .item-watch-chart-title {
@@ -505,9 +507,6 @@ td {
 }
 
 .item-watch-chart-close-button {
-    @media print {
-        display: none;
-    }
     position: absolute;
     top: 5px;
     right: 5px;
@@ -515,17 +514,20 @@ td {
     border: 0px;
     color: #eee;
     cursor: pointer;
-}
-
-.dobj-close-button {
     @media print {
         display: none;
     }
+}
+
+.dobj-close-button {
     background-color: #222;
     float: right;
     border: 0px;
     color: #eee;
     cursor: pointer;
+    @media print {
+        display: none;
+    }
 }
 
 .working {
@@ -648,14 +650,15 @@ td {
 }
 
 .trends-values {
-    @media print {
-        display: block;
-    }
     display: none;
     margin-top: 20px;
     color: black;
     border-collapse: collapse;
     border: 2px solid black;
+    @media print {
+        display: block;
+    }
+
     tbody > tr {
         padding: 0px;
         border: 1px solid black;
@@ -934,12 +937,12 @@ td {
 }
 
 .print-info-bar {
-    @media print {
-        display: block;
-        white-space: normal;
-    }
     display: none;
     white-space: nowrap;
     padding-left: 10px;
     color: black;
+    @media print {
+        display: block;
+        white-space: normal;
+    }
 }
