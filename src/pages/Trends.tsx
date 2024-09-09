@@ -7,7 +7,7 @@ import {
     generateStateHistoryCSV,
     useEvaStateHistory,
 } from "@eva-ics/webengine-react";
-import { EvaError, StateProp } from "@eva-ics/webengine";
+import { StateProp } from "@eva-ics/webengine";
 import { downloadCSV } from "bmat/dom";
 import { EditNumber } from "../components/editors/number.tsx";
 import { EditString } from "../components/editors/string.tsx";
@@ -26,7 +26,9 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { SelectPeriod } from "../components/editors/select_period.tsx";
 import { Timestamp } from "bmat/time";
-import { ButtonStyled, onError, onEvaError } from "../common.tsx";
+import { ButtonStyled } from "../common.tsx";
+import { EvaErrorMessage } from "@eva-ics/webengine-react";
+import { EvaError } from "@eva-ics/webengine";
 
 type Timeout = ReturnType<typeof setTimeout>;
 
@@ -222,6 +224,7 @@ const DashboardTrends = () => {
     const [prev_update, setPrevUpdate] = useState(1);
 
     const [items, setItems] = useState<Array<ChartItem>>([]);
+    const [evaError, setEvaError] = useState<EvaError | undefined>(undefined);
 
     const hookProps = useMemo(() => {
         let oids: Array<string> = [];
@@ -312,8 +315,9 @@ const DashboardTrends = () => {
             const startTime = parseFloat(startTimeString) * 1000;
             const endTime = parseFloat(endTimeString) * 1000;
             const timeDifference = endTime - startTime;
-            let unit = "minute"; // Default unit
-            let stepSize = 0; // Default step size
+
+            let unit = "minute";
+            let stepSize = 0;
 
             if (fillUnits.endsWith("T")) {
                 unit = "minute";
@@ -323,8 +327,16 @@ const DashboardTrends = () => {
                 stepSize = parseInt(fillUnits.replace("H", ""), 10);
             }
 
+            if (timeDifference > 1000 * 60 * 60 * 24 * 365 * 10) {
+                //  If > 10 years
+                setEvaError({
+                    code: -1,
+                    message:
+                        "The selected time range is too large. Please select a range smaller than 10 years.",
+                });
+                return {};
+            }
             if (timeDifference > 1000 * 60 * 60 * 24 * 365 * 5) {
-                // If > 5 years
                 unit = "year";
                 stepSize = 1; // 1 year step
             } else if (timeDifference > 1000 * 60 * 60 * 24 * 365) {
@@ -358,11 +370,23 @@ const DashboardTrends = () => {
                 },
             };
         } catch (error) {
-            if (error instanceof Error) {
-                onError(error.message);
+            let evaError: EvaError | undefined;
+
+            if (error instanceof EvaError) {
+                evaError = error;
+            } else if (error instanceof Error) {
+                evaError = {
+                    code: -1,
+                    message: error.message,
+                };
             } else {
-                onError(String(error));
+                evaError = {
+                    code: -1,
+                    message: "An unknown error occurred.",
+                };
             }
+
+            setEvaError(evaError);
             return {};
         }
     }, [chart_opts, props.min, props.max, props.fill_units, props.timeframe]);
@@ -444,6 +468,8 @@ const DashboardTrends = () => {
     if (!loaded) {
         return <></>;
     }
+
+    if (evaError) return <EvaErrorMessage error={evaError} />;
 
     const play = () => {
         setProps({ ...props, update: prev_update });
@@ -712,6 +738,7 @@ const DashboardTrends = () => {
                                 <AddIcon />
                             </ButtonStyled>
                         </div>
+
                         <DataTable props={props} items={items} data={state.data} />
                     </div>
                 </div>
