@@ -7,7 +7,7 @@ import {
     generateStateHistoryCSV,
     useEvaStateHistory,
 } from "@eva-ics/webengine-react";
-import { StateProp } from "@eva-ics/webengine";
+import { EvaError, StateProp } from "@eva-ics/webengine";
 import { downloadCSV } from "bmat/dom";
 import { EditNumber } from "../components/editors/number.tsx";
 import { EditString } from "../components/editors/string.tsx";
@@ -26,7 +26,7 @@ import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { SelectPeriod } from "../components/editors/select_period.tsx";
 import { Timestamp } from "bmat/time";
-import { ButtonStyled } from "../common.tsx";
+import { ButtonStyled, onError, onEvaError } from "../common.tsx";
 
 type Timeout = ReturnType<typeof setTimeout>;
 
@@ -358,7 +358,11 @@ const DashboardTrends = () => {
                 },
             };
         } catch (error) {
-            console.error("Error generating chart options:", error);
+            if (error instanceof Error) {
+                onError(error.message);
+            } else {
+                onError(String(error));
+            }
             return {};
         }
     }, [chart_opts, props.min, props.max, props.fill_units, props.timeframe]);
