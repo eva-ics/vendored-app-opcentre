@@ -339,18 +339,22 @@ const DashboardTrends = () => {
             if (timeDifference > 1000 * 60 * 60 * 24 * 365 * 5) {
                 unit = "year";
                 stepSize = 1; // 1 year step
+                setEvaError(undefined);
             } else if (timeDifference > 1000 * 60 * 60 * 24 * 365) {
                 // If > 1 year
                 unit = "month";
                 stepSize = 6; // Every 6 months
+                setEvaError(undefined);
             } else if (timeDifference > 1000 * 60 * 60 * 24 * 30) {
                 // If > 1 month
                 unit = "day";
                 stepSize = 7; // Every week
+                setEvaError(undefined);
             } else if (timeDifference > 1000 * 60 * 60 * 24) {
                 // If > 1 day
                 unit = "hour";
                 stepSize = 12; // Every 12 hours
+                setEvaError(undefined);
             }
 
             return {
@@ -469,7 +473,7 @@ const DashboardTrends = () => {
         return <></>;
     }
 
-    if (evaError) return <EvaErrorMessage error={evaError} />;
+    // if (evaError) return <EvaErrorMessage error={evaError} />;
 
     const play = () => {
         setProps({ ...props, update: prev_update });
@@ -696,22 +700,26 @@ const DashboardTrends = () => {
                                 display: hookProps.oid.length === 0 ? "none" : "block",
                             }}
                         >
-                            <Chart
-                                oid={hookProps.oid}
-                                state={state}
-                                timeframe={props.timeframe}
-                                formula={formulas}
-                                fill={`${props.points}A`}
-                                digits={props.digits}
-                                update={props.update || 86400}
-                                labels={labels}
-                                colors={colors}
-                                options={options}
-                                className="chart-trends"
-                                width={chartSize.current.x}
-                                height={chartSize.current.y}
-                                kind={props.kind}
-                            />
+                            {evaError ? (
+                                <EvaErrorMessage error={evaError} />
+                            ) : (
+                                <Chart
+                                    oid={hookProps.oid}
+                                    state={state}
+                                    timeframe={props.timeframe}
+                                    formula={formulas}
+                                    fill={`${props.points}A`}
+                                    digits={props.digits}
+                                    update={props.update || 86400}
+                                    labels={labels}
+                                    colors={colors}
+                                    options={options}
+                                    className="chart-trends"
+                                    width={chartSize.current.x}
+                                    height={chartSize.current.y}
+                                    kind={props.kind}
+                                />
+                            )}
                         </div>
                         <div className="trends-editor">
                             <div>
