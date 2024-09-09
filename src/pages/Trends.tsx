@@ -219,7 +219,6 @@ const DashboardTrends = () => {
         database: "default",
         vfn: "mean",
     });
-
     const [prev_update, setPrevUpdate] = useState(1);
 
     const [items, setItems] = useState<Array<ChartItem>>([]);
@@ -263,10 +262,8 @@ const DashboardTrends = () => {
     const state = useEvaStateHistory(hookProps, [hookProps]);
 
     const size_sd = useRef<Timeout | undefined>(undefined);
-
     const props_sd = useRef<Timeout | undefined>(undefined);
     const props_sdata = useRef<ChartProps | null>(null);
-
     const items_sd = useRef<Timeout | undefined>(undefined);
     const items_sdata = useRef<Array<ChartItem> | null>(null);
 
@@ -304,9 +301,67 @@ const DashboardTrends = () => {
         }, SET_DELAY);
     };
 
+    // const options = useMemo(() => {
+    //     return { ...chart_opts, scale: { y: { min: props.min, max: props.max } } };
+    // }, [chart_opts, props.min, props.max]);
+
     const options = useMemo(() => {
-        return { ...chart_opts, scale: { y: { min: props.min, max: props.max } } };
-    }, [chart_opts, props.min, props.max]);
+        try {
+            const fillUnits = props.fill_units;
+            const [startTimeString, endTimeString] = props.timeframe.split(":");
+            const startTime = parseFloat(startTimeString) * 1000;
+            const endTime = parseFloat(endTimeString) * 1000;
+            const timeDifference = endTime - startTime;
+            let unit = "minute"; // Default unit
+            let stepSize = 0; // Default step size
+
+            if (fillUnits.endsWith("T")) {
+                unit = "minute";
+                stepSize = parseInt(fillUnits.replace("T", ""), 10);
+            } else if (fillUnits.endsWith("H")) {
+                unit = "hour";
+                stepSize = parseInt(fillUnits.replace("H", ""), 10);
+            }
+
+            if (timeDifference > 1000 * 60 * 60 * 24 * 365 * 5) {
+                // If > 5 years
+                unit = "year";
+                stepSize = 1; // 1 year step
+            } else if (timeDifference > 1000 * 60 * 60 * 24 * 365) {
+                // If > 1 year
+                unit = "month";
+                stepSize = 6; // Every 6 months
+            } else if (timeDifference > 1000 * 60 * 60 * 24 * 30) {
+                // If > 1 month
+                unit = "day";
+                stepSize = 7; // Every week
+            } else if (timeDifference > 1000 * 60 * 60 * 24) {
+                // If > 1 day
+                unit = "hour";
+                stepSize = 12; // Every 12 hours
+            }
+
+            return {
+                ...chart_opts,
+                scales: {
+                    x: {
+                        type: "time",
+                        time: {
+                            unit,
+                            stepSize,
+                        },
+                    },
+                    y: {
+                        min: props.min,
+                        max: props.max,
+                    },
+                },
+            };
+        } catch (error) {
+            console.error("Error generating chart options:", error);
+            return {};
+        }
+    }, [chart_opts, props.min, props.max, props.fill_units, props.timeframe]);
 
     const labels = items.map((i) => i.label || i.oid);
     const formulas = items.map((i) => i.formula);
