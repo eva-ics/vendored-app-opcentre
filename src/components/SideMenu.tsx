@@ -120,7 +120,7 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
                                                 data-has-submenu={
                                                     v.submenus && v.submenus.length > 0
                                                 }
-                                                tabIndex={0}
+                                                // tabIndex={0}
                                                 onClick={() => toggleSubMenu(v.value)}
                                                 onKeyDown={(event) => {
                                                     if (
@@ -135,7 +135,6 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
                                                 {v.to ? (
                                                     <NavLink
                                                         to={v.to}
-                                                        tabIndex={0}
                                                         onClick={(event) => {
                                                             event.stopPropagation();
                                                             handleNavClick(
@@ -190,7 +189,6 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
                                                                     v.value
                                                                 ] = el)
                                                             }
-                                                            tabIndex={-1}
                                                             onClick={(event) =>
                                                                 event.stopPropagation()
                                                             }
