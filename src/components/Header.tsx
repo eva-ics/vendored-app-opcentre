@@ -2,7 +2,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { HeaderProps, NavElement } from "../types";
 import { Eva } from "@eva-ics/webengine";
 import { get_engine } from "@eva-ics/webengine-react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { Timestamp } from "bmat/time";
 
@@ -30,6 +30,7 @@ const TimeInfo = () => {
 const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
     const [openSubMenu, setOpenSubMenu] = useState<string | null>(null);
     const submenuRefs = useRef<{ [key: string]: HTMLUListElement | null }>({});
+    const navigate = useNavigate();
 
     const eva = get_engine() as Eva;
 
@@ -38,6 +39,7 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
         event: React.MouseEvent<HTMLLIElement> | React.KeyboardEvent<HTMLLIElement>,
         v: NavElement
     ) => {
+        event.preventDefault();
         const isShiftKey = (event as React.KeyboardEvent<HTMLLIElement>).shiftKey;
         if (
             event.type === "click" ||
@@ -52,7 +54,7 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                     }
                 } else {
                     if (v.to?.startsWith("?")) {
-                        window.location.href = v.to;
+                        navigate(v.to);
                     }
                 }
             }
@@ -94,7 +96,7 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
             if (isShiftKey) {
                 window.open(to, "_blank");
             } else {
-                document.location = to;
+                navigate(to);
             }
         }
     };
@@ -154,7 +156,7 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                                 className={navLinkClass}
                                 key={idx}
                                 data-has-submenu={v.submenus && v.submenus.length > 0}
-                                tabIndex={idx}
+                                tabIndex={0}
                                 onClick={(event) => {
                                     event.stopPropagation();
                                     handleNavClick(event, v);

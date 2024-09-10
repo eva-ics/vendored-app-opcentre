@@ -1,14 +1,101 @@
-import { useState } from "react";
-import { SideMenuProps } from "../types";
+import { useEffect, useRef, useState } from "react";
+import { NavElement, SideMenuProps } from "../types";
 import { AiOutlineClose } from "react-icons/ai";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuProps) => {
     const [openSubMenu, setOpenSubMenu] = useState<string | null>(null);
+    const submenuRefs = useRef<{ [key: string]: HTMLUListElement | null }>({});
+    const navigate = useNavigate();
 
     const toggleSubMenu = (menuItem: string) => {
-        openSubMenu === menuItem ? setOpenSubMenu(null) : setOpenSubMenu(menuItem);
+        setOpenSubMenu(openSubMenu === menuItem ? null : menuItem);
     };
+
+    const handleNavClick = (
+        event:
+            | React.MouseEvent<HTMLAnchorElement | HTMLLIElement>
+            | React.KeyboardEvent<HTMLAnchorElement | HTMLLIElement>,
+        v: NavElement
+    ) => {
+        event.preventDefault();
+        const isShiftKey = (
+            event as React.KeyboardEvent<HTMLAnchorElement | HTMLLIElement>
+        ).shiftKey;
+
+        if (
+            event.type === "click" ||
+            (event as React.KeyboardEvent<HTMLAnchorElement | HTMLLIElement>).key ===
+                "Enter"
+        ) {
+            if (v.submenus && v.submenus.length > 0) {
+                toggleSubMenu(v.value);
+            } else {
+                if (isShiftKey) {
+                    if (v.to?.startsWith("?")) {
+                        window.open(v.to, "_blank");
+                    }
+                } else {
+                    if (v.to) {
+                        navigate(v.to);
+                    }
+                }
+                toggleMenu();
+            }
+        }
+    };
+
+    // Handle focus and keyboard events for main menu items
+    const handleNavFocus = (
+        event: React.FocusEvent<HTMLAnchorElement | HTMLLIElement>
+    ) => {
+        const target = event.target as HTMLLIElement | HTMLAnchorElement;
+        if (target.dataset.hasSubmenu === "true") {
+            const submenu = target.querySelector(".subitem-list") as HTMLElement;
+            if (submenu) {
+                submenu.focus({ preventScroll: true });
+            }
+        }
+    };
+
+    const handleSubClick = (
+        event:
+            | React.MouseEvent<HTMLAnchorElement>
+            | React.KeyboardEvent<HTMLAnchorElement>,
+        to: string
+    ) => {
+        const isShiftKey = (event as React.KeyboardEvent<HTMLAnchorElement>).shiftKey;
+
+        if (to === "logout") {
+            logout();
+        } else if (to.startsWith("?")) {
+            if (isShiftKey) {
+                window.open(to, "_blank");
+            } else {
+                navigate(to);
+                toggleMenu();
+            }
+        }
+    };
+
+    const handleSubKeyDown = (
+        event: React.KeyboardEvent<HTMLAnchorElement>,
+        to: string
+    ) => {
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            handleSubClick(event, to);
+        }
+    };
+
+    useEffect(() => {
+        if (openSubMenu) {
+            const submenu = submenuRefs.current[openSubMenu];
+            if (submenu) {
+                submenu.focus({ preventScroll: true });
+            }
+        }
+    }, [openSubMenu]);
 
     return (
         <>
@@ -28,15 +115,44 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
                                             : "side-menu-item";
 
                                         return (
-                                            <li key={idx}>
+                                            <li
+                                                key={idx}
+                                                data-has-submenu={
+                                                    v.submenus && v.submenus.length > 0
+                                                }
+                                                tabIndex={0}
+                                                onClick={() => toggleSubMenu(v.value)}
+                                                onKeyDown={(event) => {
+                                                    if (
+                                                        event.key === "Enter" ||
+                                                        event.key === " "
+                                                    ) {
+                                                        handleNavClick(event, v);
+                                                    }
+                                                }}
+                                                onFocus={handleNavFocus}
+                                            >
                                                 {v.to ? (
                                                     <NavLink
                                                         to={v.to}
-                                                        onClick={() => {
-                                                            toggleSubMenu(v.value);
-                                                            toggleMenu();
-                                                            if (v.to?.startsWith("/")) {
-                                                                document.location = v.to;
+                                                        tabIndex={0}
+                                                        onClick={(event) => {
+                                                            event.stopPropagation();
+                                                            handleNavClick(
+                                                                event as React.MouseEvent<HTMLAnchorElement>,
+                                                                v
+                                                            );
+                                                        }}
+                                                        onFocus={handleNavFocus}
+                                                        onKeyDown={(event) => {
+                                                            if (
+                                                                event.key === "Enter" ||
+                                                                event.key === " "
+                                                            ) {
+                                                                handleNavClick(
+                                                                    event as React.KeyboardEvent<HTMLAnchorElement>,
+                                                                    v
+                                                                );
                                                             }
                                                         }}
                                                     >
@@ -59,7 +175,18 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
                                                 {openSubMenu === v.value &&
                                                     v.submenus &&
                                                     v.submenus.length > 0 && (
-                                                        <ul className="subitem-list">
+                                                        <ul
+                                                            className="subitem-list"
+                                                            ref={(el) =>
+                                                                (submenuRefs.current[
+                                                                    v.value
+                                                                ] = el)
+                                                            }
+                                                            tabIndex={-1}
+                                                            onClick={(event) =>
+                                                                event.stopPropagation()
+                                                            }
+                                                        >
                                                             {v.submenus.map(
                                                                 (subItem, i) => (
                                                                     <li key={i}>
@@ -76,24 +203,23 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
                                                                                     ? "?"
                                                                                     : subItem.to
                                                                             }
-                                                                            onClick={() => {
-                                                                                if (
-                                                                                    subItem.to.startsWith(
-                                                                                        "/"
-                                                                                    )
-                                                                                ) {
-                                                                                    document.location =
-                                                                                        subItem.to;
-                                                                                } else if (
-                                                                                    subItem.to ===
-                                                                                    "logout"
-                                                                                ) {
-                                                                                    logout();
-                                                                                    toggleMenu();
-                                                                                } else {
-                                                                                    toggleMenu();
-                                                                                }
+                                                                            onClick={(
+                                                                                event
+                                                                            ) => {
+                                                                                event.stopPropagation();
+                                                                                handleSubClick(
+                                                                                    event,
+                                                                                    subItem.to
+                                                                                );
                                                                             }}
+                                                                            onKeyDown={(
+                                                                                event
+                                                                            ) =>
+                                                                                handleSubKeyDown(
+                                                                                    event,
+                                                                                    subItem.to
+                                                                                )
+                                                                            }
                                                                         >
                                                                             {
                                                                                 subItem.value
