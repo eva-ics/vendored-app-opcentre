@@ -161,15 +161,23 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
                                                         </div>
                                                     </NavLink>
                                                 ) : (
-                                                    <div
-                                                        className={containerClass}
-                                                        style={{ cursor: "pointer" }}
-                                                        onClick={() =>
-                                                            toggleSubMenu(v.value)
+                                                    <NavLink
+                                                        key={idx}
+                                                        to="#"
+                                                        onClick={(event) =>
+                                                            event.preventDefault()
                                                         }
                                                     >
-                                                        {v.value}
-                                                    </div>
+                                                        <div
+                                                            className={containerClass}
+                                                            style={{ cursor: "pointer" }}
+                                                            onClick={() =>
+                                                                toggleSubMenu(v.value)
+                                                            }
+                                                        >
+                                                            {v.value}
+                                                        </div>
+                                                    </NavLink>
                                                 )}
 
                                                 {openSubMenu === v.value &&
