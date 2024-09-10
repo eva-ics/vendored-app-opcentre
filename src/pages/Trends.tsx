@@ -313,7 +313,6 @@ const DashboardTrends = () => {
             const timeframeInSeconds = Number(props.timeframe);
             const isLongInterval = timeframeInSeconds >= 604800;
             const timeUnit = isLongInterval ? "week" : "day";
-
             return {
                 ...chart_opts,
                 scales: {
@@ -351,93 +350,6 @@ const DashboardTrends = () => {
             return { ...chart_opts }; // Return a fallback chart configuration
         }
     }, [chart_opts, props.min, props.max, props.timeframe]);
-
-    // const options = useMemo(() => {
-    //     try {
-    //         const fillUnits = props.fill_units;
-    //         const [startTimeString, endTimeString] = props.timeframe.split(":");
-    //         const startTime = parseFloat(startTimeString) * 1000;
-    //         const endTime = parseFloat(endTimeString) * 1000;
-    //         const timeDifference = endTime - startTime;
-
-    //         let unit = "minute";
-    //         let stepSize = 0;
-
-    //         if (fillUnits.endsWith("T")) {
-    //             unit = "minute";
-    //             stepSize = parseInt(fillUnits.replace("T", ""), 10);
-    //         } else if (fillUnits.endsWith("H")) {
-    //             unit = "hour";
-    //             stepSize = parseInt(fillUnits.replace("H", ""), 10);
-    //         }
-
-    //         if (timeDifference > 1000 * 60 * 60 * 24 * 365 * 10) {
-    //             //  If > 10 years
-    //             setEvaError({
-    //                 code: -1,
-    //                 message:
-    //                     "The selected time range is too large. Please select a range smaller than 10 years.",
-    //             });
-    //             return {};
-    //         }
-    //         if (timeDifference > 1000 * 60 * 60 * 24 * 365 * 5) {
-    //             unit = "year";
-    //             stepSize = 1; // 1 year step
-    //             setEvaError(undefined);
-    //         } else if (timeDifference > 1000 * 60 * 60 * 24 * 365) {
-    //             // If > 1 year
-    //             unit = "month";
-    //             stepSize = 6; // Every 6 months
-    //             setEvaError(undefined);
-    //         } else if (timeDifference > 1000 * 60 * 60 * 24 * 30) {
-    //             // If > 1 month
-    //             unit = "day";
-    //             stepSize = 7; // Every week
-    //             setEvaError(undefined);
-    //         } else if (timeDifference > 1000 * 60 * 60 * 24) {
-    //             // If > 1 day
-    //             unit = "hour";
-    //             stepSize = 12; // Every 12 hours
-    //             setEvaError(undefined);
-    //         }
-
-    //         return {
-    //             ...chart_opts,
-    //             scales: {
-    //                 x: {
-    //                     type: "time",
-    //                     time: {
-    //                         unit,
-    //                         stepSize,
-    //                     },
-    //                 },
-    //                 y: {
-    //                     min: props.min,
-    //                     max: props.max,
-    //                 },
-    //             },
-    //         };
-    //     } catch (error) {
-    //         let evaError: EvaError | undefined;
-
-    //         if (error instanceof EvaError) {
-    //             evaError = error;
-    //         } else if (error instanceof Error) {
-    //             evaError = {
-    //                 code: -1,
-    //                 message: error.message,
-    //             };
-    //         } else {
-    //             evaError = {
-    //                 code: -1,
-    //                 message: "An unknown error occurred.",
-    //             };
-    //         }
-
-    //         setEvaError(evaError);
-    //         return {};
-    //     }
-    // }, [chart_opts, props.min, props.max, props.fill_units, props.timeframe]);
 
     const labels = items.map((i) => i.label || i.oid);
     const formulas = items.map((i) => i.formula);
