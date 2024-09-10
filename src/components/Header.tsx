@@ -29,18 +29,56 @@ const TimeInfo = () => {
 
 const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
     const [openSubMenu, setOpenSubMenu] = useState<string | null>(null);
+    const submenuRefs = useRef<{ [key: string]: HTMLUListElement | null }>({});
 
     const eva = get_engine() as Eva;
 
-    // const handleSubClick = (event: any) => {
-    //     if (event.target.tagName !== "A") {
-    //         const link = event.currentTarget.querySelector("a");
-    //         if (link) {
-    //             link.click();
-    //         }
-    //     }
-    // };
-    // Handle  clicks submenu
+    // Handle clicks or keyboard events on main menu items
+    const handleNavClick = (
+        event: React.MouseEvent<HTMLLIElement> | React.KeyboardEvent<HTMLLIElement>,
+        v: NavElement
+    ) => {
+        const isShiftKey = (event as React.KeyboardEvent<HTMLLIElement>).shiftKey;
+        if (
+            event.type === "click" ||
+            (event as React.KeyboardEvent<HTMLLIElement>).key === "Enter"
+        ) {
+            if (v.submenus && v.submenus.length > 0) {
+                setOpenSubMenu(openSubMenu === v.value ? null : v.value);
+            } else {
+                if (isShiftKey) {
+                    if (v.to?.startsWith("?")) {
+                        window.open(v.to, "_blank");
+                    }
+                } else {
+                    if (v.to?.startsWith("?")) {
+                        window.location.href = v.to;
+                    }
+                }
+            }
+        }
+    };
+
+    // Handle focus and keyboard events for main menu items
+    const handleNavFocus = (event: React.FocusEvent<HTMLLIElement>) => {
+        const target = event.target as HTMLLIElement;
+        if (target && target.dataset.hasSubmenu === "true") {
+            const submenu = target.querySelector(".submenu") as HTMLElement;
+            if (submenu) {
+                submenu.focus();
+            }
+        }
+    };
+
+    ////////////Sub//////////
+    const handleSub = (event: any) => {
+        if (event.target.tagName !== "A") {
+            const link = event.currentTarget.querySelector("a");
+            if (link) {
+                link.click();
+            }
+        }
+    };
 
     const handleSubClick = (
         event:
@@ -48,47 +86,40 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
             | React.KeyboardEvent<HTMLAnchorElement>,
         to: string
     ) => {
+        const isShiftKey = (event as React.KeyboardEvent<HTMLAnchorElement>).shiftKey;
+
         if (to === "logout") {
             logout();
-        } else if (to.startsWith("/")) {
-            document.location = to;
-        }
-    };
-
-    // const handleSubKeyDown = (
-    //     event: React.KeyboardEvent<HTMLAnchorElement>,
-    //     to: string
-    // ) => {
-    //     event.preventDefault();
-
-    //     if (event.key === "Enter" || event.key === " ") {
-    //         if (to === "logout") {
-    //             logout();
-    //         } else if (to.startsWith("/")) {
-    //             document.location.href = to;
-    //         }
-    //     } else if (event.key === "Escape" || event.key === "Backspace") {
-    //         setOpenSubMenu(null);
-    //     }
-    // };
-
-    // Handle  clicks
-    const handleNavClick = (
-        event: React.MouseEvent<HTMLLIElement, MouseEvent>,
-        v: NavElement,
-        openSubMenu: string | null,
-        setOpenSubMenu: (value: string | null) => void
-    ) => {
-        if (v.submenus && v.submenus.length > 0) {
-            if (openSubMenu !== v.value) {
-                setOpenSubMenu(v.value);
+        } else if (to.startsWith("?")) {
+            if (isShiftKey) {
+                window.open(to, "_blank");
             } else {
-                setOpenSubMenu(null);
+                document.location = to;
             }
-        } else if (v.to?.startsWith("/")) {
-            window.location.href = v.to;
         }
     };
+
+    const handleSubKeyDown = (
+        event: React.KeyboardEvent<HTMLAnchorElement>,
+        to: string
+    ) => {
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            handleSubClick(event, to);
+        }
+    };
+
+    useEffect(() => {
+        if (openSubMenu) {
+            const submenu = submenuRefs.current[openSubMenu];
+            if (submenu) {
+                const firstItem = submenu.querySelector("a");
+                if (firstItem) {
+                    firstItem.focus();
+                }
+            }
+        }
+    }, [openSubMenu]);
 
     return (
         <header className="header">
@@ -122,10 +153,18 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                             <li
                                 className={navLinkClass}
                                 key={idx}
+                                data-has-submenu={v.submenus && v.submenus.length > 0}
                                 tabIndex={idx}
-                                onClick={(event) =>
-                                    handleNavClick(event, v, openSubMenu, setOpenSubMenu)
-                                }
+                                onClick={(event) => {
+                                    event.stopPropagation();
+                                    handleNavClick(event, v);
+                                }}
+                                onFocus={handleNavFocus}
+                                onKeyDown={(event) => {
+                                    if (event.key === "Enter" || event.key === " ") {
+                                        handleNavClick(event, v);
+                                    }
+                                }}
                             >
                                 {v.to ? (
                                     <NavLink key={idx} to={v.to}>
@@ -138,34 +177,37 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                                 {openSubMenu == v.value &&
                                     v.submenus &&
                                     v.submenus.length > 0 && (
-                                        <ul className="submenu">
+                                        <ul
+                                            className="submenu"
+                                            ref={(el) =>
+                                                (submenuRefs.current[v.value] = el)
+                                            }
+                                        >
                                             {v.submenus.map((submenuItem, subIdx) => (
-                                                <li className="submenu-item" key={subIdx}>
+                                                <li
+                                                    className="submenu-item"
+                                                    key={subIdx}
+                                                    onClick={handleSub}
+                                                >
                                                     <NavLink
                                                         to={
                                                             submenuItem.to === "logout"
                                                                 ? "?"
                                                                 : submenuItem.to
                                                         }
-                                                        onClick={(event) =>
+                                                        onClick={(event) => {
+                                                            event.stopPropagation();
                                                             handleSubClick(
+                                                                event,
+                                                                submenuItem.to
+                                                            );
+                                                        }}
+                                                        onKeyDown={(event) =>
+                                                            handleSubKeyDown(
                                                                 event,
                                                                 submenuItem.to
                                                             )
                                                         }
-                                                        tabIndex={0}
-                                                        // onKeyDown={(event) =>
-                                                        //     handleSubKeyDown(
-                                                        //         event,
-                                                        //         submenuItem.to
-                                                        //     )
-                                                        // }
-                                                        // onKeyDown={(event) =>
-                                                        //     handleSubClick(
-                                                        //         event,
-                                                        //         submenuItem.to
-                                                        //     )
-                                                        // }
                                                     >
                                                         {submenuItem.value}
                                                     </NavLink>
