@@ -29,12 +29,10 @@ const TimeInfo = () => {
 
 const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
     const [openSubMenu, setOpenSubMenu] = useState<string | null>(null);
-    const submenuRefs = useRef<{ [key: string]: HTMLUListElement | null }>({});
     const navigate = useNavigate();
 
     const eva = get_engine() as Eva;
 
-    // Handle clicks or keyboard events on main menu items
     const handleNavClick = (
         event: React.MouseEvent<HTMLLIElement> | React.KeyboardEvent<HTMLLIElement>,
         v: NavElement
@@ -57,17 +55,6 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                         navigate(v.to);
                     }
                 }
-            }
-        }
-    };
-
-    // Handle focus and keyboard events for main menu items
-    const handleNavFocus = (event: React.FocusEvent<HTMLLIElement>) => {
-        const target = event.target as HTMLLIElement;
-        if (target && target.dataset.hasSubmenu === "true") {
-            const submenu = target.querySelector(".submenu") as HTMLElement;
-            if (submenu) {
-                submenu.focus();
             }
         }
     };
@@ -111,18 +98,6 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
         }
     };
 
-    useEffect(() => {
-        if (openSubMenu) {
-            const submenu = submenuRefs.current[openSubMenu];
-            if (submenu) {
-                const firstItem = submenu.querySelector("a");
-                if (firstItem) {
-                    firstItem.focus();
-                }
-            }
-        }
-    }, [openSubMenu]);
-
     return (
         <header className="header">
             <button className="menu-icon-btn" onClick={toggleMenu}>
@@ -155,12 +130,10 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                             <li
                                 className={navLinkClass}
                                 key={idx}
-                                data-has-submenu={v.submenus && v.submenus.length > 0}
                                 onClick={(event) => {
                                     event.stopPropagation();
                                     handleNavClick(event, v);
                                 }}
-                                onFocus={handleNavFocus}
                                 onKeyDown={(event) => {
                                     if (event.key === "Enter" || event.key === " ") {
                                         handleNavClick(event, v);
@@ -184,12 +157,7 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                                 {openSubMenu == v.value &&
                                     v.submenus &&
                                     v.submenus.length > 0 && (
-                                        <ul
-                                            className="submenu"
-                                            ref={(el) =>
-                                                (submenuRefs.current[v.value] = el)
-                                            }
-                                        >
+                                        <ul className="submenu">
                                             {v.submenus.map((submenuItem, subIdx) => (
                                                 <li
                                                     className="submenu-item"

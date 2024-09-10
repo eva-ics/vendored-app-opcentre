@@ -1,11 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { NavElement, SideMenuProps } from "../types";
 import { AiOutlineClose } from "react-icons/ai";
 import { NavLink, useNavigate } from "react-router-dom";
 
 const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuProps) => {
     const [openSubMenu, setOpenSubMenu] = useState<string | null>(null);
-    const submenuRefs = useRef<{ [key: string]: HTMLUListElement | null }>({});
     const navigate = useNavigate();
 
     const toggleSubMenu = (menuItem: string) => {
@@ -45,19 +44,6 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
         }
     };
 
-    // Handle focus and keyboard events for main menu items
-    const handleNavFocus = (
-        event: React.FocusEvent<HTMLAnchorElement | HTMLLIElement>
-    ) => {
-        const target = event.target as HTMLLIElement | HTMLAnchorElement;
-        if (target.dataset.hasSubmenu === "true") {
-            const submenu = target.querySelector(".subitem-list") as HTMLElement;
-            if (submenu) {
-                submenu.focus({ preventScroll: true });
-            }
-        }
-    };
-
     const handleSubClick = (
         event:
             | React.MouseEvent<HTMLAnchorElement>
@@ -88,15 +74,6 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
         }
     };
 
-    useEffect(() => {
-        if (openSubMenu) {
-            const submenu = submenuRefs.current[openSubMenu];
-            if (submenu) {
-                submenu.focus({ preventScroll: true });
-            }
-        }
-    }, [openSubMenu]);
-
     return (
         <>
             {isOpen ? (
@@ -117,10 +94,6 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
                                         return (
                                             <li
                                                 key={idx}
-                                                data-has-submenu={
-                                                    v.submenus && v.submenus.length > 0
-                                                }
-                                                // tabIndex={0}
                                                 onClick={() => toggleSubMenu(v.value)}
                                                 onKeyDown={(event) => {
                                                     if (
@@ -130,7 +103,6 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
                                                         handleNavClick(event, v);
                                                     }
                                                 }}
-                                                onFocus={handleNavFocus}
                                             >
                                                 {v.to ? (
                                                     <NavLink
@@ -142,7 +114,6 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
                                                                 v
                                                             );
                                                         }}
-                                                        onFocus={handleNavFocus}
                                                         onKeyDown={(event) => {
                                                             if (
                                                                 event.key === "Enter" ||
@@ -184,11 +155,6 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
                                                     v.submenus.length > 0 && (
                                                         <ul
                                                             className="subitem-list"
-                                                            ref={(el) =>
-                                                                (submenuRefs.current[
-                                                                    v.value
-                                                                ] = el)
-                                                            }
                                                             onClick={(event) =>
                                                                 event.stopPropagation()
                                                             }
