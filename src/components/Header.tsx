@@ -1,8 +1,8 @@
 import { GiHamburgerMenu } from "react-icons/gi";
-import { HeaderProps } from "../types";
+import { HeaderProps, NavElement } from "../types";
 import { Eva } from "@eva-ics/webengine";
 import { get_engine } from "@eva-ics/webengine-react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { Timestamp } from "bmat/time";
 
@@ -29,15 +29,74 @@ const TimeInfo = () => {
 
 const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
     const [openSubMenu, setOpenSubMenu] = useState<string | null>(null);
+    const navigate = useNavigate();
 
     const eva = get_engine() as Eva;
 
-    const handleSubClick = (event: any) => {
+    const handleNavClick = (
+        event: React.MouseEvent<HTMLLIElement> | React.KeyboardEvent<HTMLLIElement>,
+        v: NavElement
+    ) => {
+        event.preventDefault();
+        const isShiftKey = (event as React.KeyboardEvent<HTMLLIElement>).shiftKey;
+        if (
+            event.type === "click" ||
+            (event as React.KeyboardEvent<HTMLLIElement>).key === "Enter"
+        ) {
+            if (v.submenus && v.submenus.length > 0) {
+                setOpenSubMenu(openSubMenu === v.value ? null : v.value);
+            } else {
+                if (isShiftKey) {
+                    event.preventDefault();
+                    if (v.to?.startsWith("?")) {
+                        setTimeout(() => window.open(v.to, "_blank"), 0);
+                    }
+                } else {
+                    if (v.to?.startsWith("?")) {
+                        navigate(v.to);
+                    }
+                }
+            }
+        }
+    };
+
+    ////////////Sub//////////
+    const handleSub = (event: any) => {
         if (event.target.tagName !== "A") {
             const link = event.currentTarget.querySelector("a");
             if (link) {
                 link.click();
             }
+        }
+    };
+
+    const handleSubClick = (
+        event:
+            | React.MouseEvent<HTMLAnchorElement, MouseEvent>
+            | React.KeyboardEvent<HTMLAnchorElement>,
+        to: string
+    ) => {
+        const isShiftKey = (event as React.KeyboardEvent<HTMLAnchorElement>).shiftKey;
+
+        if (to === "logout") {
+            logout();
+        } else if (to.startsWith("?")) {
+            if (isShiftKey) {
+                event.preventDefault();
+                setTimeout(() => window.open(to, "_blank"), 0);
+            } else {
+                navigate(to);
+            }
+        }
+    };
+
+    const handleSubKeyDown = (
+        event: React.KeyboardEvent<HTMLAnchorElement>,
+        to: string
+    ) => {
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            handleSubClick(event, to);
         }
     };
 
@@ -50,7 +109,7 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                 <div className="dash-info">
                     <img src="icon.svg" className="dash-logo" />
                     <div className="dash-title">
-                        EVA ICS OpCentre. Node: {eva.system_name()}{" "}
+                        EVA ICS System dashboard. Node: {eva.system_name()}{" "}
                         <span className="current-user">[{eva?.server_info?.aci.u}]</span>
                     </div>
                 </div>
@@ -59,7 +118,7 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
             <nav id="header">
                 <ul>
                     {nav.map((v, idx) => {
-                        const isCurrent = (current_page === v.compare_value || current_page === v.value);
+                        const isCurrent = current_page === v.value;
 
                         const navLinkClass = isCurrent
                             ? "nav-link nav-link-current"
@@ -73,18 +132,13 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                             <li
                                 className={navLinkClass}
                                 key={idx}
-                                onClick={() => {
-                                    if (
-                                        v.submenus &&
-                                        v.submenus.length > 0 &&
-                                        openSubMenu !== v.value
-                                    ) {
-                                        setOpenSubMenu(v.value);
-                                    } else {
-                                        setOpenSubMenu(null);
-                                        if (v.to?.startsWith("/")) {
-                                            document.location = v.to;
-                                        }
+                                onClick={(event) => {
+                                    event.stopPropagation();
+                                    handleNavClick(event, v);
+                                }}
+                                onKeyDown={(event) => {
+                                    if (event.key === "Enter" || event.key === " ") {
+                                        handleNavClick(event, v);
                                     }
                                 }}
                             >
@@ -93,7 +147,13 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                                         <div className={containerClass}>{v.value}</div>
                                     </NavLink>
                                 ) : (
-                                    <div className={containerClass}>{v.value}</div>
+                                    <NavLink
+                                        key={idx}
+                                        to="#"
+                                        onClick={(event) => event.preventDefault()}
+                                    >
+                                        <div className={containerClass}>{v.value}</div>
+                                    </NavLink>
                                 )}
 
                                 {openSubMenu == v.value &&
@@ -104,7 +164,7 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                                                 <li
                                                     className="submenu-item"
                                                     key={subIdx}
-                                                    onClick={handleSubClick}
+                                                    onClick={handleSub}
                                                 >
                                                     <NavLink
                                                         to={
@@ -112,21 +172,19 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                                                                 ? "?"
                                                                 : submenuItem.to
                                                         }
-                                                        onClick={() => {
-                                                            if (
-                                                                submenuItem.to.startsWith(
-                                                                    "/"
-                                                                )
-                                                            ) {
-                                                                document.location =
-                                                                    submenuItem.to;
-                                                            } else if (
-                                                                submenuItem.to ===
-                                                                "logout"
-                                                            ) {
-                                                                logout();
-                                                            }
+                                                        onClick={(event) => {
+                                                            event.stopPropagation();
+                                                            handleSubClick(
+                                                                event,
+                                                                submenuItem.to
+                                                            );
                                                         }}
+                                                        onKeyDown={(event) =>
+                                                            handleSubKeyDown(
+                                                                event,
+                                                                submenuItem.to
+                                                            )
+                                                        }
                                                     >
                                                         {submenuItem.value}
                                                     </NavLink>
