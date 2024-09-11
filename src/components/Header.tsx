@@ -47,8 +47,9 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                 setOpenSubMenu(openSubMenu === v.value ? null : v.value);
             } else {
                 if (isShiftKey) {
+                    event.preventDefault();
                     if (v.to?.startsWith("?")) {
-                        window.open(v.to, "_blank");
+                        setTimeout(() => window.open(v.to, "_blank"), 0);
                     }
                 } else {
                     if (v.to?.startsWith("?")) {
@@ -81,7 +82,8 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
             logout();
         } else if (to.startsWith("?")) {
             if (isShiftKey) {
-                window.open(to, "_blank");
+                event.preventDefault();
+                setTimeout(() => window.open(to, "_blank"), 0);
             } else {
                 navigate(to);
             }
