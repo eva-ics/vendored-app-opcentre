@@ -62,12 +62,10 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
     };
 
     const handleSubClick = (
-        event:
-            | React.MouseEvent<HTMLAnchorElement>
-            | React.KeyboardEvent<HTMLAnchorElement>,
+        event: React.MouseEvent<HTMLLIElement | HTMLAnchorElement>,
         to: string
     ) => {
-        const isShiftKey = (event as React.KeyboardEvent<HTMLAnchorElement>).shiftKey;
+        const isShiftKey = event.shiftKey;
 
         if (to === "logout") {
             logout();
@@ -83,12 +81,22 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
     };
 
     const handleSubKeyDown = (
-        event: React.KeyboardEvent<HTMLAnchorElement>,
+        event: React.KeyboardEvent<HTMLLIElement | HTMLAnchorElement>,
         to: string
     ) => {
         if (event.key === "Enter" || event.key === " ") {
             event.preventDefault();
-            handleSubClick(event, to);
+
+            handleSubClick(
+                {
+                    currentTarget: event.currentTarget,
+                    target: event.target,
+                    shiftKey: event.shiftKey,
+                    preventDefault: () => event.preventDefault(),
+                    stopPropagation: () => event.stopPropagation(),
+                } as React.MouseEvent<HTMLLIElement | HTMLAnchorElement>,
+                to
+            );
         }
     };
 
@@ -179,7 +187,26 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
                                                         >
                                                             {v.submenus.map(
                                                                 (subItem, i) => (
-                                                                    <li key={i}>
+                                                                    <li
+                                                                        key={i}
+                                                                        onClick={(
+                                                                            event
+                                                                        ) => {
+                                                                            event.stopPropagation();
+                                                                            handleSubClick(
+                                                                                event as React.MouseEvent<HTMLLIElement>,
+                                                                                subItem.to
+                                                                            );
+                                                                        }}
+                                                                        onKeyDown={(
+                                                                            event
+                                                                        ) =>
+                                                                            handleSubKeyDown(
+                                                                                event as React.KeyboardEvent<HTMLLIElement>,
+                                                                                subItem.to
+                                                                            )
+                                                                        }
+                                                                    >
                                                                         <NavLink
                                                                             className={
                                                                                 current_page ===
@@ -192,23 +219,6 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
                                                                                 "logout"
                                                                                     ? "?"
                                                                                     : subItem.to
-                                                                            }
-                                                                            onClick={(
-                                                                                event
-                                                                            ) => {
-                                                                                event.stopPropagation();
-                                                                                handleSubClick(
-                                                                                    event,
-                                                                                    subItem.to
-                                                                                );
-                                                                            }}
-                                                                            onKeyDown={(
-                                                                                event
-                                                                            ) =>
-                                                                                handleSubKeyDown(
-                                                                                    event,
-                                                                                    subItem.to
-                                                                                )
                                                                             }
                                                                         >
                                                                             {
