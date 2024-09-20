@@ -1,12 +1,14 @@
 import { useState, useMemo, useEffect, useRef, useReducer } from "react";
 import { Coords } from "bmat/dom";
 import {
-    Chart,
-    ChartKind,
+    // Chart,
+    // ChartKind,
     StateHistoryOIDColMapping,
     generateStateHistoryCSV,
     useEvaStateHistory,
 } from "@eva-ics/webengine-react";
+import { Chart, ChartKind } from "../idc/default_pack/chart.tsx";
+
 import { StateProp } from "@eva-ics/webengine";
 import { downloadCSV } from "bmat/dom";
 import { EditNumber } from "../components/editors/number.tsx";
@@ -27,8 +29,9 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import { SelectPeriod } from "../components/editors/select_period.tsx";
 import { Timestamp } from "bmat/time";
 import { ButtonStyled } from "../common.tsx";
-import { EvaErrorMessage } from "@eva-ics/webengine-react";
-import { EvaError } from "@eva-ics/webengine";
+// import { EvaErrorMessage } from "@eva-ics/webengine-react";
+// import { EvaError } from "@eva-ics/webengine";
+import ErrorBoundary from "../idc/default_pack/ErrorBoundary.tsx";
 
 type Timeout = ReturnType<typeof setTimeout>;
 
@@ -221,10 +224,9 @@ const DashboardTrends = () => {
         database: "default",
         vfn: "mean",
     });
-    const [prev_update, setPrevUpdate] = useState(1);
 
+    const [prev_update, setPrevUpdate] = useState(1);
     const [items, setItems] = useState<Array<ChartItem>>([]);
-    const [evaError, setEvaError] = useState<EvaError | undefined>(undefined);
 
     const hookProps = useMemo(() => {
         let oids: Array<string> = [];
@@ -304,52 +306,21 @@ const DashboardTrends = () => {
         }, SET_DELAY);
     };
 
+    const options = useMemo(() => {
+        return {
+            ...chart_opts,
+            scales: {
+                y: {
+                    min: props.min,
+                    max: props.max,
+                },
+            },
+        };
+    }, [chart_opts, props.min, props.max]);
+
     // const options = useMemo(() => {
     //     return { ...chart_opts, scale: { y: { min: props.min, max: props.max } } };
     // }, [chart_opts, props.min, props.max]);
-
-    const options = useMemo(() => {
-        try {
-            const timeframeInSeconds = Number(props.timeframe);
-            const isLongInterval = timeframeInSeconds >= 604800;
-            const timeUnit = isLongInterval ? "week" : "day";
-            return {
-                ...chart_opts,
-                scales: {
-                    y: {
-                        min: props.min,
-                        max: props.max,
-                    },
-                    x: {
-                        type: "time",
-                        time: {
-                            unit: timeUnit,
-                            stepSize: isLongInterval ? 1 : undefined,
-                        },
-                    },
-                },
-            };
-        } catch (error) {
-            let evaError: EvaError | undefined;
-
-            if (error instanceof EvaError) {
-                evaError = error;
-            } else if (error instanceof Error) {
-                evaError = {
-                    code: -1,
-                    message: error.message,
-                };
-            } else {
-                evaError = {
-                    code: -1,
-                    message: "An unknown error occurred.",
-                };
-            }
-
-            setEvaError(evaError);
-            return { ...chart_opts }; // Return a fallback chart configuration
-        }
-    }, [chart_opts, props.min, props.max, props.timeframe]);
 
     const labels = items.map((i) => i.label || i.oid);
     const formulas = items.map((i) => i.formula);
@@ -448,6 +419,43 @@ const DashboardTrends = () => {
         }
         setPropsDelayed(np);
     };
+    ////////////////////////////////////////
+
+    // const renderChart = (
+    //     hookProps,
+    //     state,
+    //     formulas,
+    //     labels,
+    //     colors,
+    //     options,
+    //     chartSize,
+    //     props
+    // ) => {
+    //     try {
+    //         return (
+    //             <Chart
+    //                 oid={hookProps.oid}
+    //                 state={state}
+    //                 timeframe={props.timeframe}
+    //                 formula={formulas}
+    //                 fill={`${props.points}A`}
+    //                 digits={props.digits}
+    //                 update={props.update || 86400}
+    //                 labels={labels}
+    //                 colors={colors}
+    //                 options={options}
+    //                 className="chart-trends"
+    //                 width={chartSize?.current.x}
+    //                 height={chartSize?.current.y}
+    //                 kind={props.kind}
+    //             />
+    //         );
+    //     } catch (err) {
+    //         console.log("err:", err);
+    //         setError(true); // Capture the error
+    //         console.error("Error rendering chart:", err);
+    //     }
+    // };
 
     return (
         <div>
@@ -656,9 +664,10 @@ const DashboardTrends = () => {
                                 display: hookProps.oid.length === 0 ? "none" : "block",
                             }}
                         >
-                            {evaError ? (
-                                <EvaErrorMessage error={evaError} />
-                            ) : (
+                            {/* {evaError ? (
+                                    <EvaErrorMessage error={evaError} />
+                                ) : ( */}
+                            <ErrorBoundary>
                                 <Chart
                                     oid={hookProps.oid}
                                     state={state}
@@ -675,7 +684,20 @@ const DashboardTrends = () => {
                                     height={chartSize.current.y}
                                     kind={props.kind}
                                 />
-                            )}
+                            </ErrorBoundary>
+                            {/* )} */}
+                            {/* <div>
+                                {renderChart(
+                                    hookProps,
+                                    state,
+                                    formulas,
+                                    labels,
+                                    colors,
+                                    options,
+                                    chartSize,
+                                    props
+                                )}
+                            </div> */}
                         </div>
                         <div className="trends-editor">
                             <div>
