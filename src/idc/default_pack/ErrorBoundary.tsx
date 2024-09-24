@@ -3,6 +3,7 @@ import React, { Component, ErrorInfo } from "react";
 interface Props {
     children: React.ReactNode;
     errorMessage?: string;
+    setError: (error: string | null) => void;
 }
 
 interface State {
@@ -21,6 +22,8 @@ class ErrorBoundary extends Component<Props, State> {
 
     componentDidCatch(error: Error, errorInfo: ErrorInfo) {
         console.error("Error caught by ErrorBoundary:", error, errorInfo);
+
+        this.props.setError(error.message || "Something went wrong...");
 
         setTimeout(() => {
             window.location.reload();

@@ -29,8 +29,6 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import { SelectPeriod } from "../components/editors/select_period.tsx";
 import { Timestamp } from "bmat/time";
 import { ButtonStyled } from "../common.tsx";
-// import { EvaErrorMessage } from "@eva-ics/webengine-react";
-// import { EvaError } from "@eva-ics/webengine";
 import ErrorBoundary from "../idc/default_pack/ErrorBoundary.tsx";
 
 type Timeout = ReturnType<typeof setTimeout>;
@@ -227,6 +225,7 @@ const DashboardTrends = () => {
 
     const [prev_update, setPrevUpdate] = useState(1);
     const [items, setItems] = useState<Array<ChartItem>>([]);
+    const [error, setError] = useState<string | null>(null);
 
     const hookProps = useMemo(() => {
         let oids: Array<string> = [];
@@ -318,10 +317,6 @@ const DashboardTrends = () => {
         };
     }, [chart_opts, props.min, props.max]);
 
-    // const options = useMemo(() => {
-    //     return { ...chart_opts, scale: { y: { min: props.min, max: props.max } } };
-    // }, [chart_opts, props.min, props.max]);
-
     const labels = items.map((i) => i.label || i.oid);
     const formulas = items.map((i) => i.formula);
     const colors = items.map((i) => i.color);
@@ -400,13 +395,12 @@ const DashboardTrends = () => {
         return <></>;
     }
 
-    // if (evaError) return <EvaErrorMessage error={evaError} />;
-
     const play = () => {
         setProps({ ...props, update: prev_update });
     };
 
     const pause = (p: ChartProps) => {
+        console.log("pause:", pause);
         setPrevUpdate(p.update);
         setProps({ ...p, update: 0 });
     };
@@ -419,43 +413,6 @@ const DashboardTrends = () => {
         }
         setPropsDelayed(np);
     };
-    ////////////////////////////////////////
-
-    // const renderChart = (
-    //     hookProps,
-    //     state,
-    //     formulas,
-    //     labels,
-    //     colors,
-    //     options,
-    //     chartSize,
-    //     props
-    // ) => {
-    //     try {
-    //         return (
-    //             <Chart
-    //                 oid={hookProps.oid}
-    //                 state={state}
-    //                 timeframe={props.timeframe}
-    //                 formula={formulas}
-    //                 fill={`${props.points}A`}
-    //                 digits={props.digits}
-    //                 update={props.update || 86400}
-    //                 labels={labels}
-    //                 colors={colors}
-    //                 options={options}
-    //                 className="chart-trends"
-    //                 width={chartSize?.current.x}
-    //                 height={chartSize?.current.y}
-    //                 kind={props.kind}
-    //             />
-    //         );
-    //     } catch (err) {
-    //         console.log("err:", err);
-    //         setError(true); // Capture the error
-    //         console.error("Error rendering chart:", err);
-    //     }
-    // };
 
     return (
         <div>
@@ -481,7 +438,7 @@ const DashboardTrends = () => {
                                         // size
                                     />
                                 </div>
-                                {prev_update > 0 && props.update == 0 ? (
+                                {!error && prev_update > 0 && props.update == 0 ? (
                                     <ButtonStyled
                                         title="Start chart updates"
                                         variant="outlined"
@@ -490,7 +447,7 @@ const DashboardTrends = () => {
                                         <PlayArrowOutlinedIcon fontSize="small" />
                                     </ButtonStyled>
                                 ) : null}
-                                {props.update > 0 ? (
+                                {error || props.update > 0 ? (
                                     <ButtonStyled
                                         variant="outlined"
                                         title="Pause chart updates"
@@ -664,10 +621,7 @@ const DashboardTrends = () => {
                                 display: hookProps.oid.length === 0 ? "none" : "block",
                             }}
                         >
-                            {/* {evaError ? (
-                                    <EvaErrorMessage error={evaError} />
-                                ) : ( */}
-                            <ErrorBoundary>
+                            <ErrorBoundary setError={setError}>
                                 <Chart
                                     oid={hookProps.oid}
                                     state={state}
@@ -685,19 +639,6 @@ const DashboardTrends = () => {
                                     kind={props.kind}
                                 />
                             </ErrorBoundary>
-                            {/* )} */}
-                            {/* <div>
-                                {renderChart(
-                                    hookProps,
-                                    state,
-                                    formulas,
-                                    labels,
-                                    colors,
-                                    options,
-                                    chartSize,
-                                    props
-                                )}
-                            </div> */}
                         </div>
                         <div className="trends-editor">
                             <div>
