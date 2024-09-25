@@ -8,12 +8,13 @@ interface Props {
 
 interface State {
     hasError: boolean;
+    errorMessage: string | null;
 }
 
 class ErrorBoundary extends Component<Props, State> {
     constructor(props: Props) {
         super(props);
-        this.state = { hasError: false };
+        this.state = { hasError: false, errorMessage: null };
     }
 
     static getDerivedStateFromError() {
@@ -21,21 +22,23 @@ class ErrorBoundary extends Component<Props, State> {
     }
 
     componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-        console.error("Error caught by ErrorBoundary:", error, errorInfo);
+        console.error(error, errorInfo);
 
-        this.props.setError(error.message || "Something went wrong...");
-
-        setTimeout(() => {
-            window.location.reload();
-        }, 3000);
+        this.setState({ errorMessage: error.message });
+        this.props.setError(error.message);
     }
 
     render() {
         if (this.state.hasError) {
             return (
-                <p style={{ fontSize: "18px", color: "red", paddingTop: "20px" }}>
-                    {this.props.errorMessage || "Something went wrong..."}
-                </p>
+                <div>
+                    <p style={{ fontSize: "18px", color: "red", paddingTop: "20px" }}>
+                        Please select another option.
+                    </p>
+                    <p style={{ fontSize: "14px", color: "red", paddingTop: "20px" }}>
+                        {this.state.errorMessage || this.props.errorMessage}
+                    </p>
+                </div>
             );
         }
 

@@ -1,13 +1,13 @@
 import { useState, useMemo, useEffect, useRef, useReducer } from "react";
 import { Coords } from "bmat/dom";
 import {
-    // Chart,
-    // ChartKind,
+    Chart,
+    ChartKind,
     StateHistoryOIDColMapping,
     generateStateHistoryCSV,
     useEvaStateHistory,
 } from "@eva-ics/webengine-react";
-import { Chart, ChartKind } from "../idc/default_pack/chart.tsx";
+// import { Chart, ChartKind } from "../idc/default_pack/chart.tsx";
 
 import { StateProp } from "@eva-ics/webengine";
 import { downloadCSV } from "bmat/dom";
@@ -29,7 +29,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import { SelectPeriod } from "../components/editors/select_period.tsx";
 import { Timestamp } from "bmat/time";
 import { ButtonStyled } from "../common.tsx";
-import ErrorBoundary from "../idc/default_pack/ErrorBoundary.tsx";
+import ErrorBoundary from "../components/ErrorBoundary.tsx";
 
 type Timeout = ReturnType<typeof setTimeout>;
 
@@ -226,6 +226,23 @@ const DashboardTrends = () => {
     const [prev_update, setPrevUpdate] = useState(1);
     const [items, setItems] = useState<Array<ChartItem>>([]);
     const [error, setError] = useState<string | null>(null);
+    const previousPropsRef = useRef<ChartProps>(props);
+
+    useEffect(() => {
+        if (error) {
+            const hasChanged = (Object.keys(props) as Array<keyof ChartProps>).some(
+                (key) => props[key] !== previousPropsRef.current[key]
+            );
+            if (hasChanged) {
+                const timeout = setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+
+                return () => clearTimeout(timeout);
+            }
+        }
+        previousPropsRef.current = props;
+    }, [props, error]);
 
     const hookProps = useMemo(() => {
         let oids: Array<string> = [];
@@ -400,7 +417,6 @@ const DashboardTrends = () => {
     };
 
     const pause = (p: ChartProps) => {
-        console.log("pause:", pause);
         setPrevUpdate(p.update);
         setProps({ ...p, update: 0 });
     };
