@@ -7,6 +7,8 @@ import {
     generateStateHistoryCSV,
     useEvaStateHistory,
 } from "@eva-ics/webengine-react";
+// import { Chart, ChartKind } from "../idc/default_pack/chart.tsx";
+
 import { StateProp } from "@eva-ics/webengine";
 import { downloadCSV } from "bmat/dom";
 import { EditNumber } from "../components/editors/number.tsx";
@@ -27,6 +29,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import { SelectPeriod } from "../components/editors/select_period.tsx";
 import { Timestamp } from "bmat/time";
 import { ButtonStyled } from "../common.tsx";
+import ErrorBoundary from "../components/ErrorBoundary.tsx";
 
 type Timeout = ReturnType<typeof setTimeout>;
 
@@ -221,8 +224,25 @@ const DashboardTrends = () => {
     });
 
     const [prev_update, setPrevUpdate] = useState(1);
-
     const [items, setItems] = useState<Array<ChartItem>>([]);
+    const [error, setError] = useState<string | null>(null);
+    const previousPropsRef = useRef<ChartProps>(props);
+
+    useEffect(() => {
+        if (error) {
+            const hasChanged = (Object.keys(props) as Array<keyof ChartProps>).some(
+                (key) => props[key] !== previousPropsRef.current[key]
+            );
+            if (hasChanged) {
+                const timeout = setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+
+                return () => clearTimeout(timeout);
+            }
+        }
+        previousPropsRef.current = props;
+    }, [props, error]);
 
     const hookProps = useMemo(() => {
         let oids: Array<string> = [];
@@ -263,10 +283,8 @@ const DashboardTrends = () => {
     const state = useEvaStateHistory(hookProps, [hookProps]);
 
     const size_sd = useRef<Timeout | undefined>(undefined);
-
     const props_sd = useRef<Timeout | undefined>(undefined);
     const props_sdata = useRef<ChartProps | null>(null);
-
     const items_sd = useRef<Timeout | undefined>(undefined);
     const items_sdata = useRef<Array<ChartItem> | null>(null);
 
@@ -305,7 +323,15 @@ const DashboardTrends = () => {
     };
 
     const options = useMemo(() => {
-        return { ...chart_opts, scale: { y: { min: props.min, max: props.max } } };
+        return {
+            ...chart_opts,
+            scales: {
+                y: {
+                    min: props.min,
+                    max: props.max,
+                },
+            },
+        };
     }, [chart_opts, props.min, props.max]);
 
     const labels = items.map((i) => i.label || i.oid);
@@ -428,7 +454,7 @@ const DashboardTrends = () => {
                                         // size
                                     />
                                 </div>
-                                {prev_update > 0 && props.update == 0 ? (
+                                {!error && prev_update > 0 && props.update == 0 ? (
                                     <ButtonStyled
                                         title="Start chart updates"
                                         variant="outlined"
@@ -437,7 +463,7 @@ const DashboardTrends = () => {
                                         <PlayArrowOutlinedIcon fontSize="small" />
                                     </ButtonStyled>
                                 ) : null}
-                                {props.update > 0 ? (
+                                {error || props.update > 0 ? (
                                     <ButtonStyled
                                         variant="outlined"
                                         title="Pause chart updates"
@@ -611,22 +637,24 @@ const DashboardTrends = () => {
                                 display: hookProps.oid.length === 0 ? "none" : "block",
                             }}
                         >
-                            <Chart
-                                oid={hookProps.oid}
-                                state={state}
-                                timeframe={props.timeframe}
-                                formula={formulas}
-                                fill={`${props.points}A`}
-                                digits={props.digits}
-                                update={props.update || 86400}
-                                labels={labels}
-                                colors={colors}
-                                options={options}
-                                className="chart-trends"
-                                width={chartSize.current.x}
-                                height={chartSize.current.y}
-                                kind={props.kind}
-                            />
+                            <ErrorBoundary setError={setError}>
+                                <Chart
+                                    oid={hookProps.oid}
+                                    state={state}
+                                    timeframe={props.timeframe}
+                                    formula={formulas}
+                                    fill={`${props.points}A`}
+                                    digits={props.digits}
+                                    update={props.update || 86400}
+                                    labels={labels}
+                                    colors={colors}
+                                    options={options}
+                                    className="chart-trends"
+                                    width={chartSize.current.x}
+                                    height={chartSize.current.y}
+                                    kind={props.kind}
+                                />
+                            </ErrorBoundary>
                         </div>
                         <div className="trends-editor">
                             <div>
@@ -653,6 +681,7 @@ const DashboardTrends = () => {
                                 <AddIcon />
                             </ButtonStyled>
                         </div>
+
                         <DataTable props={props} items={items} data={state.data} />
                     </div>
                 </div>
