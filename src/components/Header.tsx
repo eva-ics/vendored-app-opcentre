@@ -33,31 +33,34 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
 
     const eva = get_engine() as Eva;
 
+    const handleClick = (event: any, to: string) => {
+        const isShiftKey = (event as React.KeyboardEvent<HTMLAnchorElement>).shiftKey;
+
+        if (to === "logout") {
+            logout();
+        } else if (isShiftKey) {
+            event.stopPropagation();
+            event.preventDefault();
+            setTimeout(() => window.open(to, "_blank"), 0);
+        } else if (to.startsWith("/")) {
+            document.location = to;
+        } else {
+            navigate(to);
+        }
+    };
+
     const handleNavClick = (
         event: React.MouseEvent<HTMLLIElement> | React.KeyboardEvent<HTMLLIElement>,
         v: NavElement
     ) => {
-        event.preventDefault();
-        const isShiftKey = (event as React.KeyboardEvent<HTMLLIElement>).shiftKey;
         if (
             event.type === "click" ||
             (event as React.KeyboardEvent<HTMLLIElement>).key === "Enter"
         ) {
             if (v.submenus && v.submenus.length > 0) {
                 setOpenSubMenu(openSubMenu === v.value ? null : v.value);
-            } else {
-                if (isShiftKey) {
-                    event.preventDefault();
-                    if (v.to?.startsWith("?")) {
-                        setTimeout(() => window.open(v.to, "_blank"), 0);
-                    }
-                } else if (v.to?.startsWith("/")) {
-                    document.location = v.to;
-                } else {
-                    if (v.to?.startsWith("?")) {
-                        navigate(v.to);
-                    }
-                }
+            } else if (v.to) {
+                handleClick(event, v.to);
             }
         }
     };
@@ -72,35 +75,13 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
         }
     };
 
-    const handleSubClick = (
-        event:
-            | React.MouseEvent<HTMLAnchorElement, MouseEvent>
-            | React.KeyboardEvent<HTMLAnchorElement>,
-        to: string
-    ) => {
-        const isShiftKey = (event as React.KeyboardEvent<HTMLAnchorElement>).shiftKey;
-
-        if (to === "logout") {
-            logout();
-        } else if (to.startsWith("?")) {
-            if (isShiftKey) {
-                event.preventDefault();
-                setTimeout(() => window.open(to, "_blank"), 0);
-            } else {
-                navigate(to);
-            }
-        } else if (to.startsWith("/")) {
-            document.location = to;
-        }
-    };
-
     const handleSubKeyDown = (
         event: React.KeyboardEvent<HTMLAnchorElement>,
         to: string
     ) => {
         if (event.key === "Enter" || event.key === " ") {
             event.preventDefault();
-            handleSubClick(event, to);
+            handleClick(event, to);
         }
     };
 
@@ -177,8 +158,7 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                                                                 : submenuItem.to
                                                         }
                                                         onClick={(event) => {
-                                                            event.stopPropagation();
-                                                            handleSubClick(
+                                                            handleClick(
                                                                 event,
                                                                 submenuItem.to
                                                             );

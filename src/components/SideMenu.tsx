@@ -27,17 +27,29 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
         };
     }, [toggleMenu]);
 
+    const handleClick = (event: any, to: string) => {
+        const isShiftKey = (event as React.KeyboardEvent<HTMLAnchorElement>).shiftKey;
+
+        if (to === "logout") {
+            logout();
+        } else if (isShiftKey) {
+            event.stopPropagation();
+            event.preventDefault();
+            setTimeout(() => window.open(to, "_blank"), 0);
+        } else if (to.startsWith("/")) {
+            document.location = to;
+        } else {
+            toggleMenu();
+            navigate(to);
+        }
+    };
+
     const handleNavClick = (
         event:
             | React.MouseEvent<HTMLAnchorElement | HTMLLIElement>
             | React.KeyboardEvent<HTMLAnchorElement | HTMLLIElement>,
         v: NavElement
     ) => {
-        event.preventDefault();
-        const isShiftKey = (
-            event as React.KeyboardEvent<HTMLAnchorElement | HTMLLIElement>
-        ).shiftKey;
-
         if (
             event.type === "click" ||
             (event as React.KeyboardEvent<HTMLAnchorElement | HTMLLIElement>).key ===
@@ -45,44 +57,9 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
         ) {
             if (v.submenus && v.submenus.length > 0) {
                 toggleSubMenu(v.value);
-            } else {
-                if (isShiftKey) {
-                    event.preventDefault();
-                    if (v.to?.startsWith("?")) {
-                        setTimeout(() => window.open(v.to, "_blank"), 0);
-                    }
-                } else if (v.to?.startsWith("/")) {
-                    document.location = v.to;
-                } else {
-                    if (v.to) {
-                        navigate(v.to);
-                    }
-                }
-                toggleMenu();
+            } else if (v.to) {
+                handleClick(event, v.to);
             }
-        }
-    };
-
-    const handleSubClick = (
-        event:
-            | React.MouseEvent<HTMLAnchorElement>
-            | React.KeyboardEvent<HTMLAnchorElement>,
-        to: string
-    ) => {
-        const isShiftKey = (event as React.KeyboardEvent<HTMLAnchorElement>).shiftKey;
-
-        if (to === "logout") {
-            logout();
-        } else if (to.startsWith("?")) {
-            if (isShiftKey) {
-                event.preventDefault();
-                setTimeout(() => window.open(to, "_blank"), 0);
-            } else {
-                navigate(to);
-                toggleMenu();
-            }
-        } else if (to.startsWith("/")) {
-            document.location = to;
         }
     };
 
@@ -92,7 +69,7 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
     ) => {
         if (event.key === "Enter" || event.key === " ") {
             event.preventDefault();
-            handleSubClick(event, to);
+            handleClick(event, to);
         }
     };
 
@@ -130,7 +107,6 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
                                                     <NavLink
                                                         to={v.to}
                                                         onClick={(event) => {
-                                                            event.stopPropagation();
                                                             handleNavClick(
                                                                 event as React.MouseEvent<HTMLAnchorElement>,
                                                                 v
@@ -201,7 +177,7 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
                                                                                 event
                                                                             ) => {
                                                                                 event.stopPropagation();
-                                                                                handleSubClick(
+                                                                                handleClick(
                                                                                     event,
                                                                                     subItem.to
                                                                                 );
