@@ -51,6 +51,8 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                     if (v.to?.startsWith("?")) {
                         setTimeout(() => window.open(v.to, "_blank"), 0);
                     }
+                } else if (v.to?.startsWith("/")) {
+                    document.location = v.to;
                 } else {
                     if (v.to?.startsWith("?")) {
                         navigate(v.to);
@@ -84,6 +86,8 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
             if (isShiftKey) {
                 event.preventDefault();
                 setTimeout(() => window.open(to, "_blank"), 0);
+            } else if (to.startsWith("/")) {
+                document.location = to;
             } else {
                 navigate(to);
             }

@@ -51,6 +51,8 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
                     if (v.to?.startsWith("?")) {
                         setTimeout(() => window.open(v.to, "_blank"), 0);
                     }
+                } else if (v.to?.startsWith("/")) {
+                    document.location = v.to;
                 } else {
                     if (v.to) {
                         navigate(v.to);
@@ -75,6 +77,8 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
             if (isShiftKey) {
                 event.preventDefault();
                 setTimeout(() => window.open(to, "_blank"), 0);
+            } else if (to.startsWith("/")) {
+                document.location = to;
             } else {
                 navigate(to);
                 toggleMenu();
