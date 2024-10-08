@@ -86,11 +86,11 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
             if (isShiftKey) {
                 event.preventDefault();
                 setTimeout(() => window.open(to, "_blank"), 0);
-            } else if (to.startsWith("/")) {
-                document.location = to;
             } else {
                 navigate(to);
             }
+        } else if (to.startsWith("/")) {
+            document.location = to;
         }
     };
 
