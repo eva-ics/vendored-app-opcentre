@@ -33,55 +33,81 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
 
     const eva = get_engine() as Eva;
 
-    const handleClick = (event: any, to: string) => {
-        const isShiftKey = (event as React.KeyboardEvent<HTMLAnchorElement>).shiftKey;
-
-        if (to === "logout") {
-            logout();
-        } else if (isShiftKey) {
-            event.stopPropagation();
-            event.preventDefault();
-            setTimeout(() => window.open(to, "_blank"), 0);
-        } else if (to.startsWith("/")) {
-            document.location = to;
-        } else {
-            navigate(to);
-        }
-    };
-
     const handleNavClick = (
         event: React.MouseEvent<HTMLLIElement> | React.KeyboardEvent<HTMLLIElement>,
         v: NavElement
     ) => {
+        event.preventDefault();
+        const isShiftKey = (event as React.KeyboardEvent<HTMLLIElement>).shiftKey;
         if (
             event.type === "click" ||
             (event as React.KeyboardEvent<HTMLLIElement>).key === "Enter"
         ) {
             if (v.submenus && v.submenus.length > 0) {
                 setOpenSubMenu(openSubMenu === v.value ? null : v.value);
-            } else if (v.to) {
-                handleClick(event, v.to);
+            } else {
+                if (isShiftKey) {
+                    event.preventDefault();
+                    if (v.to?.startsWith("?")) {
+                        setTimeout(() => window.open(v.to, "_blank"), 0);
+                    } else if (v.to?.startsWith("/")) {
+                        setTimeout(() => window.open(v.to, "_blank"), 0);
+                    }
+                } else {
+                    if (v.to?.startsWith("?")) {
+                        navigate(v.to);
+                    } else if (v.to?.startsWith("/")) {
+                        document.location = v.to;
+                    }
+                }
             }
         }
     };
 
-    ////////////Sub//////////
-    const handleSub = (event: any) => {
-        if (event.target.tagName !== "A") {
-            const link = event.currentTarget.querySelector("a");
-            if (link) {
-                link.click();
+    const handleSubClick = (
+        event: React.MouseEvent<HTMLLIElement | HTMLAnchorElement>,
+        to: string
+    ) => {
+        const isShiftKey = event.shiftKey;
+
+        if (to === "logout") {
+            logout();
+        } else if (to.startsWith("?")) {
+            if (isShiftKey) {
+                event.preventDefault();
+                setTimeout(() => window.open(to, "_blank"), 0);
+            } else {
+                navigate(to);
+                setOpenSubMenu(null);
+            }
+        } else if (to.startsWith("/")) {
+            event.preventDefault();
+            if (isShiftKey) {
+                setTimeout(() => window.open(to, "_blank"), 0);
+            } else {
+                document.location = to;
+                setOpenSubMenu(null);
             }
         }
     };
 
     const handleSubKeyDown = (
-        event: React.KeyboardEvent<HTMLAnchorElement>,
+        event: React.KeyboardEvent<HTMLLIElement | HTMLAnchorElement>,
         to: string
     ) => {
         if (event.key === "Enter" || event.key === " ") {
             event.preventDefault();
-            handleClick(event, to);
+
+            handleSubClick(
+                {
+                    currentTarget: event.currentTarget,
+                    target: event.target,
+                    shiftKey: event.shiftKey,
+                    preventDefault: () => event.preventDefault(),
+                    stopPropagation: () => event.stopPropagation(),
+                } as React.MouseEvent<HTMLLIElement | HTMLAnchorElement>,
+                to
+            );
         }
     };
 
@@ -147,27 +173,27 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                                         <ul className="submenu">
                                             {v.submenus.map((submenuItem, subIdx) => (
                                                 <li
-                                                    className="submenu-item"
                                                     key={subIdx}
-                                                    onClick={handleSub}
+                                                    className="submenu-item"
+                                                    onClick={(event) => {
+                                                        event.stopPropagation();
+                                                        handleSubClick(
+                                                            event as React.MouseEvent<HTMLLIElement>,
+                                                            submenuItem.to
+                                                        );
+                                                    }}
+                                                    onKeyDown={(event) =>
+                                                        handleSubKeyDown(
+                                                            event as React.KeyboardEvent<HTMLLIElement>,
+                                                            submenuItem.to
+                                                        )
+                                                    }
                                                 >
                                                     <NavLink
                                                         to={
                                                             submenuItem.to === "logout"
                                                                 ? "?"
                                                                 : submenuItem.to
-                                                        }
-                                                        onClick={(event) => {
-                                                            handleClick(
-                                                                event,
-                                                                submenuItem.to
-                                                            );
-                                                        }}
-                                                        onKeyDown={(event) =>
-                                                            handleSubKeyDown(
-                                                                event,
-                                                                submenuItem.to
-                                                            )
                                                         }
                                                     >
                                                         {submenuItem.value}
