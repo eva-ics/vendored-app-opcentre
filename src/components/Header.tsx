@@ -50,10 +50,14 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                     event.preventDefault();
                     if (v.to?.startsWith("?")) {
                         setTimeout(() => window.open(v.to, "_blank"), 0);
+                    } else if (v.to?.startsWith("/")) {
+                        setTimeout(() => window.open(v.to, "_blank"), 0);
                     }
                 } else {
                     if (v.to?.startsWith("?")) {
                         navigate(v.to);
+                    } else if (v.to?.startsWith("/")) {
+                        document.location = v.to;
                     }
                 }
             }
@@ -72,13 +76,13 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
             if (isShiftKey) {
                 event.preventDefault();
                 setTimeout(() => window.open(to, "_blank"), 0);
-            } else if (to.startsWith("/")) {
-                document.location = to;
-                setOpenSubMenu(null);
             } else {
                 navigate(to);
                 setOpenSubMenu(null);
             }
+        } else if (to.startsWith("/")) {
+            document.location = to;
+            setOpenSubMenu(null);
         }
     };
 
