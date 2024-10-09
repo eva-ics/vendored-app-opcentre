@@ -79,16 +79,16 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
                 setTimeout(() => window.open(to, "_blank"), 0);
             } else {
                 navigate(to);
-                toggleMenu();
             }
+            toggleMenu();
         } else if (to.startsWith("/")) {
             event.preventDefault();
             if (isShiftKey) {
                 setTimeout(() => window.open(to, "_blank"), 0);
             } else {
                 document.location = to;
-                toggleMenu();
             }
+            toggleMenu();
         }
     };
 
