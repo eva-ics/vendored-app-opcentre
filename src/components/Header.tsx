@@ -76,11 +76,16 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
             if (isShiftKey) {
                 event.preventDefault();
                 setTimeout(() => window.open(to, "_blank"), 0);
-            } else if (to.startsWith("/")) {
-                document.location = to;
-                setOpenSubMenu(null);
             } else {
                 navigate(to);
+                setOpenSubMenu(null);
+            }
+        } else if (to.startsWith("/")) {
+            event.preventDefault();
+            if (isShiftKey) {
+                setTimeout(() => window.open(to, "_blank"), 0);
+            } else {
+                document.location = to;
                 setOpenSubMenu(null);
             }
         }
@@ -90,7 +95,6 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
         event: React.KeyboardEvent<HTMLLIElement | HTMLAnchorElement>,
         to: string
     ) => {
-        console.log("to:", to);
         if (event.key === "Enter" || event.key === " ") {
             event.preventDefault();
 
