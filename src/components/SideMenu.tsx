@@ -50,10 +50,14 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
                     event.preventDefault();
                     if (v.to?.startsWith("?")) {
                         setTimeout(() => window.open(v.to, "_blank"), 0);
+                    } else if (v.to?.startsWith("/")) {
+                        setTimeout(() => window.open(v.to, "_blank"), 0);
                     }
                 } else {
                     if (v.to) {
                         navigate(v.to);
+                    } else if (v.to?.startsWith("/")) {
+                        document.location = v.to;
                     }
                 }
                 toggleMenu();
