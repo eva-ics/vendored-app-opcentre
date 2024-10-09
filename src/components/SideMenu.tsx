@@ -73,6 +73,9 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
             if (isShiftKey) {
                 event.preventDefault();
                 setTimeout(() => window.open(to, "_blank"), 0);
+            } else if (to.startsWith("/")) {
+                document.location = to;
+                toggleMenu();
             } else {
                 navigate(to);
                 toggleMenu();
