@@ -56,6 +56,7 @@ export const defaultIDCDashboard = () => {
                     x: 80,
                     y: 40,
                 },
+                zindex: 10,
             },
             {
                 kind: "image",
@@ -68,6 +69,7 @@ export const defaultIDCDashboard = () => {
                     x: 20,
                     y: 20,
                 },
+                zindex: 9,
             },
         ],
     };

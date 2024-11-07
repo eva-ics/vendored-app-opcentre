@@ -105,6 +105,7 @@ ELEMENT_CLASSES.set(ElementKind.Label, {
 ELEMENT_CLASSES.set(ElementKind.Image, {
     description: "Image",
     group: ElementGroup.UI,
+    default_zIndex: 5,
     defaults: {
         image: undefined,
         width: 300,
@@ -137,6 +138,7 @@ ELEMENT_CLASSES.set(ElementKind.Image, {
 ELEMENT_CLASSES.set(ElementKind.IFrame, {
     description: "IFrame",
     group: ElementGroup.UI,
+    default_zIndex: 4,
     IconDraw: IFrameIcon,
     defaults: {
         image: undefined,
@@ -533,6 +535,7 @@ ELEMENT_CLASSES.set(ElementKind.LineChart, {
 ELEMENT_CLASSES.set(ElementKind.Canvas, {
     description: "Canvas",
     group: ElementGroup.UI,
+    default_zIndex: 1,
     defaults: {
         image: undefined,
         width: 300,
@@ -566,6 +569,7 @@ ELEMENT_CLASSES.set(ElementKind.Frame, {
     description: "Frame",
     IconDraw: FrameIcon,
     group: ElementGroup.UI,
+    default_zIndex: 3,
     defaults: {
         label: "",
         width: 300,
