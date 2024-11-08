@@ -696,10 +696,12 @@ ELEMENT_CLASSES.set(ElementKind.ControlButtonRun, {
 const Viewer = ({
     kind,
     dragged,
+    vendored,
     ...params
 }: {
     kind: string;
     dragged: boolean;
+    vendored: any;
 }): JSX.Element => {
     switch (kind as ElementKind) {
         case ElementKind.Label:
@@ -728,7 +730,8 @@ const Viewer = ({
             return <ControlButtonRun {...(params as any)} />;
         default:
             if (kind.startsWith("clipart/")) {
-              return <SizedImage {...(params as any)} />;
+                const c_params = { ...params, image: vendored?.image };
+                return <SizedImage {...(c_params as any)} />;
             } else {
                 return <div className="idc-element-unsupported">Unsupported element</div>;
             }

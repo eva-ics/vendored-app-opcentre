@@ -72,8 +72,8 @@ async function updateElementPack() {
         const l = n.lastIndexOf(".");
         const name = n.substring(0, l);
         const elc_id = `clipart/${group}/${name}`;
-        console.log(eva.api_token);
         const img_uri = `/pvt/vendored-apps/opcentre/idc/clipart/${r.path}`;
+        //const img_uri = `${eva.api_uri}/pvt/vendored-apps/opcentre/idc/clipart/${r.path}?k=${eva.api_token}`;
         const elc: ElementClass = {
             description: `${name}`,
             group: `Clipart/${group}`,
@@ -81,7 +81,8 @@ async function updateElementPack() {
             IconDraw: () => <img width="30" src={img_uri} alt={elc_id} />,
             defaults: {
                 width: 200,
-                update: 0,
+            },
+            vendored: {
                 image: img_uri,
             },
             props: [
