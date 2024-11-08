@@ -212,6 +212,8 @@ ELEMENT_CLASSES.set(ElementKind.ItemValue, {
         units: "",
         digits: 2,
         color: "",
+        bgcolor: "",
+        padding: 0,
         oid: undefined,
         formula: "x",
         value_map: undefined,
@@ -234,6 +236,13 @@ ELEMENT_CLASSES.set(ElementKind.ItemValue, {
             params: { size: 20 },
         },
         { id: uuidv4(), name: "color", kind: PropertyKind.SelectColor },
+        { id: uuidv4(), name: "bgcolor", kind: PropertyKind.SelectColor },
+        {
+            id: uuidv4(),
+            name: "padding",
+            kind: PropertyKind.SelectNumberSlider,
+            params: { min: 0, max: 10 },
+        },
         {
             id: uuidv4(),
             name: "font_size",

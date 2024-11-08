@@ -8,6 +8,8 @@ export const ItemValueWithLabel = ({
     formula,
     value_map,
     color,
+    bgcolor,
+    padding,
     font_size,
     font_bold,
     units,
@@ -22,6 +24,8 @@ export const ItemValueWithLabel = ({
     formula: string;
     value_map?: Array<ValueMap>;
     color: string;
+    bgcolor: string;
+    padding: number;
     font_size: number;
     font_bold: boolean;
     units: string;
@@ -84,7 +88,9 @@ export const ItemValueWithLabel = ({
         <div
             style={{
                 color: color,
+                backgroundColor: bgcolor,
                 fontSize: font_size,
+                padding: padding,
                 fontWeight: fontWeight(font_bold),
             }}
         >
