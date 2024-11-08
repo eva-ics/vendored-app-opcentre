@@ -76,7 +76,7 @@ async function updateElementPack() {
         const img_uri = `/pvt/vendored-apps/opcentre/idc/clipart/${r.path}`;
         const elc: ElementClass = {
             description: `${name}`,
-            group: `Clipart::${group}`,
+            group: `Clipart/${group}`,
             default_zIndex: 5,
             IconDraw: () => <img width="30" src={img_uri} alt={elc_id} />,
             defaults: {
