@@ -727,7 +727,11 @@ const Viewer = ({
         case ElementKind.ControlButtonRun:
             return <ControlButtonRun {...(params as any)} />;
         default:
-            return <div className="idc-element-unsupported">Unsupported element</div>;
+            if (kind.startsWith("clipart/")) {
+              return <SizedImage {...(params as any)} />;
+            } else {
+                return <div className="idc-element-unsupported">Unsupported element</div>;
+            }
     }
 };
 

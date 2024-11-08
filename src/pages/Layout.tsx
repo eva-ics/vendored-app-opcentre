@@ -16,6 +16,7 @@ import { v4 as uuidv4 } from "uuid";
 import { DashboardData, DashboardEditor, DashboardViewer } from "idc-core";
 import { get_engine, useEvaAPICall } from "@eva-ics/webengine-react";
 import { Eva } from "@eva-ics/webengine";
+import { ElementClass, PropertyKind } from "idc-core";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import {
     onSuccess,
@@ -57,8 +58,57 @@ const AlarmSummary = () => {
     }
 };
 
+async function updateElementPack() {
+    const eva = get_engine() as Eva;
+    const result = await eva.call("pvt.list", "vendored-apps/opcentre/idc/clipart", {
+        recursive: true,
+        kind: "file",
+    });
+    const c = element_pack.classes;
+    result.forEach((r: any) => {
+        const parts = r.path.split("/");
+        const group = parts[0];
+        const n = parts[1];
+        const l = n.lastIndexOf(".");
+        const name = n.substring(0, l);
+        const elc_id = `clipart/${group}/${name}`;
+        console.log(eva.api_token);
+        const img_uri = `/pvt/vendored-apps/opcentre/idc/clipart/${r.path}`;
+        const elc: ElementClass = {
+            description: `${name}`,
+            group: `Clipart::${group}`,
+            default_zIndex: 5,
+            IconDraw: () => <img width="30" src={img_uri} alt={elc_id} />,
+            defaults: {
+                width: 200,
+                update: 0,
+                image: img_uri,
+            },
+            props: [
+                {
+                    id: uuidv4(),
+                    name: "width",
+                    kind: PropertyKind.Number,
+                    params: { size: 5, min: 20 },
+                },
+            ],
+            default_size: { x: 20, y: 20 },
+            boxed: true,
+            actions: false,
+        };
+        c.set(elc_id, elc);
+    });
+}
+
+enum ElementPackUpdated {
+    No,
+    Pending,
+    Yes,
+}
+
 const Layout = ({ logout }: LayoutProps) => {
     const [isOpenMenu, setIsOpenMenu] = useState(false);
+    const [isElementPackUpdated, setElementPackUpdated] = useState(ElementPackUpdated.No);
     const [searchParams, _] = useSearchParams();
     const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
     const [currentDashboard, setCurrentDashboard] = useState<string | null>(null);
@@ -75,6 +125,16 @@ const Layout = ({ logout }: LayoutProps) => {
                 .catch((e) => onEvaError(e));
         }
     }, [currentDashboard]);
+
+    if (isElementPackUpdated != ElementPackUpdated.Yes) {
+        if (isElementPackUpdated == ElementPackUpdated.No) {
+            setElementPackUpdated(ElementPackUpdated.Pending);
+            updateElementPack()
+                .then(() => setElementPackUpdated(ElementPackUpdated.Yes))
+                .catch(() => setElementPackUpdated(ElementPackUpdated.Yes));
+        }
+        return <div className="d-idc-preparing">Loading custom elements...</div>;
+    }
 
     const toggleMenu = () => {
         setIsOpenMenu(!isOpenMenu);
