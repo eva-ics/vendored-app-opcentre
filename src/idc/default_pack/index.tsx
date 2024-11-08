@@ -701,7 +701,7 @@ const Viewer = ({
 }: {
     kind: string;
     dragged: boolean;
-    vendored: any;
+    vendored?: any;
 }): JSX.Element => {
     switch (kind as ElementKind) {
         case ElementKind.Label:
