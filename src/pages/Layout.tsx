@@ -16,7 +16,7 @@ import { v4 as uuidv4 } from "uuid";
 import { DashboardData, DashboardEditor, DashboardViewer } from "idc-core";
 import { get_engine, useEvaAPICall } from "@eva-ics/webengine-react";
 import { Eva } from "@eva-ics/webengine";
-import { ElementClass, PropertyKind } from "idc-core";
+import { ElementClass } from "idc-core";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import {
     onSuccess,
@@ -67,7 +67,9 @@ async function updateElementPack() {
     const c = element_pack.classes;
     if (Array.isArray(result) && result.length > 0) {
         const image_class = element_pack.classes.get(ElementKind.Image) as ElementClass;
-        const props = image_class.props.filter((p) => p.name != "image" && p.name != "update");
+        const props = image_class.props.filter(
+            (p) => p.name != "image" && p.name != "update"
+        );
         const defaults: any = { ...image_class.defaults };
         defaults.width = 200;
         delete defaults.image;
