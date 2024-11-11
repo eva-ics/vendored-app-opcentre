@@ -24,7 +24,7 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import WebAssetOutlinedIcon from "@mui/icons-material/WebAssetOutlined";
 import TouchAppOutlinedIcon from "@mui/icons-material/TouchAppOutlined";
 
-enum ElementKind {
+export enum ElementKind {
     Label = "label",
     ItemValue = "item_value",
     Gauge = "gauge",
@@ -72,7 +72,7 @@ const ButtonIcon = () => {
     return <TouchAppOutlinedIcon style={{ fontSize: 25 }} />;
 };
 
-const ELEMENT_CLASSES: Map<ElementKind, ElementClass> = new Map();
+export const ELEMENT_CLASSES: Map<ElementKind, ElementClass> = new Map();
 ELEMENT_CLASSES.set(ElementKind.Label, {
     description: "Text label",
     group: ElementGroup.UI,
@@ -109,6 +109,18 @@ ELEMENT_CLASSES.set(ElementKind.Image, {
     defaults: {
         image: undefined,
         width: 300,
+        height_p: 100,
+        rotate: 0,
+        hflip: false,
+        vflip: false,
+        blur: 0,
+        brightness: 100,
+        contrast: 100,
+        hue_rotate: 0,
+        invert: 0,
+        opacity: 100,
+        saturate: 100,
+        sepia: 0,
         update: 0,
     },
     props: [
@@ -123,6 +135,68 @@ ELEMENT_CLASSES.set(ElementKind.Image, {
             name: "width",
             kind: PropertyKind.Number,
             params: { size: 5, min: 20 },
+        },
+        {
+            id: uuidv4(),
+            name: "height_p",
+            kind: PropertyKind.Number,
+            params: { size: 5, min: 1 },
+        },
+        {
+            id: uuidv4(),
+            name: "rotate",
+            kind: PropertyKind.SelectNumberSlider,
+            params: { size: 5, min: 0, max: 359 },
+        },
+        { id: uuidv4(), name: "hflip", kind: PropertyKind.Boolean },
+        { id: uuidv4(), name: "vflip", kind: PropertyKind.Boolean },
+        {
+            id: uuidv4(),
+            name: "blur",
+            kind: PropertyKind.Number,
+            params: { size: 5, min: 0, max: 100 },
+        },
+        {
+            id: uuidv4(),
+            name: "brightness",
+            kind: PropertyKind.Number,
+            params: { size: 5, min: 0, max: 500 },
+        },
+        {
+            id: uuidv4(),
+            name: "contrast",
+            kind: PropertyKind.Number,
+            params: { size: 5, min: 0, max: 500 },
+        },
+        {
+            id: uuidv4(),
+            name: "hue_rotate",
+            kind: PropertyKind.SelectNumberSlider,
+            params: { size: 5, min: 0, max: 359 },
+        },
+        {
+            id: uuidv4(),
+            name: "invert",
+            kind: PropertyKind.SelectNumberSlider,
+            params: { size: 5, min: 0, max: 100 },
+        },
+        {
+            id: uuidv4(),
+            name: "opacity",
+            kind: PropertyKind.SelectNumberSlider,
+            params: { size: 5, min: 0, max: 100 },
+        },
+        {
+            id: uuidv4(),
+            name: "saturate",
+            kind: PropertyKind.Number,
+            params: { size: 5, min: 0 },
+        },
+        {
+            id: uuidv4(),
+            name: "sepia",
+            kind: PropertyKind.SelectNumberSlider,
+            params: { size: 5, min: 0, max: 100 },
         },
         {
             id: uuidv4(),

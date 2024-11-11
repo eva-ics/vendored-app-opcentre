@@ -11,7 +11,7 @@ import DashboardAlarmHistory from "../pages/AlarmHistory.tsx";
 import DashboardDataObjects from "../pages/DataObjects.tsx";
 import DashboardTrends from "../pages/Trends.tsx";
 import DashboardIDC from "../pages/IDC.tsx";
-import { element_pack } from "../idc/default_pack";
+import { element_pack, ElementKind } from "../idc/default_pack";
 import { v4 as uuidv4 } from "uuid";
 import { DashboardData, DashboardEditor, DashboardViewer } from "idc-core";
 import { get_engine, useEvaAPICall } from "@eva-ics/webengine-react";
@@ -65,40 +65,39 @@ async function updateElementPack() {
         kind: "file",
     });
     const c = element_pack.classes;
-    result.forEach((r: any) => {
-        const parts = r.path.split("/");
-        const group = parts[0];
-        const n = parts[1];
-        const l = n.lastIndexOf(".");
-        const name = n.substring(0, l);
-        const elc_id = `clipart/${group}/${name}`;
-        const img_uri = `/pvt/vendored-apps/opcentre/idc/clipart/${r.path}`;
-        //const img_uri = `${eva.api_uri}/pvt/vendored-apps/opcentre/idc/clipart/${r.path}?k=${eva.api_token}`;
-        const elc: ElementClass = {
-            description: `${name}`,
-            group: `Clipart/${group}`,
-            default_zIndex: 5,
-            IconDraw: () => <img width="30" src={img_uri} alt={elc_id} />,
-            defaults: {
-                width: 200,
-            },
-            vendored: {
-                image: img_uri,
-            },
-            props: [
-                {
-                    id: uuidv4(),
-                    name: "width",
-                    kind: PropertyKind.Number,
-                    params: { size: 5, min: 20 },
+    if (Array.isArray(result) && result.length > 0) {
+        const image_class = element_pack.classes.get(ElementKind.Image) as ElementClass;
+        const props = image_class.props.filter((p) => p.name != "image" && p.name != "update");
+        const defaults: any = { ...image_class.defaults };
+        defaults.width = 200;
+        delete defaults.image;
+        delete defaults.update;
+        result.forEach((r: any) => {
+            const parts = r.path.split("/");
+            const group = parts[0];
+            const n = parts[1];
+            const l = n.lastIndexOf(".");
+            const name = n.substring(0, l);
+            const elc_id = `clipart/${group}/${name}`;
+            const img_uri = `/pvt/vendored-apps/opcentre/idc/clipart/${r.path}`;
+            //const img_uri = `${eva.api_uri}/pvt/vendored-apps/opcentre/idc/clipart/${r.path}?k=${eva.api_token}`;
+            const elc: ElementClass = {
+                description: `${name}`,
+                group: `Clipart/${group}`,
+                default_zIndex: 5,
+                IconDraw: () => <img width="30" src={img_uri} alt={elc_id} />,
+                defaults,
+                vendored: {
+                    image: img_uri,
                 },
-            ],
-            default_size: { x: 20, y: 20 },
-            boxed: true,
-            actions: false,
-        };
-        c.set(elc_id, elc);
-    });
+                props,
+                default_size: { x: 20, y: 20 },
+                boxed: true,
+                actions: false,
+            };
+            c.set(elc_id, elc);
+        });
+    }
 }
 
 enum ElementPackUpdated {
