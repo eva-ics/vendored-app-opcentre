@@ -1,6 +1,6 @@
 import { ItemValue } from "@eva-ics/webengine-react";
 import { fontWeight } from "idc-core";
-import { useMemo } from "react";
+import { useMemo, CSSProperties } from "react";
 import { ValueMap } from "idc-core";
 
 export const ItemValueWithLabel = ({
@@ -10,6 +10,7 @@ export const ItemValueWithLabel = ({
     color,
     bgcolor,
     padding,
+    value_padding,
     font_size,
     font_bold,
     units,
@@ -18,6 +19,7 @@ export const ItemValueWithLabel = ({
     critValue,
     lowWarnValue,
     lowCritValue,
+    warn_bg,
     oid,
 }: {
     label: string;
@@ -26,6 +28,7 @@ export const ItemValueWithLabel = ({
     color: string;
     bgcolor: string;
     padding: number;
+    value_padding: number;
     font_size: number;
     font_bold: boolean;
     units: string;
@@ -35,6 +38,7 @@ export const ItemValueWithLabel = ({
     critValue?: number;
     lowWarnValue?: number;
     lowCritValue?: number;
+    warn_bg: boolean;
 }) => {
     const props = useMemo(() => {
         let props = { units: units, digits: digits, oid: oid, formula: formula };
@@ -60,17 +64,22 @@ export const ItemValueWithLabel = ({
         (props as any).set_class_name_with = (value: any) => {
             const val = parseFloat(value);
             if (lowCritValue !== undefined && val <= lowCritValue) {
-                return "value-crit";
+                return "value-crit" + (warn_bg ? "-inv" : "");
             }
             if (lowWarnValue !== undefined && val <= lowWarnValue) {
-                return "value-warn";
+                return "value-warn" + (warn_bg ? "-inv" : "");
             }
             if (critValue !== undefined && val >= critValue) {
-                return "value-crit";
+                return "value-crit" + (warn_bg ? "-inv" : "");
             }
             if (warnValue !== undefined && val >= warnValue) {
-                return "value-warn";
+                return "value-warn" + (warn_bg ? "-inv" : "");
             }
+        };
+        (props as any).set_style_with = (_value: any): CSSProperties => {
+            return {
+                padding: value_padding,
+            };
         };
         return props;
     }, [
@@ -83,6 +92,8 @@ export const ItemValueWithLabel = ({
         critValue,
         lowWarnValue,
         lowCritValue,
+        warn_bg,
+        value_padding,
     ]);
     return (
         <div
@@ -94,7 +105,10 @@ export const ItemValueWithLabel = ({
                 fontWeight: fontWeight(font_bold),
             }}
         >
-            {label} <ItemValue {...props} />
+            {label}{" "}
+            <span style={{ padding: value_padding }}>
+                <ItemValue {...props} />
+            </span>
         </div>
     );
 };

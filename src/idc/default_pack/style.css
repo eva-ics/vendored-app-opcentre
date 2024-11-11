@@ -219,6 +219,15 @@ button.eva.button.run {
 .value-crit {
   color: #e32636;
 }
+.value-warn-inv {
+  color: #111;
+  background-color: #f0e130;
+}
+
+.value-crit-inv {
+  color: #111;
+  background-color: #e32636;
+}
 .gauge-container {
   display: flex;
   flex-direction: column;

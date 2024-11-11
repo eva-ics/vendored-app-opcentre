@@ -288,6 +288,7 @@ ELEMENT_CLASSES.set(ElementKind.ItemValue, {
         color: "",
         bgcolor: "",
         padding: 0,
+        value_padding: 0,
         oid: undefined,
         formula: "x",
         value_map: undefined,
@@ -295,6 +296,7 @@ ELEMENT_CLASSES.set(ElementKind.ItemValue, {
         critValue: undefined,
         lowWarnValue: undefined,
         lowCritValue: undefined,
+        warn_bg: false,
     },
     props: [
         {
@@ -314,6 +316,12 @@ ELEMENT_CLASSES.set(ElementKind.ItemValue, {
         {
             id: uuidv4(),
             name: "padding",
+            kind: PropertyKind.SelectNumberSlider,
+            params: { min: 0, max: 10 },
+        },
+        {
+            id: uuidv4(),
+            name: "value_padding",
             kind: PropertyKind.SelectNumberSlider,
             params: { min: 0, max: 10 },
         },
@@ -376,6 +384,7 @@ ELEMENT_CLASSES.set(ElementKind.ItemValue, {
             kind: PropertyKind.Number,
             params: { size: 5, allow_undefined: true, float: true },
         },
+        { id: uuidv4(), name: "warn_bg", kind: PropertyKind.Boolean },
     ],
     default_size: { x: 20, y: 20 },
     boxed: true,
