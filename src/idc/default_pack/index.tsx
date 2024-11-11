@@ -146,7 +146,7 @@ ELEMENT_CLASSES.set(ElementKind.Image, {
             id: uuidv4(),
             name: "rotate",
             kind: PropertyKind.SelectNumberSlider,
-            params: { size: 5, min: 0, max: 359 },
+            params: { size: 5, min: 0, max: 360 - 10, step: 10 },
         },
         { id: uuidv4(), name: "hflip", kind: PropertyKind.Boolean },
         { id: uuidv4(), name: "vflip", kind: PropertyKind.Boolean },
