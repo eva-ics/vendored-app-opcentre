@@ -733,7 +733,6 @@ ELEMENT_CLASSES.set(ElementKind.Pipe, {
             kind: PropertyKind.SelectString,
             params: [PipeEnding.Open, PipeEnding.Closed],
         },
-        { id: uuidv4(), name: "vertical", kind: PropertyKind.Boolean },
         {
             id: uuidv4(),
             name: "end",
