@@ -7,6 +7,7 @@ import { SizedCanvas } from "./sized_canvas";
 import { SizedLineChart } from "./sized_line_chart";
 import { Frame } from "./frame";
 import { GaugeColorized } from "./gauge_colorized";
+import { Pipe, PipeEnding, PipeStyle } from "./pipe";
 import {
     ControlButtonToggle,
     ControlButtonValue,
@@ -23,6 +24,7 @@ import LooksOneOutlinedIcon from "@mui/icons-material/LooksOneOutlined";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import WebAssetOutlinedIcon from "@mui/icons-material/WebAssetOutlined";
 import TouchAppOutlinedIcon from "@mui/icons-material/TouchAppOutlined";
+import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
 
 export enum ElementKind {
     Label = "label",
@@ -32,6 +34,7 @@ export enum ElementKind {
     Canvas = "canvas",
     Image = "image",
     Frame = "frame",
+    Pipe = "pipe",
     IFrame = "iframe",
     Button = "button",
     ControlButtonToggle = "control_button_toggle",
@@ -50,6 +53,10 @@ const FILL_UNITS = ["A", "S", "T", "H", "D", "W"];
 
 const LabelIcon = () => {
     return <TextFormatOutlined style={{ fontSize: 25 }} />;
+};
+
+const PipeIcon = () => {
+    return <HorizontalRuleIcon style={{ fontSize: 25 }} />;
 };
 
 const FrameIcon = () => {
@@ -691,6 +698,66 @@ ELEMENT_CLASSES.set(ElementKind.Frame, {
     boxed: false,
     actions: false,
 });
+ELEMENT_CLASSES.set(ElementKind.Pipe, {
+    description: "Pipe",
+    IconDraw: PipeIcon,
+    group: ElementGroup.UI,
+    default_zIndex: 4,
+    defaults: {
+        diameter: 10,
+        length: 200,
+        vertical: false,
+        start: PipeEnding.Open,
+        end: PipeEnding.Open,
+        style: PipeStyle.Rings,
+        color: "#eee",
+        shadow: 50,
+    },
+    props: [
+        {
+            id: uuidv4(),
+            name: "diameter",
+            kind: PropertyKind.Number,
+            params: { size: 5, min: 5 },
+        },
+        {
+            id: uuidv4(),
+            name: "length",
+            kind: PropertyKind.Number,
+            params: { size: 5, min: 5 },
+        },
+        { id: uuidv4(), name: "vertical", kind: PropertyKind.Boolean },
+        {
+            id: uuidv4(),
+            name: "start",
+            kind: PropertyKind.SelectString,
+            params: [PipeEnding.Open, PipeEnding.Closed],
+        },
+        { id: uuidv4(), name: "vertical", kind: PropertyKind.Boolean },
+        {
+            id: uuidv4(),
+            name: "end",
+            kind: PropertyKind.SelectString,
+            params: [PipeEnding.Open, PipeEnding.Closed],
+        },
+        {
+            id: uuidv4(),
+            name: "style",
+            kind: PropertyKind.SelectString,
+            params: [PipeStyle.Rings, PipeStyle.Solid],
+        },
+        { id: uuidv4(), name: "color", kind: PropertyKind.SelectColor },
+        {
+            id: uuidv4(),
+            name: "shadow",
+            kind: PropertyKind.Number,
+            params: { size: 5, min: 0, max: 100 },
+        },
+    ],
+    default_size: { x: 20, y: 20 },
+    boxed: false,
+    actions: false,
+});
 ELEMENT_CLASSES.set(ElementKind.ControlButtonToggle, {
     description: "CBtn.Toggle",
     group: ElementGroup.Action,
@@ -805,6 +872,8 @@ const Viewer = ({
             return <SizedIFrame {...(params as any)} />;
         case ElementKind.Button:
             return <Button {...(params as any)} />;
+        case ElementKind.Pipe:
+            return <Pipe {...(params as any)} />;
         case ElementKind.ControlButtonToggle:
             return <ControlButtonToggle {...(params as any)} />;
         case ElementKind.ControlButtonValue:
