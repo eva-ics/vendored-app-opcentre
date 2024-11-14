@@ -24,7 +24,7 @@ import LooksOneOutlinedIcon from "@mui/icons-material/LooksOneOutlined";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import WebAssetOutlinedIcon from "@mui/icons-material/WebAssetOutlined";
 import TouchAppOutlinedIcon from "@mui/icons-material/TouchAppOutlined";
-import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
+import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
 
 export enum ElementKind {
     Label = "label",
@@ -743,7 +743,7 @@ ELEMENT_CLASSES.set(ElementKind.Pipe, {
             id: uuidv4(),
             name: "style",
             kind: PropertyKind.SelectString,
-            params: [PipeStyle.Rings, PipeStyle.Solid],
+            params: [PipeStyle.Rings, PipeStyle.Segmented, PipeStyle.Solid],
         },
         { id: uuidv4(), name: "color", kind: PropertyKind.SelectColor },
         {
