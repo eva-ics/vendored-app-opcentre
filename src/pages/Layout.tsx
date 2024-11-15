@@ -80,6 +80,7 @@ async function updateElementPack() {
             const n = parts[1];
             const l = n.lastIndexOf(".");
             const name = n.substring(0, l);
+            if (name.startsWith("_")) return;
             const elc_id = `clipart/${group}/${name}`;
             const img_uri = `/pvt/vendored-apps/opcentre/idc/clipart/${r.path}`;
             //const img_uri = `${eva.api_uri}/pvt/vendored-apps/opcentre/idc/clipart/${r.path}?k=${eva.api_token}`;
