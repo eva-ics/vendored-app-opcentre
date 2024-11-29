@@ -7,6 +7,7 @@ import { SizedCanvas } from "./sized_canvas";
 import { SizedLineChart } from "./sized_line_chart";
 import { Frame } from "./frame";
 import { GaugeColorized } from "./gauge_colorized";
+import { AlarmBell } from "./alarm_bell";
 import { Pipe, PipeEnding, PipeStyle } from "./pipe";
 import {
     ControlButtonToggle,
@@ -25,6 +26,7 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import WebAssetOutlinedIcon from "@mui/icons-material/WebAssetOutlined";
 import TouchAppOutlinedIcon from "@mui/icons-material/TouchAppOutlined";
 import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 
 export enum ElementKind {
     Label = "label",
@@ -40,6 +42,7 @@ export enum ElementKind {
     ControlButtonToggle = "control_button_toggle",
     ControlButtonValue = "control_button_value",
     ControlButtonRun = "control_button_run",
+    AlarmBell = "alarm_bell",
 }
 
 enum ElementGroup {
@@ -47,6 +50,7 @@ enum ElementGroup {
     Value = "Item values",
     Chart = "Charts",
     Action = "Item actions",
+    Notifications = "Notifications",
 }
 
 const FILL_UNITS = ["A", "S", "T", "H", "D", "W"];
@@ -69,6 +73,10 @@ const EnterValueIcon = () => {
 
 const RunIcon = () => {
     return <PlayArrowIcon style={{ fontSize: 25 }} />;
+};
+
+const AlarmBellIcon = () => {
+    return <NotificationsActiveIcon style={{ fontSize: 25 }} />;
 };
 
 const IFrameIcon = () => {
@@ -841,6 +849,27 @@ ELEMENT_CLASSES.set(ElementKind.ControlButtonRun, {
     boxed: true,
     actions: true,
 });
+ELEMENT_CLASSES.set(ElementKind.AlarmBell, {
+    description: "Active alarms",
+    group: ElementGroup.Notifications,
+    IconDraw: AlarmBellIcon,
+    defaults: {
+        size: 25,
+        sound: true,
+    },
+    props: [
+        {
+            id: uuidv4(),
+            name: "size",
+            kind: PropertyKind.SelectNumberSlider,
+            params: { min: 20, max: 100 },
+        },
+        { id: uuidv4(), name: "sound", kind: PropertyKind.Boolean },
+    ],
+    default_size: { x: 50, y: 50 },
+    boxed: true,
+    actions: true,
+});
 
 const Viewer = ({
     kind,
@@ -879,6 +908,8 @@ const Viewer = ({
             return <ControlButtonValue {...(params as any)} />;
         case ElementKind.ControlButtonRun:
             return <ControlButtonRun {...(params as any)} />;
+        case ElementKind.AlarmBell:
+            return <AlarmBell {...(params as any)} />;
         default:
             if (kind.startsWith("clipart/")) {
                 const c_params = { ...params, image: vendored?.image };
