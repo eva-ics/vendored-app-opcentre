@@ -850,7 +850,7 @@ ELEMENT_CLASSES.set(ElementKind.ControlButtonRun, {
     actions: true,
 });
 ELEMENT_CLASSES.set(ElementKind.AlarmBell, {
-    description: "Active alarms",
+    description: "Alarm bell",
     group: ElementGroup.Notifications,
     IconDraw: AlarmBellIcon,
     defaults: {
