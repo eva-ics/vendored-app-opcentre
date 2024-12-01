@@ -8,6 +8,7 @@ import { SizedLineChart } from "./sized_line_chart";
 import { Frame } from "./frame";
 import { GaugeColorized } from "./gauge_colorized";
 import { AlarmBell } from "./alarm_bell";
+import { DashboardVariable } from "./dashboard_variable";
 import { Pipe, PipeEnding, PipeStyle } from "./pipe";
 import {
     ControlButtonToggle,
@@ -20,6 +21,7 @@ import { CHART_TIME_FRAMES, CHART_KINDS, VALUE_FN } from "./sized_line_chart";
 import { ElementClass, ElementPack } from "idc-core";
 import { v4 as uuidv4 } from "uuid";
 import { TextFormatOutlined, CheckBoxOutlineBlankOutlined } from "@mui/icons-material";
+import { DispatchWithoutAction } from "react";
 
 import LooksOneOutlinedIcon from "@mui/icons-material/LooksOneOutlined";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
@@ -27,6 +29,7 @@ import WebAssetOutlinedIcon from "@mui/icons-material/WebAssetOutlined";
 import TouchAppOutlinedIcon from "@mui/icons-material/TouchAppOutlined";
 import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
+import GradingIcon from "@mui/icons-material/Grading";
 
 export enum ElementKind {
     Label = "label",
@@ -43,6 +46,7 @@ export enum ElementKind {
     ControlButtonValue = "control_button_value",
     ControlButtonRun = "control_button_run",
     AlarmBell = "alarm_bell",
+    DashboardVariable = "dashboard_variable",
 }
 
 enum ElementGroup {
@@ -87,6 +91,10 @@ const ButtonIcon = () => {
     return <TouchAppOutlinedIcon style={{ fontSize: 25 }} />;
 };
 
+const DashboardVariableIcon = () => {
+    return <GradingIcon style={{ fontSize: 25 }} />;
+};
+
 export const ELEMENT_CLASSES: Map<ElementKind, ElementClass> = new Map();
 ELEMENT_CLASSES.set(ElementKind.Label, {
     description: "Text label",
@@ -116,6 +124,52 @@ ELEMENT_CLASSES.set(ElementKind.Label, {
     default_size: { x: 20, y: 20 },
     boxed: true,
     actions: false,
+});
+ELEMENT_CLASSES.set(ElementKind.DashboardVariable, {
+    description: "Dashboard variable",
+    group: ElementGroup.UI,
+    IconDraw: DashboardVariableIcon,
+    defaults: {
+        width: 100,
+        variable: "",
+        default_value: "",
+        values: [] as string[],
+        style: "list",
+    },
+    props: [
+        {
+            id: uuidv4(),
+            name: "variable",
+            kind: PropertyKind.String,
+            params: { size: 40 },
+        },
+        {
+            id: uuidv4(),
+            name: "default_value",
+            kind: PropertyKind.String,
+            params: { size: 40 },
+        },
+        {
+            id: uuidv4(),
+            name: "width",
+            kind: PropertyKind.SelectNumberSlider,
+            params: { min: 20, max: 300, step: 10 },
+        },
+        {
+            id: uuidv4(),
+            name: "values",
+            kind: PropertyKind.StringList,
+        },
+        {
+            id: uuidv4(),
+            name: "style",
+            kind: PropertyKind.SelectString,
+            params: ["list", "input"],
+        },
+    ],
+    default_size: { x: 20, y: 20 },
+    boxed: true,
+    actions: true,
 });
 ELEMENT_CLASSES.set(ElementKind.Image, {
     description: "Image",
@@ -875,11 +929,17 @@ const Viewer = ({
     kind,
     dragged,
     vendored,
+    setVariable,
+    getVariable,
+    forceUpdate,
     ...params
 }: {
     kind: string;
     dragged: boolean;
     vendored?: any;
+    setVariable: (name: string, value: any) => void;
+    getVariable: (name: string) => string | undefined;
+    forceUpdate: DispatchWithoutAction;
 }): JSX.Element => {
     switch (kind as ElementKind) {
         case ElementKind.Label:
@@ -910,6 +970,14 @@ const Viewer = ({
             return <ControlButtonRun {...(params as any)} />;
         case ElementKind.AlarmBell:
             return <AlarmBell {...(params as any)} />;
+        case ElementKind.DashboardVariable:
+            return (
+                <DashboardVariable
+                    setVariable={setVariable}
+                    getVariable={getVariable}
+                    {...(params as any)}
+                />
+            );
         default:
             if (kind.startsWith("clipart/")) {
                 const c_params = { ...params, image: vendored?.image };
