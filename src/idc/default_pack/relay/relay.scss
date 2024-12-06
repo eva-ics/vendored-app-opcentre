@@ -9,7 +9,7 @@
   border: 1px solid #eaa612;
   border-radius: 5px;
   cursor: pointer;
-  background-color: var(--body-bg-color);
+  background-color: #151721;
   z-index: 10;
   transition: 1s;
   user-select: none;
@@ -34,20 +34,11 @@
   height: 30px;
   transition: 1s;
 
-  @include media(tablet) {
-    width: 40px;
-    height: 40px;
-  }
-
 }
 
 .relay-connect-image {
   width: 10px;
   transition: 1s;
-
-  @include media(tablet) {
-    width: 12px;
-  }
 
 }
 
@@ -57,11 +48,6 @@
   top: 13px;
   transition: 1s;
 
-  @include media(tablet) {
-    left: 3px;
-    top: 18px;
-  }
-
 }
 
 .relay-connect-right {
@@ -70,11 +56,6 @@
   right: 2px;
   top: 13px;
   transition: 1s;
-
-  @include media(tablet) {
-    right: 3px;
-    top: 18px;
-  }
 
 }
 
@@ -86,12 +67,6 @@
   transform: rotateZ(0deg);
   animation: rotate 0.5s ease-in-out 1;
   transition: 1s;
-
-  @include media(tablet) {
-    left: 15px;
-    top: 18px;
-  }
-
 
   @keyframes rotate {
     0% {
@@ -113,11 +88,6 @@
   animation: rotate-reverse 0.5s ease-in-out 1;
   transition: 1s;
 
-  @include media(tablet) {
-    right: 12px;
-    top: 18px;
-  }
-
   @keyframes rotate-reverse {
     0% {
       transform: rotateZ(0deg);
@@ -134,6 +104,7 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  background-color: #151721;
 }
 
 .valve-stripe {
@@ -168,5 +139,6 @@
 
 .valve-label {
   margin-left: 5px;
+  margin-right: 5px;
   display: inline-block;
 }
