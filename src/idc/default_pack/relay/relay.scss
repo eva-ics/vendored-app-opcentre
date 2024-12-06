@@ -1,0 +1,172 @@
+@import "../../../sass/mixin.scss";
+
+.relay-button-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border: 1px solid #eaa612;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: var(--body-bg-color);
+  z-index: 10;
+  transition: 1s;
+  user-select: none;
+  pointer-events: click;
+
+}
+
+.relay-label {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.relay-wrapper_on {
+  transition: 1s;
+  border: 1px solid #02ca2e;
+
+}
+
+.relay-switch-container {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  transition: 1s;
+
+  @include media(tablet) {
+    width: 40px;
+    height: 40px;
+  }
+
+}
+
+.relay-connect-image {
+  width: 10px;
+  transition: 1s;
+
+  @include media(tablet) {
+    width: 12px;
+  }
+
+}
+
+.relay-connect-left {
+  position: absolute;
+  left: 2px;
+  top: 13px;
+  transition: 1s;
+
+  @include media(tablet) {
+    left: 3px;
+    top: 18px;
+  }
+
+}
+
+.relay-connect-right {
+  position: absolute;
+  transform: rotate(180deg);
+  right: 2px;
+  top: 13px;
+  transition: 1s;
+
+  @include media(tablet) {
+    right: 3px;
+    top: 18px;
+  }
+
+}
+
+.relay-contact {
+  position: absolute;
+  left: 11px;
+  top: 13px;
+  transform-origin: 100% 60%;
+  transform: rotateZ(0deg);
+  animation: rotate 0.5s ease-in-out 1;
+  transition: 1s;
+
+  @include media(tablet) {
+    left: 15px;
+    top: 18px;
+  }
+
+
+  @keyframes rotate {
+    0% {
+      transform: rotateZ(45deg);
+    }
+
+    100% {
+      transform: rotateZ(0deg);
+    }
+  }
+}
+
+.relay-contact-off {
+  position: absolute;
+  right: 8px;
+  top: 13px;
+  transform-origin: 100% 20%;
+  transform: rotateZ(45deg);
+  animation: rotate-reverse 0.5s ease-in-out 1;
+  transition: 1s;
+
+  @include media(tablet) {
+    right: 12px;
+    top: 18px;
+  }
+
+  @keyframes rotate-reverse {
+    0% {
+      transform: rotateZ(0deg);
+    }
+
+    100% {
+      transform: rotateZ(45deg);
+    }
+  }
+}
+
+.valve-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.valve-stripe {
+  transition: stroke 0.3s ease, transform 0.5s ease;
+}
+
+.valve-stripe.circle.open {
+  animation: circleOpen 0.5s forwards;
+}
+
+.valve-stripe.circle.close {
+  animation: circleClose 0.5s forwards;
+}
+
+@keyframes circleOpen {
+  0% {
+    stroke-dasharray: 0;
+  }
+  100% {
+    stroke-dasharray: 100;
+  }
+}
+
+@keyframes circleClose {
+  0% {
+    stroke-dasharray: 100;
+  }
+  100% {
+    stroke-dasharray: 0;
+  }
+}
+
+.valve-label {
+  margin-left: 5px;
+  display: inline-block;
+}

@@ -9,12 +9,12 @@ import { Frame } from "./frame";
 import { GaugeColorized } from "./gauge_colorized";
 import { AlarmBell } from "./alarm_bell";
 import { DashboardVariable } from "./dashboard_variable";
-import { Pipe, PipeEnding, PipeStyle } from "./pipe";
 import {
-    ControlButtonToggle,
-    ControlButtonValue,
-    ControlButtonRun,
-} from "@eva-ics/webengine-react";
+    ControlButtonToggleStyled,
+    ControlButtonToggleStyle,
+} from "./control_button_toggle_styled";
+import { Pipe, PipeEnding, PipeStyle } from "./pipe";
+import { ControlButtonValue, ControlButtonRun } from "@eva-ics/webengine-react";
 import { PropertyKind } from "idc-core";
 import { GaugeType } from "@eva-ics/webengine-react";
 import { CHART_TIME_FRAMES, CHART_KINDS, VALUE_FN } from "./sized_line_chart";
@@ -825,6 +825,7 @@ ELEMENT_CLASSES.set(ElementKind.ControlButtonToggle, {
     defaults: {
         oid: undefined,
         label: "Button",
+        style: ControlButtonToggleStyle.Button,
     },
     props: [
         {
@@ -838,6 +839,16 @@ ELEMENT_CLASSES.set(ElementKind.ControlButtonToggle, {
             name: "label",
             kind: PropertyKind.String,
             params: { size: 30 },
+        },
+        {
+            id: uuidv4(),
+            name: "style",
+            kind: PropertyKind.SelectString,
+            params: [
+                ControlButtonToggleStyle.Button,
+                ControlButtonToggleStyle.Relay,
+                ControlButtonToggleStyle.Valve,
+            ],
         },
     ],
     default_size: { x: 50, y: 50 },
@@ -963,7 +974,7 @@ const Viewer = ({
         case ElementKind.Pipe:
             return <Pipe {...(params as any)} />;
         case ElementKind.ControlButtonToggle:
-            return <ControlButtonToggle {...(params as any)} />;
+            return <ControlButtonToggleStyled {...(params as any)} />;
         case ElementKind.ControlButtonValue:
             return <ControlButtonValue {...(params as any)} />;
         case ElementKind.ControlButtonRun:
