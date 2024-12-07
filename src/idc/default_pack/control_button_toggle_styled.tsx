@@ -121,7 +121,7 @@ const Valve = ({
 }) => {
     const state = useEvaState({ oid }, []);
     const isOpen = state?.value > 0;
-    const strokeColor = isOpen ? "#F19F00" : "#02CA2E";
+    const strokeColor = isOpen ? "#02CA2E" : "#F19F00";
 
     const pathD = isOpen
         ? "M46.129 43.9993L58.2051 50.3472V27.433L46.129 34.4701M29.1811 34.4701L17.7959 27.433V50.3472L29.1811 43.6248"
