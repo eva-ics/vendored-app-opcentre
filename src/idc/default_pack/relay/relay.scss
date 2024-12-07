@@ -109,15 +109,15 @@
   transition: stroke 0.3s ease, transform 0.5s ease;
 }
 
-.valve-stripe.circle.open {
-  animation: circleOpen 0.5s forwards;
-}
-
 .valve-stripe.circle.close {
   animation: circleClose 0.5s forwards;
 }
 
-@keyframes circleOpen {
+.valve-stripe.circle.open {
+  animation: circleOpen 0.5s forwards;
+}
+
+@keyframes circleClose {
   0% {
     stroke-dasharray: 0;
   }
@@ -126,7 +126,7 @@
   }
 }
 
-@keyframes circleClose {
+@keyframes circleOpen {
   0% {
     stroke-dasharray: 100;
   }
