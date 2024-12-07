@@ -1,4 +1,6 @@
 import { useRef, useEffect } from "react";
+import { useEvaState } from "@eva-ics/webengine-react";
+import { ValueColorMap } from "idc-core";
 
 export enum PipeStyle {
     Solid = "solid",
@@ -37,6 +39,8 @@ export const Pipe = ({
     end,
     style,
     color,
+    value_color,
+    oid,
     shadow,
 }: {
     diameter: number;
@@ -46,9 +50,22 @@ export const Pipe = ({
     end: PipeEnding;
     style: PipeStyle;
     color: string;
+    value_color: ValueColorMap[];
+    oid?: string;
     shadow: number;
 }) => {
     const canvasRef = useRef(null);
+    const state = useEvaState({ oid }, [oid]);
+
+    let primary_color: string = color;
+    if (state.value !== undefined && value_color !== undefined) {
+        for (const v of value_color) {
+            if (state.value == v.value) {
+                primary_color = v.color;
+                break;
+            }
+        }
+    }
 
     useEffect(() => {
         const canvas: any = canvasRef.current;
@@ -56,7 +73,7 @@ export const Pipe = ({
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        const color2 = color;
+        const color2 = primary_color;
         const color1 = darkenColor(color2, shadow);
 
         const x = diameter;
@@ -185,7 +202,7 @@ export const Pipe = ({
                 ctx.fillRect(0, y - x / 8, x, y);
             }
         }
-    }, [diameter, length, vertical, start, end, style, color, shadow]);
+    }, [diameter, length, vertical, start, end, style, primary_color, shadow]);
 
     const width = vertical ? diameter : length;
     const height = vertical ? length : diameter;

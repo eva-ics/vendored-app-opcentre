@@ -772,8 +772,10 @@ ELEMENT_CLASSES.set(ElementKind.Pipe, {
         start: PipeEnding.Open,
         end: PipeEnding.Open,
         style: PipeStyle.Rings,
-        color: "#eee",
         shadow: 50,
+        color: "#eee",
+        oid: undefined,
+        value_color: undefined,
     },
     props: [
         {
@@ -807,12 +809,23 @@ ELEMENT_CLASSES.set(ElementKind.Pipe, {
             kind: PropertyKind.SelectString,
             params: [PipeStyle.Rings, PipeStyle.Segmented, PipeStyle.Solid],
         },
-        { id: uuidv4(), name: "color", kind: PropertyKind.SelectColor },
         {
             id: uuidv4(),
             name: "shadow",
             kind: PropertyKind.Number,
             params: { size: 5, min: 0, max: 100 },
+        },
+        { id: uuidv4(), name: "color", kind: PropertyKind.SelectColor },
+        { id: uuidv4(), name: "oid", kind: PropertyKind.OIDSubscribed },
+        {
+            id: uuidv4(),
+            name: "value_color",
+            kind: PropertyKind.ValueColorMap,
+            params: {
+                size: 40,
+                title: "Value mapping",
+                help: "Select colors matching item value",
+            },
         },
     ],
     default_size: { x: 20, y: 20 },
