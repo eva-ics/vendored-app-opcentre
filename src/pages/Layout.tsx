@@ -60,12 +60,12 @@ const AlarmSummary = () => {
 
 async function updateElementPack() {
     const eva = get_engine() as Eva;
-    const result = await eva.call("pvt.list", "vendored-apps/opcentre/idc/clipart", {
+    const res_clipart = await eva.call("pvt.list", "vendored-apps/opcentre/idc/clipart", {
         recursive: true,
         kind: "file",
     });
     const c = element_pack.classes;
-    if (Array.isArray(result) && result.length > 0) {
+    if (Array.isArray(res_clipart) && res_clipart.length > 0) {
         const image_class = element_pack.classes.get(ElementKind.Image) as ElementClass;
         const props = image_class.props.filter(
             (p) => p.name != "image" && p.name != "update"
@@ -74,7 +74,7 @@ async function updateElementPack() {
         defaults.width = 200;
         delete defaults.image;
         delete defaults.update;
-        result.forEach((r: any) => {
+        res_clipart.forEach((r: any) => {
             const parts = r.path.split("/");
             const group = parts[0];
             const n = parts[1];
@@ -100,6 +100,42 @@ async function updateElementPack() {
             };
             c.set(elc_id, elc);
         });
+    }
+    const res_elements = await eva.call(
+        "pvt.list",
+        "vendored-apps/opcentre/idc/elements",
+        {
+            recursive: false,
+            kind: "file",
+        }
+    );
+    if (Array.isArray(res_elements) && res_elements.length > 0) {
+        for (const r of res_elements) {
+            const n = r.path;
+            const l = n.lastIndexOf(".");
+            const module_name: string = `idce_${n.substring(0, l)}`;
+            try {
+                console.debug(`Loading element module ${r.path}`);
+                //const mod_uri = `/pvt/vendored-apps/opcentre/idc/elements/${r.path}`;
+                const mod_uri = `${eva.api_uri}/pvt/vendored-apps/opcentre/idc/elements/${r.path}?k=${eva.api_token}`;
+                await import(mod_uri);
+                const module: Map<string, ElementClass> = window[
+                    module_name as any
+                ] as any;
+                if (!module) {
+                    throw new Error(`Module ${module_name} not loaded`);
+                }
+                if (!(module instanceof Map)) {
+                    throw new Error(`Module ${module_name} export is not a map`);
+                }
+                for (const [k, v] of module) {
+                    console.debug(`Loaded element class ${k}`);
+                    element_pack.classes.set(k, v);
+                }
+            } catch (e) {
+                console.error(`Error loading element module ${r.path}: ${e}`);
+            }
+        }
     }
 }
 
