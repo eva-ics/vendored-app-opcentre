@@ -57,7 +57,7 @@ export const Pipe = ({
     const canvasRef = useRef(null);
     const state = useEvaState({ oid }, [oid]);
 
-    let primary_color: string = color;
+    let primary_color: string = color || "#eee";
     if (state.value !== undefined && value_color !== undefined) {
         for (const v of value_color) {
             if (state.value == v.value) {
