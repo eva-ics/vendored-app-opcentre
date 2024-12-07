@@ -50,7 +50,7 @@ export enum ElementKind {
 }
 
 enum ElementGroup {
-    UI = "UI Elements",
+    UI = "UI elements",
     Value = "Item values",
     Chart = "Charts",
     Action = "Item actions",

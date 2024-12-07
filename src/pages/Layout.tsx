@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import SideMenu from "../components/SideMenu";
@@ -58,14 +59,14 @@ const AlarmSummary = () => {
     }
 };
 
-async function updateElementPack() {
+const updateElementPack = async () => {
     const eva = get_engine() as Eva;
-    const result = await eva.call("pvt.list", "vendored-apps/opcentre/idc/clipart", {
+    const res_clipart = await eva.call("pvt.list", "vendored-apps/opcentre/idc/clipart", {
         recursive: true,
         kind: "file",
     });
     const c = element_pack.classes;
-    if (Array.isArray(result) && result.length > 0) {
+    if (Array.isArray(res_clipart) && res_clipart.length > 0) {
         const image_class = element_pack.classes.get(ElementKind.Image) as ElementClass;
         const props = image_class.props.filter(
             (p) => p.name != "image" && p.name != "update"
@@ -74,7 +75,7 @@ async function updateElementPack() {
         defaults.width = 200;
         delete defaults.image;
         delete defaults.update;
-        result.forEach((r: any) => {
+        res_clipart.forEach((r: any) => {
             const parts = r.path.split("/");
             const group = parts[0];
             const n = parts[1];
@@ -101,7 +102,64 @@ async function updateElementPack() {
             c.set(elc_id, elc);
         });
     }
-}
+    const res_elements = await eva.call(
+        "pvt.list",
+        "vendored-apps/opcentre/idc/elements",
+        {
+            recursive: false,
+            kind: "file",
+        }
+    );
+    if (Array.isArray(res_elements) && res_elements.length > 0) {
+        window.React = React;
+        (window as any).$eva.external.uuidv4 = uuidv4;
+        const jobs = [];
+        for (const r of res_elements) {
+            jobs.push(importCustomElement(r));
+        }
+        await Promise.all(jobs).catch((e) => {
+            console.error(`Error loading element modules: ${e}`);
+        });
+    }
+};
+
+const importCustomElement = async (el: any) => {
+    const n = el.path;
+    const l = n.lastIndexOf(".");
+    const module_name: string = `idce_${n.substring(0, l)}`;
+    try {
+        console.debug(`Loading element module ${el.path}`);
+        //const mod_uri = `/pvt/vendored-apps/opcentre/idc/elements/${r.path}`;
+        const mod_uri = `${(window as any).$eva.api_uri}/pvt/vendored-apps/opcentre/idc/elements/${el.path}?k=${(window as any).$eva.api_token}`;
+        //await appendScript(mod_uri);
+        await import(mod_uri);
+        const module: Map<string, ElementClass> = (window[module_name as any] as any)
+            .default;
+        if (!module) {
+            throw new Error(`Module ${module_name} not loaded`);
+        }
+        if (!(module instanceof Map)) {
+            throw new Error(`Module ${module_name} export is not a map`);
+        }
+        for (const [k, v] of module) {
+            console.debug(`Loaded element class ${k}`);
+            element_pack.classes.set(k, v);
+        }
+    } catch (e) {
+        console.error(`Error loading element module ${el.path}: ${e}`);
+    }
+};
+
+//const appendScript = (uri: string): Promise<void> => {
+//const script = document.createElement("script");
+//script.src = uri;
+//script.async = true;
+//return new Promise((resolve, reject) => {
+//script.onload = () => resolve();
+//script.onerror = (e) => reject(e);
+//document.head.appendChild(script);
+//});
+//};
 
 enum ElementPackUpdated {
     No,
