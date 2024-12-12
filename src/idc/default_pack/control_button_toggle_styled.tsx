@@ -36,7 +36,7 @@ const Relay = ({
     on_fail?: (err: EvaError) => void;
     disabled_actions: boolean;
 }) => {
-    const state = useEvaState({ oid }, []);
+    const state = useEvaState({ oid }, [oid]);
     const toggleOn = state?.value > 0;
 
     const handle_action_finished = (
@@ -119,7 +119,7 @@ const Valve = ({
     on_fail?: (err: EvaError) => void;
     disabled_actions: boolean;
 }) => {
-    const state = useEvaState({ oid }, []);
+    const state = useEvaState({ oid }, [oid]);
     const isOpen = state?.value > 0;
     const strokeColor = isOpen ? "#02CA2E" : "#F19F00";
 
