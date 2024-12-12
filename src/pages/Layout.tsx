@@ -118,6 +118,7 @@ async function updateElementPack() {
                 console.debug(`Loading element module ${r.path}`);
                 //const mod_uri = `/pvt/vendored-apps/opcentre/idc/elements/${r.path}`;
                 const mod_uri = `${eva.api_uri}/pvt/vendored-apps/opcentre/idc/elements/${r.path}?k=${eva.api_token}`;
+                await appendScript(mod_uri);
                 await import(mod_uri);
                 const module: Map<string, ElementClass> = window[
                     module_name as any
@@ -137,6 +138,17 @@ async function updateElementPack() {
             }
         }
     }
+}
+
+const appendScript = (uri: string): Promise<void> => {
+  const script = document.createElement("script");
+  script.src = uri;
+  script.async = true;
+  return new Promise((resolve, reject) => {
+    script.onload = () => resolve();
+    script.onerror = (e) => reject(e);
+    document.head.appendChild(script);
+  });
 }
 
 enum ElementPackUpdated {
