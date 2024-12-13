@@ -58,7 +58,7 @@ const AlarmSummary = () => {
     }
 };
 
-async function updateElementPack() {
+const updateElementPack = async () => {
     const eva = get_engine() as Eva;
     const res_clipart = await eva.call("pvt.list", "vendored-apps/opcentre/idc/clipart", {
         recursive: true,
@@ -110,46 +110,55 @@ async function updateElementPack() {
         }
     );
     if (Array.isArray(res_elements) && res_elements.length > 0) {
+        const jobs = [];
+        jobs.push(appendScript("js/react.production.min.js"));
+        jobs.push(appendScript("js/react-dom.production.min.js"));
         for (const r of res_elements) {
-            const n = r.path;
-            const l = n.lastIndexOf(".");
-            const module_name: string = `idce_${n.substring(0, l)}`;
-            try {
-                console.debug(`Loading element module ${r.path}`);
-                //const mod_uri = `/pvt/vendored-apps/opcentre/idc/elements/${r.path}`;
-                const mod_uri = `${eva.api_uri}/pvt/vendored-apps/opcentre/idc/elements/${r.path}?k=${eva.api_token}`;
-                await appendScript(mod_uri);
-                await import(mod_uri);
-                const module: Map<string, ElementClass> = window[
-                    module_name as any
-                ] as any;
-                if (!module) {
-                    throw new Error(`Module ${module_name} not loaded`);
-                }
-                if (!(module instanceof Map)) {
-                    throw new Error(`Module ${module_name} export is not a map`);
-                }
-                for (const [k, v] of module) {
-                    console.debug(`Loaded element class ${k}`);
-                    element_pack.classes.set(k, v);
-                }
-            } catch (e) {
-                console.error(`Error loading element module ${r.path}: ${e}`);
-            }
+            jobs.push(importCustomElement(r));
         }
+        await Promise.all(jobs).catch((e) => {
+            console.error(`Error loading element modules: ${e}`);
+        });
     }
-}
+};
+
+const importCustomElement = async (el: any) => {
+    const n = el.path;
+    const l = n.lastIndexOf(".");
+    const module_name: string = `idce_${n.substring(0, l)}`;
+    try {
+        console.debug(`Loading element module ${el.path}`);
+        //const mod_uri = `/pvt/vendored-apps/opcentre/idc/elements/${r.path}`;
+        const mod_uri = `${(window as any).$eva.api_uri}/pvt/vendored-apps/opcentre/idc/elements/${el.path}?k=${(window as any).$eva.api_token}`;
+        await appendScript(mod_uri);
+        await import(mod_uri);
+        const module: Map<string, ElementClass> = (window[module_name as any] as any)
+            .default;
+        if (!module) {
+            throw new Error(`Module ${module_name} not loaded`);
+        }
+        if (!(module instanceof Map)) {
+            throw new Error(`Module ${module_name} export is not a map`);
+        }
+        for (const [k, v] of module) {
+            console.debug(`Loaded element class ${k}`);
+            element_pack.classes.set(k, v);
+        }
+    } catch (e) {
+        console.error(`Error loading element module ${el.path}: ${e}`);
+    }
+};
 
 const appendScript = (uri: string): Promise<void> => {
-  const script = document.createElement("script");
-  script.src = uri;
-  script.async = true;
-  return new Promise((resolve, reject) => {
-    script.onload = () => resolve();
-    script.onerror = (e) => reject(e);
-    document.head.appendChild(script);
-  });
-}
+    const script = document.createElement("script");
+    script.src = uri;
+    script.async = true;
+    return new Promise((resolve, reject) => {
+        script.onload = () => resolve();
+        script.onerror = (e) => reject(e);
+        document.head.appendChild(script);
+    });
+};
 
 enum ElementPackUpdated {
     No,
