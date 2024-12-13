@@ -30,6 +30,8 @@ import {
     DEFAULT_ALARM_SVC,
 } from "../common";
 import Profile from "./Profile.tsx";
+import * as EvaWE from "@eva-ics/webengine";
+import * as EvaWER from "@eva-ics/webengine-react";
 
 const allowedDashboardChars = /^[a-zA-Z0-9 ._-]+$/;
 
@@ -113,6 +115,8 @@ const updateElementPack = async () => {
     if (Array.isArray(res_elements) && res_elements.length > 0) {
         window.React = React;
         (window as any).$eva.external.uuidv4 = uuidv4;
+        (window as any).EvaWE = EvaWE;
+        (window as any).EvaWER = EvaWER;
         const jobs = [];
         for (const r of res_elements) {
             jobs.push(importCustomElement(r));
