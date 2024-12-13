@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import SideMenu from "../components/SideMenu";
@@ -110,9 +111,9 @@ const updateElementPack = async () => {
         }
     );
     if (Array.isArray(res_elements) && res_elements.length > 0) {
+        window.React = React;
+        (window as any).$eva.external.uuidv4 = uuidv4;
         const jobs = [];
-        jobs.push(appendScript("js/react.production.min.js"));
-        jobs.push(appendScript("js/react-dom.production.min.js"));
         for (const r of res_elements) {
             jobs.push(importCustomElement(r));
         }
@@ -130,7 +131,7 @@ const importCustomElement = async (el: any) => {
         console.debug(`Loading element module ${el.path}`);
         //const mod_uri = `/pvt/vendored-apps/opcentre/idc/elements/${r.path}`;
         const mod_uri = `${(window as any).$eva.api_uri}/pvt/vendored-apps/opcentre/idc/elements/${el.path}?k=${(window as any).$eva.api_token}`;
-        await appendScript(mod_uri);
+        //await appendScript(mod_uri);
         await import(mod_uri);
         const module: Map<string, ElementClass> = (window[module_name as any] as any)
             .default;
@@ -149,16 +150,16 @@ const importCustomElement = async (el: any) => {
     }
 };
 
-const appendScript = (uri: string): Promise<void> => {
-    const script = document.createElement("script");
-    script.src = uri;
-    script.async = true;
-    return new Promise((resolve, reject) => {
-        script.onload = () => resolve();
-        script.onerror = (e) => reject(e);
-        document.head.appendChild(script);
-    });
-};
+//const appendScript = (uri: string): Promise<void> => {
+//const script = document.createElement("script");
+//script.src = uri;
+//script.async = true;
+//return new Promise((resolve, reject) => {
+//script.onload = () => resolve();
+//script.onerror = (e) => reject(e);
+//document.head.appendChild(script);
+//});
+//};
 
 enum ElementPackUpdated {
     No,
