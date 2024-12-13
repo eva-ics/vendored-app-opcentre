@@ -133,9 +133,8 @@ const importCustomElement = async (el: any) => {
     const module_name: string = `idce_${n.substring(0, l)}`;
     try {
         console.debug(`Loading element module ${el.path}`);
-        //const mod_uri = `/pvt/vendored-apps/opcentre/idc/elements/${r.path}`;
-        const mod_uri = `${(window as any).$eva.api_uri}/pvt/vendored-apps/opcentre/idc/elements/${el.path}?k=${(window as any).$eva.api_token}`;
-        //await appendScript(mod_uri);
+        const mod_uri = `/pvt/vendored-apps/opcentre/idc/elements/${el.path}`;
+        //const mod_uri = `${(window as any).$eva.api_uri}/pvt/vendored-apps/opcentre/idc/elements/${el.path}?k=${(window as any).$eva.api_token}`;
         await import(mod_uri);
         const module: Map<string, ElementClass> = (window[module_name as any] as any)
             .default;
@@ -153,17 +152,6 @@ const importCustomElement = async (el: any) => {
         console.error(`Error loading element module ${el.path}: ${e}`);
     }
 };
-
-//const appendScript = (uri: string): Promise<void> => {
-//const script = document.createElement("script");
-//script.src = uri;
-//script.async = true;
-//return new Promise((resolve, reject) => {
-//script.onload = () => resolve();
-//script.onerror = (e) => reject(e);
-//document.head.appendChild(script);
-//});
-//};
 
 enum ElementPackUpdated {
     No,
