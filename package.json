@@ -22,7 +22,7 @@
     "chart.js": "^4.4.0",
     "chartjs-adapter-date-fns": "^3.0.0",
     "dayjs": "^1.11.10",
-    "idc-core": "^0.5.25",
+    "idc-core": "^0.5.26",
     "mui-color-input": "^2.0.1",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
