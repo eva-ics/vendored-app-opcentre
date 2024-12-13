@@ -1,4 +1,3 @@
-//import React from "react";
 import ReactDOM from "react-dom/client";
 import OpCentre from "./opcn.tsx";
 import "./sass/main.scss";
@@ -35,7 +34,7 @@ ChartJS.register(
     Tooltip,
     Legend,
     BarElement,
-    BarController,
+    BarController
 );
 
 disableTabFreeze();
@@ -55,8 +54,10 @@ eva.load_config().then((_config: any) => {
     eva.set_interval(IntervalKind.Heartbeat, 1);
     ReactDOM.createRoot(document.getElementById("root")!).render(
         <>
+            <React.StrictMode>
                 <ToasterProvider />
                 <HMIApp Dashboard={OpCentre} login_props={login_props} />
+            </React.StrictMode>
         </>
     );
 });
