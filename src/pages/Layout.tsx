@@ -179,16 +179,6 @@ const Layout = ({ logout }: LayoutProps) => {
         }
     }, [currentDashboard]);
 
-    if (isElementPackUpdated != ElementPackUpdated.Yes) {
-        if (isElementPackUpdated == ElementPackUpdated.No) {
-            setElementPackUpdated(ElementPackUpdated.Pending);
-            updateElementPack()
-                .then(() => setElementPackUpdated(ElementPackUpdated.Yes))
-                .catch(() => setElementPackUpdated(ElementPackUpdated.Yes));
-        }
-        return <div className="d-idc-preparing">Loading custom elements...</div>;
-    }
-
     const toggleMenu = () => {
         setIsOpenMenu(!isOpenMenu);
     };
@@ -230,6 +220,16 @@ const Layout = ({ logout }: LayoutProps) => {
 
     switch (searchParams.get("d")) {
         case "idc":
+            if (isElementPackUpdated != ElementPackUpdated.Yes) {
+                if (isElementPackUpdated == ElementPackUpdated.No) {
+                    setElementPackUpdated(ElementPackUpdated.Pending);
+                    updateElementPack()
+                        .then(() => setElementPackUpdated(ElementPackUpdated.Yes))
+                        .catch(() => setElementPackUpdated(ElementPackUpdated.Yes));
+                }
+                return <div className="d-idc-preparing">Loading custom elements...</div>;
+            }
+
             const i = searchParams.get("i");
             switch (searchParams.get("m")) {
                 case "view":
