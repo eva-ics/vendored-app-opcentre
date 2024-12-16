@@ -135,7 +135,7 @@ const importCustomElement = async (el: any) => {
         console.debug(`Loading element module ${el.path}`);
         const mod_uri = `/pvt/vendored-apps/opcentre/idc/elements/${el.path}`;
         //const mod_uri = `${(window as any).$eva.api_uri}/pvt/vendored-apps/opcentre/idc/elements/${el.path}?k=${(window as any).$eva.api_token}`;
-        await import(mod_uri);
+        await import(/* @vite-ignore */mod_uri);
         const mod: any = window[module_name as any];
         const module: Map<string, ElementClass> = mod?.default ? mod.default : mod;
         if (!module) {
