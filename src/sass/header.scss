@@ -38,10 +38,10 @@ nav#header {
     }
 }
 
-.nav-link-container {
+a.nav-link-container {
     display: inline-block;
     padding: 10px 20px;
-    color: $secondary-text-color;
+    color: $secondary-text-color !important;
 
     @media (hover: hover) and (pointer: fine) {
         &:hover {
@@ -50,7 +50,7 @@ nav#header {
     }
 }
 
-.nav-link-container-current {
+a.nav-link-container-current {
     position: relative;
     color: #fff;
 
@@ -93,27 +93,47 @@ nav#header {
     left: 0;
     display: flex;
     background-color: $nav-menu-bg-color;
-
     outline: 1px solid blue;
 }
+
 .submenu-item {
     user-select: none;
-    padding: 10px 20px;
+    position: relative;
 
     @media (hover: hover) and (pointer: fine) {
         &:hover {
             background-color: #103b92;
         }
     }
+}
 
-    &.submenu-item-current {
-        &:after {
-            position: absolute;
-            content: "";
-            bottom: -1px;
-            left: 0;
-            width: 100%;
-            border-bottom: 1px solid $secondary-text-color;
+.submenu-item > a {
+    display: block;
+    padding: 10px 20px;
+    color: inherit;
+    text-decoration: none;
+    width: 100%;
+    height: 100%;
+
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background-color: #103b92;
         }
     }
 }
+
+// .submenu-item-current > a {
+//     display: block;
+//     padding: 10px 20px;
+//     color: inherit;
+//     text-decoration: none;
+//     width: 100%;
+//     height: 100%;
+//     border-bottom: 1px solid red;
+
+//     @media (hover: hover) and (pointer: fine) {
+//         &:hover {
+//             background-color: #103b92;
+//         }
+//     }
+// }
