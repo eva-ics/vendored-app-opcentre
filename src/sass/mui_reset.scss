@@ -1,24 +1,25 @@
+@use "base" as *;
+
 .MuiSelect-select.MuiSelect-outlined.MuiInputBase-input.MuiOutlinedInput-input {
-  color: $main-text-color;
-  background-color: $body-bg-color;
-  padding: 11px 30px;
-  outline: 1px solid $border-color;
+    color: $main-text-color;
+    background-color: $body-bg-color;
+    padding: 11px 30px;
+    outline: 1px solid $border-color;
 }
 
 .MuiList-root.MuiList-padding.MuiMenu-list {
-  color: $main-text-color;
-  background-color: $body-bg-color;
+    color: $main-text-color;
+    background-color: $body-bg-color;
 }
 
 .MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium.MuiSelect-icon.MuiSelect-iconOutlined {
-  fill: $main-text-color;
+    fill: $main-text-color;
 }
 .MuiInputBase-input.MuiOutlinedInput-input.MuiInputBase-inputAdornedEnd {
-  padding: 6px;
-  font-size: 12px;
-
+    padding: 6px;
+    font-size: 12px;
 }
 
 .MuiButtonBase-root.MuiIconButton-root.MuiIconButton-edgeEnd.MuiIconButton-sizeMedium {
-  padding: 0;
+    padding: 0;
 }
