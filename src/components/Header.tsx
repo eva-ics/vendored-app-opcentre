@@ -2,7 +2,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { HeaderProps, NavElement } from "../types";
 import { Eva } from "@eva-ics/webengine";
 import { get_engine } from "@eva-ics/webengine-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { Timestamp } from "bmat/time";
 
@@ -31,6 +31,7 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
     const [openSubMenu, setOpenSubMenu] = useState<string | null>(null);
     const navigate = useNavigate();
     const submenuRef = useRef<HTMLUListElement>(null);
+    const location = useLocation();
 
     const eva = get_engine() as Eva;
 
@@ -90,16 +91,15 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                 setTimeout(() => window.open(to, "_blank"), 0);
             } else {
                 navigate(to);
-                setOpenSubMenu(null);
             }
         } else if (to.startsWith("/")) {
             if (isShiftKey) {
                 setTimeout(() => window.open(to, "_blank"), 0);
             } else {
                 document.location = to;
-                setOpenSubMenu(null);
             }
         }
+        setOpenSubMenu(null);
     };
 
     const handleSubKeyDown = (
@@ -185,7 +185,11 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                                             {v.submenus.map((submenuItem, subIdx) => (
                                                 <li
                                                     key={subIdx}
-                                                    className="submenu-item"
+                                                    className={
+                                                        location.search === submenuItem.to
+                                                            ? "submenu-item-current"
+                                                            : "submenu-item"
+                                                    }
                                                     onClick={(event) => {
                                                         event.stopPropagation();
                                                         handleSubClick(

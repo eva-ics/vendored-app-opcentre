@@ -85,6 +85,10 @@
             }
         }
 
+        &.current {
+            border-left: 1px solid blue;
+        }
+
         & > a {
             display: block;
             padding: 5px;
@@ -103,21 +107,36 @@
     gap: 5px;
 }
 
-.side-menu-current {
+.side-menu-li {
     user-select: none;
+    font-size: 16px;
+    color: $secondary-text-color;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.side-menu-li a {
+    width: 100%;
+    display: block;
     padding: 5px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.side-menu-current {
     background-color: $secondary-blue-color;
     color: $secondary-text-color;
 }
 
 .side-menu-item {
-    user-select: none;
     font-size: 16px;
     padding: 5px;
 
     @media (hover: hover) and (pointer: fine) {
         &:hover {
             background-color: #103b92;
+            color: #fff;
         }
     }
 }

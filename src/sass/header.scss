@@ -116,18 +116,18 @@ a.nav-link-container-current {
     height: 100%;
 }
 
-// .submenu-item-current > a {
-//     display: block;
-//     padding: 10px 20px;
-//     color: inherit;
-//     text-decoration: none;
-//     width: 100%;
-//     height: 100%;
-//     border-bottom: 1px solid red;
+.submenu-item-current > a {
+    display: block;
+    padding: 10px 20px;
+    color: inherit;
+    text-decoration: none;
+    width: 100%;
+    height: 100%;
+    border-bottom: 1px solid blue;
 
-//     @media (hover: hover) and (pointer: fine) {
-//         &:hover {
-//             background-color: #103b92;
-//         }
-//     }
-// }
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            background-color: #103b92;
+        }
+    }
+}
