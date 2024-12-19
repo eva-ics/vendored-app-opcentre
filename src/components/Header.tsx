@@ -80,21 +80,19 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
         event: React.MouseEvent<HTMLLIElement | HTMLAnchorElement>,
         to: string
     ) => {
+        event.preventDefault();
         const isShiftKey = event.shiftKey;
 
         if (to === "logout") {
-            event.preventDefault();
             logout();
         } else if (to.startsWith("?")) {
             if (isShiftKey) {
-                event.preventDefault();
                 setTimeout(() => window.open(to, "_blank"), 0);
             } else {
                 navigate(to);
                 setOpenSubMenu(null);
             }
         } else if (to.startsWith("/")) {
-            event.preventDefault();
             if (isShiftKey) {
                 setTimeout(() => window.open(to, "_blank"), 0);
             } else {

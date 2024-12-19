@@ -114,12 +114,6 @@ a.nav-link-container-current {
     text-decoration: none;
     width: 100%;
     height: 100%;
-
-    @media (hover: hover) and (pointer: fine) {
-        &:hover {
-            background-color: #103b92;
-        }
-    }
 }
 
 // .submenu-item-current > a {
