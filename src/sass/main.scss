@@ -1,17 +1,4 @@
-// @import "mixin";
-// @use "../../node_modules/bmat/sass/dashtable.scss" as *;
-// @use "../../node_modules/bmat/sass/eva_login.scss" as *;
-// @import "reset";
-// @import "fonts";
-// @import "base";
-// @import "header";
-// @import "dashboard";
-// @import "mui_reset";
-// @import "mui_styles";
-// @import "idc_mui_styles";
-// @import "sidemenu";
-// @import "profile.scss";
-
+@use "mixin" as *;
 @use "reset" as *;
 @use "fonts" as *;
 @use "base" as *;
