@@ -7,6 +7,11 @@ export default defineConfig({
     plugins: [react()],
     css: {
         devSourcemap: true,
+        preprocessorOptions: {
+            scss: {
+                silenceDeprecations: ["legacy-js-api"],
+            },
+        },
     },
     resolve: {
         alias: {
