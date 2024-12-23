@@ -1,4 +1,6 @@
 @use "mixin" as *;
+@use "../../node_modules/bmat/sass/dashtable.scss" as *;
+@use "../../node_modules/bmat/sass/eva_login.scss" as *;
 @use "reset" as *;
 @use "fonts" as *;
 @use "base" as *;
@@ -9,6 +11,3 @@
 @use "idc_mui_styles" as *;
 @use "sidemenu" as *;
 @use "profile" as *;
-
-@use "../../node_modules/bmat/sass/dashtable.scss" as *;
-@use "../../node_modules/bmat/sass/eva_login.scss" as *;
