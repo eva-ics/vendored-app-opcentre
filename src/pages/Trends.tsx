@@ -60,7 +60,7 @@ const getFillUnitCode = (name: string) => {
     return FILL_UNITS[FILL_UNIT_NAMES.indexOf(name)];
 };
 
-const DEFAULT_CHART_COLOR = "#336699";
+const DEFAULT_CHART_COLOR = "#3366CC";
 
 const CHART_COLORS_LIST = [
     "#3366CC",
@@ -291,6 +291,21 @@ const DashboardTrends = () => {
     const chartSize = useRef<Coords>(calculateChartSize());
     const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
+    const setItemsFromQS = (data: Array<ChartItem>) => {
+        for (const item of data) {
+            if (!item.color) {
+                item.color = DEFAULT_CHART_COLOR;
+            }
+            if (item.formula === undefined) {
+                item.formula = "x";
+            }
+            if (item.label === undefined) {
+                item.label = "";
+            }
+        }
+        setItems(data);
+    };
+
     const setChartSizeModified = (val: Coords) => {
         if (val.x !== chartSize.current.x || val.y !== chartSize.current.y) {
             chartSize.current = val;
@@ -396,7 +411,7 @@ const DashboardTrends = () => {
                 name: "items",
                 value: items,
                 pack_json: true,
-                setter: setItems,
+                setter: setItemsFromQS,
             },
             {
                 name: "pu",

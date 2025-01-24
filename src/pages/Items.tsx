@@ -340,6 +340,19 @@ const DashboardItems = () => {
         [watchedItems]
     );
 
+    const openTrendsFor = (oid: string, new_window: boolean) => {
+        const url =
+            window.location.origin +
+            window.location.pathname +
+            "?d=trends&items=" +
+            encodeURIComponent(JSON.stringify([{ oid: oid }]));
+        if (new_window) {
+            window.open(url, "_blank");
+        } else {
+            window.location.href = url;
+        }
+    };
+
     const data: DashTableData = states?.data?.map((state: any) => {
         return {
             data: [
@@ -373,6 +386,20 @@ const DashboardItems = () => {
                     className: "col-fit",
                 },
                 {
+                    value: (
+                        <div className="print-hidden">
+                            <button
+                                onClick={(event) =>
+                                    openTrendsFor(state.oid, event.shiftKey)
+                                }
+                            >
+                                trend
+                            </button>
+                        </div>
+                    ),
+                    className: "col-fit",
+                },
+                {
                     value: <DrawStatus state={state} />,
                     className: "col-fit",
                     sort_value: state.status,
@@ -400,7 +427,7 @@ const DashboardItems = () => {
                         <DashTable
                             id="items"
                             title="Items"
-                            cols={["oid", "node", "set time", "", "", "status", "value"]}
+                            cols={["oid", "node", "set time", "", "", "", "status", "value"]}
                             header={header}
                             filter={filter}
                             data={data}
