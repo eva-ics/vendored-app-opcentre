@@ -361,7 +361,7 @@ const DashboardAlarmState = () => {
                 <EvaErrorMessage error={alarm_states.error} />
                 {alarm_states?.error?.code === -32113 ? (
                     <div className="eva-error">
-                        Unable to call ${DEFAULT_ALARM_SVC}. Read{" "}
+                        Unable to call {DEFAULT_ALARM_SVC}. Read{" "}
                         <a
                             target="_blank"
                             href="https://info.bma.ai/en/actual/eva4/svc/eva-svc-alarms.html"

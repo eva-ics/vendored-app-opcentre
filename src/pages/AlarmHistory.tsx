@@ -27,10 +27,11 @@ import {
 } from "../components/alarms.tsx";
 
 const DEFAULT_FRAME_SEC = 3600;
-const SVC_ID = "eva.aaa.accounting";
 
 const DashboardAlarmHistory = () => {
-    const [filterParams, setFilterParams] = useState<FilterParams>(defaultHistoryFilterParams());
+    const [filterParams, setFilterParams] = useState<FilterParams>(
+        defaultHistoryFilterParams()
+    );
 
     const [cols, setCols] = useState<ColumnRichInfo[]>(defaultHistoryCols());
 
@@ -275,7 +276,7 @@ const DashboardAlarmHistory = () => {
                 <EvaErrorMessage error={records.error} />
                 {records?.error?.code === -32113 ? (
                     <div className="eva-error">
-                        Unable to call {SVC_ID} service. Read{" "}
+                        Unable to call {DEFAULT_ALARM_SVC} service. Read{" "}
                         <a
                             target="_blank"
                             href="https://info.bma.ai/en/actual/eva4/svc/eva-aaa-accounting.html"
