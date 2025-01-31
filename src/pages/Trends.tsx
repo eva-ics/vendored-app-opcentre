@@ -118,9 +118,6 @@ const chart_opts = {
     plugins: {
         legend: {
             display: true,
-            onClick: (e: any) => {
-                e.preventDefault();
-            },
         },
     },
     scales: {
