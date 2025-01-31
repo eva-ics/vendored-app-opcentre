@@ -732,9 +732,12 @@ ELEMENT_CLASSES.set(ElementKind.Frame, {
     group: ElementGroup.UI,
     default_zIndex: 3,
     defaults: {
-        label: "",
+        title: "",
         width: 300,
         height: 300,
+        title_color: "#EEEEEE",
+        background_color: "#191919",
+        border_color: "#555555",
     },
     props: [
         {
@@ -755,6 +758,9 @@ ELEMENT_CLASSES.set(ElementKind.Frame, {
             kind: PropertyKind.Number,
             params: { size: 5, min: 20 },
         },
+        { id: uuidv4(), name: "title_color", kind: PropertyKind.SelectColor },
+        { id: uuidv4(), name: "background_color", kind: PropertyKind.SelectColor },
+        { id: uuidv4(), name: "border_color", kind: PropertyKind.SelectColor },
     ],
     default_size: { x: 20, y: 20 },
     boxed: false,
