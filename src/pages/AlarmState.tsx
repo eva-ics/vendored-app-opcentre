@@ -271,12 +271,14 @@ const DashboardAlarmState = () => {
             },
             {
                 value: (
-                    <NavLink
-                        title="History"
-                        to={`?d=alarm_history&filter=${history_filter}&cols=${historyColsEnabledPacked}`}
-                    >
-                        <StorageIcon />
-                    </NavLink>
+                    <div className="print-hidden">
+                        <NavLink
+                            title="History"
+                            to={`?d=alarm_history&filter=${history_filter}&cols=${historyColsEnabledPacked}`}
+                        >
+                            <StorageIcon />
+                        </NavLink>
+                    </div>
                 ),
                 className: "col-fit",
             },
