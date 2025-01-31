@@ -200,7 +200,7 @@ const DashboardTrends = () => {
         points: 60,
         fill_units: "A",
         digits: 5,
-        update: 1,
+        update: 10,
         timeframe: "1H",
         database: "default",
         vfn: "mean",
