@@ -7,6 +7,7 @@ import {
     generateStateHistoryCSV,
     useEvaStateHistory,
 } from "@eva-ics/webengine-react";
+import { Chart as ChartJs } from "chart.js";
 // import { Chart, ChartKind } from "../idc/default_pack/chart.tsx";
 
 import { StateProp } from "@eva-ics/webengine";
@@ -110,23 +111,8 @@ interface ChartItem {
     label: string;
     formula: string;
     color: string;
+    hidden: boolean;
 }
-
-const chart_opts = {
-    responsive: true,
-    animations: false,
-    plugins: {
-        legend: {
-            display: true,
-        },
-    },
-    scales: {
-        y: {
-            min: undefined,
-            max: undefined,
-        },
-    },
-};
 
 const ChartItemEditor = ({
     id,
@@ -224,6 +210,38 @@ const DashboardTrends = () => {
     const [items, setItems] = useState<Array<ChartItem>>([]);
     const [error, setError] = useState<string | null>(null);
     const previousPropsRef = useRef<ChartProps>(props);
+
+    const chart_opts = {
+        responsive: true,
+        animations: false,
+        plugins: {
+            legend: {
+                display: true,
+                onClick: (event: any, legendItem: any, legend: any) => {
+                    for (const item of items) {
+                        if (
+                            item.label === legendItem.text ||
+                            (!item.label && item.oid === legendItem.text)
+                        ) {
+                            item.hidden = !item.hidden;
+                        }
+                    }
+                    ChartJs.defaults.plugins.legend.onClick.call(
+                        legend,
+                        event,
+                        legendItem,
+                        legend
+                    );
+                },
+            },
+        },
+        scales: {
+            y: {
+                min: undefined,
+                max: undefined,
+            },
+        },
+    };
 
     useEffect(() => {
         if (error) {
@@ -388,6 +406,7 @@ const DashboardTrends = () => {
             label: "",
             formula: "x",
             color: getChartColor(),
+            hidden: false,
         };
         ni.push(chart_item);
         setItems(ni);
@@ -442,6 +461,13 @@ const DashboardTrends = () => {
         setPropsDelayed(np);
     };
 
+    const datasetOptions = (i: any): Object => {
+        return {
+            hidden: items[i]?.hidden,
+            animations: false,
+        };
+    };
+
     return (
         <div>
             <div className="dashboard-main-wrapper">
@@ -472,7 +498,7 @@ const DashboardTrends = () => {
                                         variant="outlined"
                                         onClick={play}
                                     >
-                                        <PlayArrowOutlinedIcon fontSize="small" />
+                                          <PlayArrowOutlinedIcon fontSize="small" />
                                     </ButtonStyled>
                                 ) : null}
                                 {error || props.update > 0 ? (
@@ -661,6 +687,7 @@ const DashboardTrends = () => {
                                     labels={labels}
                                     colors={colors}
                                     options={options}
+                                    dataset_options={datasetOptions}
                                     className="chart-trends"
                                     width={chartSize.current.x}
                                     height={chartSize.current.y}

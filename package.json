@@ -13,7 +13,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@eva-ics/webengine": "^0.9.7",
-    "@eva-ics/webengine-react": "^0.5.13",
+    "@eva-ics/webengine-react": "^0.5.15",
     "@mui/icons-material": "^5.14.16",
     "@mui/material": "^5.14.17",
     "@mui/x-date-pickers": "^6.18.4",
