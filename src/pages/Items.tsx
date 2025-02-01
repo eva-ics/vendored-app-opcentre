@@ -1,15 +1,30 @@
 import { useState, useMemo, useCallback, useReducer, useEffect } from "react";
 import { Line } from "react-chartjs-2";
-import { DashTable, DashTableFilter, DashTableData } from "bmat/dashtable";
+import {
+    DashTable,
+    DashTableFilter,
+    DashTableData,
+    createRichFilter,
+    ColumnRichInfo,
+    DashTableColType,
+    DashTableFilterActionKind,
+    pushRichColData,
+    DashTableColData,
+    DashTableFilterFieldInput,
+    generateDashTableRichCSV,
+} from "bmat/dashtable";
 import { timestampRFC3339 } from "bmat/time";
 import { copyTextClipboard } from "bmat/dom";
 import { useQueryParams } from "bmat/hooks";
+import { downloadCSV } from "bmat/dom";
 import { get_engine, useEvaStateUpdates, useEvaAPICall } from "@eva-ics/webengine-react";
 import { Eva, ItemState } from "@eva-ics/webengine";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import PrintOutlinedIcon from "@mui/icons-material/PrintOutlined";
+import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import { ButtonStyled } from "../common.tsx";
+import { addButton, removeButton } from "../components/common.tsx";
 
 const item_kinds = ["", "+", "lvar", "sensor", "unit", "#"];
 
@@ -67,7 +82,7 @@ const formatValue = (val: any) => {
         return "";
     }
     if (Array.isArray(val) || typeof val == "object") {
-        return JSON.stringify(val);
+        return <pre>{JSON.stringify(val, null, 2)}</pre>;
     }
     return val;
 };
@@ -185,6 +200,7 @@ const ItemWatch = ({ oid, unwatch }: { oid: string; unwatch: (oid: string) => vo
 
 interface ItemStateParams {
     i: Array<string>;
+    full: boolean;
 }
 
 const DashboardItems = () => {
@@ -192,12 +208,45 @@ const DashboardItems = () => {
         kind: "",
         full_id: "",
     });
+    const [filterParams, setFilterParams] = useState({
+        node: null as string | null,
+        meta: null as string | null,
+        status: null as number | null,
+        value: null as string | null,
+    });
 
-    const [callParams, setCallParams] = useState<ItemStateParams>({ i: [] });
+    const [callParams, setCallParams] = useState<ItemStateParams>({ i: [], full: true });
 
     const [watchedItems, setWatchedItems] = useState<string[]>([]);
 
     const [_, setForceUpdate] = useReducer((x) => x + 1, 0);
+
+    const [cols, setCols] = useState<ColumnRichInfo[]>([
+        { id: "node", name: "node", enabled: true, filterInputSize: 20 },
+        {
+            id: "meta",
+            name: "meta",
+            enabled: false,
+            filterInputSize: 30,
+            filterActionKind: DashTableFilterActionKind.Like,
+            columnType: DashTableColType.JSON,
+        },
+        {
+            id: "status",
+            name: "status",
+            enabled: true,
+            columnType: DashTableColType.Integer,
+            filterFieldInput: DashTableFilterFieldInput.SelectWithEmpty,
+            filterFieldSelectValues: [-1, 0, 1],
+        },
+        {
+            id: "value",
+            name: "value",
+            enabled: true,
+            filterInputSize: 18,
+            columnType: DashTableColType.JSON,
+        },
+    ]);
 
     const setFullId = (s: string) => {
         const i = s.trim();
@@ -239,7 +288,7 @@ const DashboardItems = () => {
             np[k] = (p as any)[k];
         });
         setParams(np);
-        setCallParams({ i: formatItemList(np.kind, np.full_id) });
+        setCallParams({ i: formatItemList(np.kind, np.full_id), full: true });
     };
 
     const formatOID = () => {
@@ -256,6 +305,12 @@ const DashboardItems = () => {
         copyTextClipboard(formatOID()).catch((e) => alert(e));
     }, [formatOID]);
 
+    const colsEnabled = useMemo<string[]>(() => {
+        return cols
+            .filter((c: ColumnRichInfo) => c.enabled)
+            .map((c: ColumnRichInfo) => c.id);
+    }, [cols]);
+
     const loaded = useQueryParams(
         [
             {
@@ -270,6 +325,24 @@ const DashboardItems = () => {
                 decoder: (s: string) => s.split(",").filter((i) => i),
                 setter: setWatchedItems,
             },
+            {
+                name: "filter",
+                value: filterParams,
+                setter: setFilterParams,
+                pack_json: true,
+            },
+            {
+                name: "cols",
+                value: colsEnabled,
+                setter: (ec) => {
+                    const nc = [...cols];
+                    nc.forEach((column) => {
+                        column.enabled = ec.includes(column.id);
+                    });
+                    setCols(nc);
+                },
+                pack_json: true,
+            },
         ],
         [params, watchedItems]
     );
@@ -283,7 +356,7 @@ const DashboardItems = () => {
         [loaded, callParams]
     );
 
-    const filter: DashTableFilter = [
+    const oid_filter: DashTableFilter = [
         [
             "OID",
             <select
@@ -315,9 +388,6 @@ const DashboardItems = () => {
                     <HelpOutlineIcon style={{ fontSize: 15 }} />
                 </ButtonStyled>
                 <div style={{ display: "inline", marginLeft: 20 }}></div>
-                <ButtonStyled variant="outlined" onClick={window.print}>
-                    <PrintOutlinedIcon style={{ fontSize: 15 }} />
-                </ButtonStyled>
             </>,
         ],
     ];
@@ -353,22 +423,73 @@ const DashboardItems = () => {
         }
     };
 
-    const data: DashTableData = states?.data?.map((state: any) => {
-        return {
-            data: [
-                { value: state.oid, className: "col-fit " + formatClassName(state) },
-                { value: state.node, className: "col-fit " + formatClassName(state) },
+    const setStateFilterParams = (p: object) => {
+        let np: any = { ...filterParams };
+        Object.keys(p).forEach((k) => {
+            np[k] = (p as any)[k];
+        });
+        setFilterParams(np);
+    };
+
+    const filter: DashTableFilter = oid_filter.concat(
+        createRichFilter({
+            cols,
+            setCols,
+            params: filterParams,
+            setParams: setStateFilterParams,
+            removeButton,
+        })
+    );
+
+    const stateMatchesFilter = (state: ItemState) => {
+        if (filterParams.node && state.node !== filterParams.node) {
+            return false;
+        }
+        if (
+            filterParams.meta &&
+            (!state.meta ||
+                !JSON.stringify(state.meta)
+                    .toLowerCase()
+                    .includes(filterParams.meta.toLowerCase()))
+        ) {
+            return false;
+        }
+        if (filterParams.status !== null && state.status !== filterParams.status) {
+            return false;
+        }
+        if (
+            filterParams.value !== null &&
+            JSON.stringify(state.value).toLowerCase() !== filterParams.value.toLowerCase()
+        ) {
+            return false;
+        }
+        return true;
+    };
+
+    const data: DashTableData = states?.data
+        ?.filter((state: any) => stateMatchesFilter(state))
+        .map((state: any) => {
+            const colsData: DashTableColData[] = [
+                {
+                    value: (
+                        <>
+                            {state.oid}
+                            <div
+                                title={`use the value as OID filter`}
+                                className="bmat-dashtable-filter-button-add"
+                                onClick={() => setFullId(state.oid)}
+                            >
+                                {addButton}
+                            </div>
+                        </>
+                    ),
+
+                    sort_value: state.oid,
+                    className: "col-fit " + formatClassName(state),
+                },
                 {
                     value: <DrawSetTime state={state} />,
                     sort_value: state.t,
-                    className: "col-fit",
-                },
-                {
-                    value: (
-                        <div className="print-hidden">
-                            <button onClick={() => setFullId(state.oid)}>filter</button>
-                        </div>
-                    ),
                     className: "col-fit",
                 },
                 {
@@ -399,25 +520,169 @@ const DashboardItems = () => {
                     ),
                     className: "col-fit",
                 },
-                {
-                    value: <DrawStatus state={state} />,
-                    className: "col-fit",
-                    sort_value: state.status,
-                },
-                {
-                    value: <DrawValue state={state} />,
-                    className: "item-state-value",
-                    sort_value: state.value,
-                },
-            ],
-        };
-    });
+            ];
+            pushRichColData({
+                colsData,
+                id: "node",
+                value: state.node,
+                setParams: setStateFilterParams,
+                cols,
+                className: "col-fit " + formatClassName(state),
+                addButton,
+            });
+            pushRichColData({
+                colsData,
+                id: "meta",
+                value: state.meta ? (
+                    <span>
+                        <pre>{JSON.stringify(state.meta, null, 2)}</pre>
+                    </span>
+                ) : (
+                    ""
+                ),
+                cols,
+                className: "item-state",
+            });
+            pushRichColData({
+                colsData,
+                id: "status",
+                value: <DrawStatus state={state} />,
+                sort_value: state.status,
+                setParams: () => setStateFilterParams({ status: state.status }),
+                cols,
+                className: "col-fit",
+                addButton,
+            });
+            pushRichColData({
+                colsData,
+                id: "value",
+                value: <DrawValue state={state} />,
+                sort_value: state.value,
+                setParams:
+                    state.value === null
+                        ? undefined
+                        : () =>
+                              setStateFilterParams({
+                                  value:
+                                      state.value === null
+                                          ? ""
+                                          : JSON.stringify(state.value),
+                              }),
+                cols,
+                className: "item-state",
+                addButton,
+            });
+            return { data: colsData };
+        });
+
+    //const data: DashTableData = states?.data?.map((state: any) => {
+    //return {
+    //data: [
+    //{ value: state.oid, className: "col-fit " + formatClassName(state) },
+    //{ value: state.node, className: "col-fit " + formatClassName(state) },
+    //{
+    //value: <DrawSetTime state={state} />,
+    //sort_value: state.t,
+    //className: "col-fit",
+    //},
+    //{
+    //value: (
+    //<div className="print-hidden">
+    //<button
+    //className="print-hidden"
+    //disabled={!state.connected}
+    //onClick={() => watchItem(state.oid)}
+    //>
+    //watch
+    //</button>
+    //</div>
+    //),
+    //className: "col-fit",
+    //},
+    //{
+    //value: (
+    //<div className="print-hidden">
+    //<button
+    //onClick={(event) =>
+    //openTrendsFor(state.oid, event.shiftKey)
+    //}
+    //>
+    //trend
+    //</button>
+    //</div>
+    //),
+    //className: "col-fit",
+    //},
+    //{
+    //value: <DrawStatus state={state} />,
+    //className: "col-fit",
+    //sort_value: state.status,
+    //},
+    //{
+    //value: <DrawValue state={state} />,
+    //className: "item-state-value",
+    //sort_value: state.value,
+    //},
+    //],
+    //};
+    //});
 
     const watched = watchedItems.map((oid) => {
         return <ItemWatch key={oid} oid={oid} unwatch={unwatchItem} />;
     });
 
-    const header = <div className="item-watch">{watched}</div>;
+    const colsToShow = states.data
+        ? ["oid", "set time", "", ""].concat(
+              cols.filter((column) => column.enabled).map((column) => column.name)
+          )
+        : [];
+
+    const header = (
+        <>
+            <div className="item-watch">{watched}</div>
+            <div className="button-bar button-bar-spaced">
+                <ButtonStyled
+                    variant="outlined"
+                    title="Download CSV"
+                    disabled={states.data === null}
+                    onClick={() => {
+                        const data = states.data.map((state: any) => {
+                            const s = { ...state };
+                            s.t = s.t ? timestampRFC3339(s.t) : "";
+                            return s;
+                        });
+                        const csvContent = generateDashTableRichCSV({
+                            data,
+                            cols: [
+                                {
+                                    id: "oid",
+                                    name: "oid",
+                                    enabled: true,
+                                } as ColumnRichInfo,
+                                {
+                                    id: "t",
+                                    name: "set time",
+                                    enabled: true,
+                                } as ColumnRichInfo,
+                            ].concat(cols),
+                        });
+                        downloadCSV(csvContent, "items.csv");
+                    }}
+                >
+                    <FileDownloadOutlinedIcon fontSize="small" />
+                </ButtonStyled>
+                <ButtonStyled
+                    title="Print"
+                    variant="outlined"
+                    onClick={() => {
+                        window.print();
+                    }}
+                >
+                    <PrintOutlinedIcon fontSize="small" />
+                </ButtonStyled>
+            </div>
+        </>
+    );
 
     return (
         <div>
@@ -427,7 +692,7 @@ const DashboardItems = () => {
                         <DashTable
                             id="items"
                             title="Items"
-                            cols={["oid", "node", "set time", "", "", "", "status", "value"]}
+                            cols={colsToShow}
                             header={header}
                             filter={filter}
                             data={data}
