@@ -218,13 +218,18 @@ const DashboardTrends = () => {
             legend: {
                 display: true,
                 onClick: (event: any, legendItem: any, legend: any) => {
+                    let processed = false;
                     for (const item of items) {
                         if (
                             item.label === legendItem.text ||
                             (!item.label && item.oid === legendItem.text)
                         ) {
                             item.hidden = !item.hidden;
+                            processed = true;
                         }
+                    }
+                    if (processed) {
+                        setForceUpdateQs();
                     }
                     ChartJs.defaults.plugins.legend.onClick.call(
                         legend,
@@ -305,6 +310,7 @@ const DashboardTrends = () => {
 
     const chartSize = useRef<Coords>(calculateChartSize());
     const [, forceUpdate] = useReducer((x) => x + 1, 0);
+    const [forceUpdateQs, setForceUpdateQs] = useReducer((x) => x + 1, 0);
 
     const setItemsFromQS = (data: Array<ChartItem>) => {
         for (const item of data) {
@@ -436,7 +442,7 @@ const DashboardTrends = () => {
                 setter: setPrevUpdate,
             },
         ],
-        [props, items, prev_update]
+        [props, items, prev_update, forceUpdateQs]
     );
 
     if (!loaded) {
@@ -498,7 +504,7 @@ const DashboardTrends = () => {
                                         variant="outlined"
                                         onClick={play}
                                     >
-                                          <PlayArrowOutlinedIcon fontSize="small" />
+                                        <PlayArrowOutlinedIcon fontSize="small" />
                                     </ButtonStyled>
                                 ) : null}
                                 {error || props.update > 0 ? (
