@@ -972,3 +972,9 @@ td {
     }
   }
 }
+
+.bmat-dashtable-sort-arrow {
+    @media print {
+        display: none;
+    }
+}

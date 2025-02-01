@@ -344,7 +344,7 @@ const DashboardItems = () => {
                 pack_json: true,
             },
         ],
-        [params, watchedItems]
+        [params, watchedItems, filterParams]
     );
 
     const states = useEvaAPICall(
