@@ -575,58 +575,6 @@ const DashboardItems = () => {
             return { data: colsData };
         });
 
-    //const data: DashTableData = states?.data?.map((state: any) => {
-    //return {
-    //data: [
-    //{ value: state.oid, className: "col-fit " + formatClassName(state) },
-    //{ value: state.node, className: "col-fit " + formatClassName(state) },
-    //{
-    //value: <DrawSetTime state={state} />,
-    //sort_value: state.t,
-    //className: "col-fit",
-    //},
-    //{
-    //value: (
-    //<div className="print-hidden">
-    //<button
-    //className="print-hidden"
-    //disabled={!state.connected}
-    //onClick={() => watchItem(state.oid)}
-    //>
-    //watch
-    //</button>
-    //</div>
-    //),
-    //className: "col-fit",
-    //},
-    //{
-    //value: (
-    //<div className="print-hidden">
-    //<button
-    //onClick={(event) =>
-    //openTrendsFor(state.oid, event.shiftKey)
-    //}
-    //>
-    //trend
-    //</button>
-    //</div>
-    //),
-    //className: "col-fit",
-    //},
-    //{
-    //value: <DrawStatus state={state} />,
-    //className: "col-fit",
-    //sort_value: state.status,
-    //},
-    //{
-    //value: <DrawValue state={state} />,
-    //className: "item-state-value",
-    //sort_value: state.value,
-    //},
-    //],
-    //};
-    //});
-
     const watched = watchedItems.map((oid) => {
         return <ItemWatch key={oid} oid={oid} unwatch={unwatchItem} />;
     });
