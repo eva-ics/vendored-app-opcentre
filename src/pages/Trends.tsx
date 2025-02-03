@@ -61,6 +61,13 @@ const getFillUnitCode = (name: string) => {
     return FILL_UNITS[FILL_UNIT_NAMES.indexOf(name)];
 };
 
+const calculateTimeOffset = (labels: Array<number>): number => {
+    const totalTimespan = new Date(labels[labels.length - 1]).getTime() - new Date(labels[0]).getTime();
+    const averageInterval = totalTimespan / (labels.length - 1);
+    const multiplier = Math.max(1, Math.log10(labels.length));
+    return averageInterval * multiplier / 2;
+}
+
 const DEFAULT_CHART_COLOR = "#3366CC";
 
 const CHART_COLORS_LIST = [
@@ -366,6 +373,20 @@ const DashboardTrends = () => {
                     min: props.min,
                     max: props.max,
                 },
+                x: {
+                    min: function(context: any) {
+                        const labels = context.chart.data.labels;
+                        const firstTime = labels[0];
+                        const offset = calculateTimeOffset(labels);
+                        return new Date(firstTime).getTime() - offset;
+                    },
+                    max: function(context: any) {
+                        const labels = context.chart.data.labels;
+                        const lastTime = labels[labels.length - 1]
+                        const offset = calculateTimeOffset(labels);
+                        return new Date(lastTime).getTime() + offset;
+                    },
+                }
             },
         };
     }, [chart_opts, props.min, props.max]);
