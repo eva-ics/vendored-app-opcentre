@@ -140,7 +140,7 @@ const ItemWatch = ({ oid, unwatch }: { oid: string; unwatch: (oid: string) => vo
                     state.status === undefined || state?.status === null
                         ? null
                         : state.status,
-                value: parseFloat(state.value),
+                value: Number(state.value),
             });
         } else {
             st.push({

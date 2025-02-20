@@ -22,7 +22,7 @@ export const GaugeColorized = ({
             ...props,
         };
         (c_props as any).set_class_name_with = (value: any) => {
-            const val = parseFloat(value);
+            const val = Number(value);
             if (lowCritValue !== undefined && val <= lowCritValue) {
                 return "value-crit";
             }
