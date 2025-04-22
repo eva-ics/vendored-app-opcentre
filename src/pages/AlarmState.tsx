@@ -13,6 +13,7 @@ import {
     DashTableFilterFieldInput,
     DashTableFilterActionKind,
 } from "bmat/dashtable";
+import { Timestamp } from "bmat/time";
 import { useQueryParams } from "bmat/hooks";
 import { addButton, removeButton } from "../components/common.tsx";
 import { useEvaAPICall, EvaErrorMessage, get_engine } from "@eva-ics/webengine-react";
@@ -92,6 +93,18 @@ const DashboardAlarmState = () => {
             filterInputSize: 1,
             filterFieldInput: DashTableFilterFieldInput.SelectWithEmpty,
             filterFieldSelectValues: ALARM_CURRENT,
+        },
+        {
+            id: "t",
+            name: "time",
+            enabled: true,
+            filterFieldInput: DashTableFilterFieldInput.None,
+        },
+        {
+            id: "description",
+            name: "description",
+            enabled: true,
+            filterFieldInput: DashTableFilterFieldInput.None,
         },
     ]);
 
@@ -253,6 +266,22 @@ const DashboardAlarmState = () => {
             className: "col-fit never-wrap",
             addButton,
         });
+        const t = new Timestamp(state.t);
+        pushRichColData({
+            colsData,
+            id: "t",
+            value: t.toRFC3339(true),
+            filter_value: state.t,
+            cols,
+            className: "col-fit never-wrap",
+        });
+        pushRichColData({
+            colsData,
+            id: "description",
+            value: state.description,
+            cols,
+            className: "col-fit never-wrap",
+        });
         const subscribed = state.subscribed_email?.length > 0;
         const history_filter = encodeURIComponent(
             JSON.stringify(
@@ -266,9 +295,6 @@ const DashboardAlarmState = () => {
             )
         );
         let extra: DashTableColData[] = [
-            {
-                value: state.description,
-            },
             {
                 value: (
                     <div className="print-hidden">
@@ -354,7 +380,7 @@ const DashboardAlarmState = () => {
         ? cols
               .filter((column) => column.enabled)
               .map((column) => column.name)
-              .concat(["description", "", "", "", ""])
+              .concat(["", "", "", ""])
         : [];
 
     let header = (
