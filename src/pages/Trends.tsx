@@ -31,6 +31,7 @@ import { SelectPeriod } from "../components/editors/select_period.tsx";
 import { Timestamp } from "bmat/time";
 import { ButtonStyled } from "../common.tsx";
 import ErrorBoundary from "../components/ErrorBoundary.tsx";
+import { TextField } from "@mui/material";
 
 type Timeout = ReturnType<typeof setTimeout>;
 
@@ -62,11 +63,12 @@ const getFillUnitCode = (name: string) => {
 };
 
 const calculateTimeOffset = (labels: Array<number>): number => {
-    const totalTimespan = new Date(labels[labels.length - 1]).getTime() - new Date(labels[0]).getTime();
+    const totalTimespan =
+        new Date(labels[labels.length - 1]).getTime() - new Date(labels[0]).getTime();
     const averageInterval = totalTimespan / (labels.length - 1);
     const multiplier = Math.max(1, Math.log10(labels.length));
-    return averageInterval * multiplier / 2;
-}
+    return (averageInterval * multiplier) / 2;
+};
 
 const DEFAULT_CHART_COLOR = "#3366CC";
 
@@ -104,6 +106,7 @@ interface ChartProps {
     timeframe: string;
     database: string;
     vfn: string;
+    rp?: string;
 }
 
 enum ChartItemProperty {
@@ -211,6 +214,7 @@ const DashboardTrends = () => {
         timeframe: "1H",
         database: "default",
         vfn: "mean",
+        rp: "",
     });
 
     const [prev_update, setPrevUpdate] = useState(1);
@@ -282,8 +286,12 @@ const DashboardTrends = () => {
         });
 
         let args: any = {
-            xopts: { vfn: props.vfn },
+            xopts: {
+                vfn: props.vfn,
+                ...(props.rp !== "" ? { rp: props.rp } : {}),
+            },
         };
+
         if (props.database) {
             args.database = props.database;
         }
@@ -304,6 +312,7 @@ const DashboardTrends = () => {
         props.fill_units,
         props.database,
         props.vfn,
+        props.rp,
         items,
     ]);
 
@@ -374,19 +383,19 @@ const DashboardTrends = () => {
                     max: props.max,
                 },
                 x: {
-                    min: function(context: any) {
+                    min: function (context: any) {
                         const labels = context.chart.data.labels;
                         const firstTime = labels[0];
                         const offset = calculateTimeOffset(labels);
                         return new Date(firstTime).getTime() - offset;
                     },
-                    max: function(context: any) {
+                    max: function (context: any) {
                         const labels = context.chart.data.labels;
-                        const lastTime = labels[labels.length - 1]
+                        const lastTime = labels[labels.length - 1];
                         const offset = calculateTimeOffset(labels);
                         return new Date(lastTime).getTime() + offset;
                     },
-                }
+                },
             },
         };
     }, [chart_opts, props.min, props.max]);
@@ -599,6 +608,7 @@ const DashboardTrends = () => {
                                     />
                                 </div>
                             </div>
+
                             <div className="form-list-wrapper-item">
                                 <p className="page-label">Kind</p>
                                 <div>
@@ -673,6 +683,30 @@ const DashboardTrends = () => {
                                         }}
                                     />
                                 </div>
+                            </div>
+                            <div className="form-list-wrapper-item">
+                                <p className="page-label">Rp</p>
+                                <TextField
+                                    variant="outlined"
+                                    size="small"
+                                    value={props.rp}
+                                    onChange={(
+                                        e: React.ChangeEvent<HTMLInputElement>
+                                    ) => {
+                                        setPropsDelayed({
+                                            ...(props_sdata.current || props),
+                                            rp: e.target.value,
+                                        });
+                                    }}
+                                    placeholder="rp"
+                                    fullWidth
+                                    sx={{
+                                        "& .MuiInputBase-root": {
+                                            padding: "3px 6px",
+                                            fontSize: "12px",
+                                        },
+                                    }}
+                                />
                             </div>
                             <div className="form-list-wrapper-item">
                                 <ButtonStyled
