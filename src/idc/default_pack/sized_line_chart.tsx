@@ -32,6 +32,7 @@ export const SizedLineChart = ({
     label,
     type,
     vfn,
+    rp,
     formula,
     width,
     min,
@@ -49,6 +50,7 @@ export const SizedLineChart = ({
     label: string;
     type: ChartKind;
     vfn: string;
+    rp: string;
     formula: string;
     width: number;
     min: number;
@@ -72,8 +74,11 @@ export const SizedLineChart = ({
         if (database) {
             args.database = database;
         }
+        if (rp) {
+            args.xopts.rp = rp;
+        }
         return args;
-    }, [database, vfn]);
+    }, [database, vfn, rp]);
 
     return (
         <div

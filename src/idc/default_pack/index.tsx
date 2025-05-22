@@ -594,6 +594,7 @@ ELEMENT_CLASSES.set(ElementKind.LineChart, {
         update: 10,
         type: CHART_KINDS[0],
         vfn: VALUE_FN[0],
+        rp: "",
         database: undefined,
     },
     props: [
@@ -669,6 +670,12 @@ ELEMENT_CLASSES.set(ElementKind.LineChart, {
             name: "database",
             kind: PropertyKind.SelectDatabase,
             params: { size: 5 },
+        },
+        {
+            id: uuidv4(),
+            name: "rp",
+            kind: PropertyKind.String,
+            params: { size: 20 },
         },
         {
             id: uuidv4(),
