@@ -711,7 +711,7 @@ const DashboardTrends = () => {
                                             e.currentTarget.blur();
                                         }
                                     }}
-                                    placeholder="rp"
+                                    placeholder="retention_policy"
                                     fullWidth
                                     sx={{
                                         "& .MuiInputBase-root": {
