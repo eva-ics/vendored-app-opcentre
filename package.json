@@ -23,6 +23,7 @@
     "chartjs-adapter-date-fns": "^3.0.0",
     "dayjs": "^1.11.10",
     "idc-core": "^0.5.31",
+    "logicline-view": "^0.1.2",
     "mui-color-input": "^2.0.1",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.3.0",

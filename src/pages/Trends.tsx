@@ -324,7 +324,7 @@ const DashboardTrends = () => {
     const items_sd = useRef<Timeout | undefined>(undefined);
     const items_sdata = useRef<Array<ChartItem> | null>(null);
 
-    const [inputValue, setInputValue] = useState<string>(props.rp ?? "");
+    const [rpInputValue, setRpInputValue] = useState<string>(props.rp ?? "");
 
     const chartSize = useRef<Coords>(calculateChartSize());
     const [, forceUpdate] = useReducer((x) => x + 1, 0);
@@ -507,10 +507,10 @@ const DashboardTrends = () => {
     };
 
     const saveChange = () => {
-        if (inputValue !== props.rp) {
+        if (rpInputValue !== props.rp) {
             setPropsDelayed({
                 ...(props_sdata.current || props),
-                rp: inputValue,
+                rp: rpInputValue,
             });
         }
     };
@@ -700,8 +700,8 @@ const DashboardTrends = () => {
                                 <TextField
                                     variant="outlined"
                                     size="small"
-                                    value={inputValue}
-                                    onChange={(e) => setInputValue(e.target.value)}
+                                    value={rpInputValue}
+                                    onChange={(e) => setRpInputValue(e.target.value)}
                                     onBlur={saveChange}
                                     onKeyDown={(
                                         e: React.KeyboardEvent<HTMLInputElement>

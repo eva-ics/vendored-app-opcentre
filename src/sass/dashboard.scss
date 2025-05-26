@@ -978,3 +978,58 @@ td {
         display: none;
     }
 }
+
+.logicline_line-container {
+  background-color: #191d22;
+  border: 0px;
+}
+
+.logicline_block {
+  cursor: pointer;
+}
+
+.logicline_line-wrapper {
+  border-top: 1px solid;
+}
+
+.logicline_block-value {
+  font-weight: normal;
+}
+
+.logicline_block-body--empty {
+  padding: 7px 0px;
+}
+
+.logicline_merge-line {
+  right: -3px;
+}
+
+.logicline_merge-line:after {
+  top: -1px;
+  right: 1px;
+}
+
+.logicline_straight-arrow-disabled:after {
+  top: 1px;
+  right: -1px;
+}
+
+.logicline_straight-arrow:after {
+  top: 1px;
+  right: -1px;
+}
+
+.logicline_arrow-left-top:after {
+  top: -1px;
+  right: -1px;
+}
+
+.logicline_arrow-left-bottom:after {
+  top: -1px;
+  right: -1px;
+}
+
+.logicline_external-arrow-tip {
+  top: -2px;
+  left: 8px;
+}
