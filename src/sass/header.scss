@@ -21,8 +21,6 @@
     display: inline-block;
     position: absolute;
     padding-left: 10px;
-    position: relative;
-
     @include media(desktop) {
         position: relative;
         top: 0px;
@@ -35,11 +33,12 @@
 }
 
 .header-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-
-    min-width: 50%;
+    @include media(desktop) {
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        min-width: 40%;
+    }
 }
 
 nav#header {
@@ -52,7 +51,6 @@ nav#header {
     @include media(desktop) {
         position: relative;
         top: 2px;
-        left: 40px;
         display: block;
         border-bottom: 1px solid #323741;
         min-width: 700px;
