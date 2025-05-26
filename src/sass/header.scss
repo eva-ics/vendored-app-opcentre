@@ -3,6 +3,14 @@
 
 .header {
     padding: 11px 0;
+
+    @include media(desktop) {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+    }
+
     @media print {
         padding-top: 0px;
         padding-bottom: 3em;
@@ -13,6 +21,8 @@
     display: inline-block;
     position: absolute;
     padding-left: 10px;
+    position: relative;
+
     @include media(desktop) {
         position: relative;
         top: 0px;
@@ -24,18 +34,37 @@
     }
 }
 
+.header-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    min-width: 50%;
+}
+
 nav#header {
     position: absolute;
     top: 2px;
     right: 40px;
     border-bottom: 1px solid #323741;
     display: none;
+
     @include media(desktop) {
+        position: relative;
+        top: 2px;
+        left: 40px;
         display: block;
+        border-bottom: 1px solid #323741;
+        min-width: 700px;
+        max-width: 700px;
+        margin-left: auto;
+        text-align: right;
     }
+
     > ul > li {
         display: inline;
     }
+
     @media print {
         display: none;
     }

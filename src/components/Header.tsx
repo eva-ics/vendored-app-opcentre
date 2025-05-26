@@ -123,18 +123,24 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
 
     return (
         <header className="header">
-            <button className="menu-icon-btn" onClick={toggleMenu}>
-                <GiHamburgerMenu size={25} />
-            </button>
-            <div className="header-info">
-                <div className="dash-info">
-                    <img src="icon.svg" className="dash-logo" />
-                    <div className="dash-title">
-                        EVA ICS System dashboard. Node: {eva.system_name()}{" "}
-                        <span className="current-user">[{eva?.server_info?.aci.u}]</span>
+            <div className="header-top">
+                <button className="menu-icon-btn" onClick={toggleMenu}>
+                    <GiHamburgerMenu size={25} />
+                </button>
+                <div className="header-info">
+                    <div className="dash-info">
+                        <img src="icon.svg" className="dash-logo" />
+                        <div className="dash-title">
+                            <span className="dash-title__text">
+                              EVA ICS System dashboard.Node: {eva.system_name()}    
+                                <span className="current-user">
+                                    [{eva?.server_info?.aci.u}]
+                                </span>
+                            </span>
+                        </div>
                     </div>
+                    <TimeInfo />
                 </div>
-                <TimeInfo />
             </div>
             <nav id="header">
                 <ul>
