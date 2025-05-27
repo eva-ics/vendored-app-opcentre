@@ -7,7 +7,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import { TextField } from "@mui/material";
 import { ButtonStyled } from "../common.tsx";
-import { RackView, type Snapshot, type Step } from "logicline-view";
+import { RackView, type Step } from "logicline-view";
 import "../../node_modules/logicline-view/dist/style.css";
 import PauseOutlinedIcon from "@mui/icons-material/PauseOutlined";
 import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
@@ -19,7 +19,7 @@ const DashboardIDC = () => {
     const [lineFilter, setLineFilter] = useState("");
     const [lineFilterInputValue, setLineFilterInputValue] = useState(lineFilter ?? "");
     const [stepInfoOpen, setStepInfoOpen] = useState(false);
-    const [stepInfo, setStepInfo] = useState<StepInfo | null>(null);
+    const [stepInfo, setStepInfo] = useState<Step | null>(null);
 
     const snapshotRes = useEvaAPICall(
         {
