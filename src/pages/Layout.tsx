@@ -12,6 +12,7 @@ import DashboardAlarmHistory from "../pages/AlarmHistory.tsx";
 import DashboardDataObjects from "../pages/DataObjects.tsx";
 import DashboardTrends from "../pages/Trends.tsx";
 import DashboardIDC from "../pages/IDC.tsx";
+import DashboardLL from "../pages/LL.tsx";
 import { element_pack, ElementKind } from "../idc/default_pack";
 import { v4 as uuidv4 } from "uuid";
 import { DashboardData, DashboardEditor, DashboardViewer } from "idc-core";
@@ -295,6 +296,10 @@ const Layout = ({ logout }: LayoutProps) => {
             content = <DashboardDataObjects />;
             current_page = "Data objects";
             break;
+        case "ll":
+            content = <DashboardLL />;
+            current_page = "Logic";
+            break;
         case "profile":
             content = <Profile logout={logout} />;
             current_page = "Profile";
@@ -340,6 +345,7 @@ const Layout = ({ logout }: LayoutProps) => {
             ],
         },
         { value: "Data objects", to: "?d=dobj" },
+        { value: "Logic", to: "?d=ll" },
         { value: "Trends", to: "?d=trends" },
         {
             value: "Navigate",
