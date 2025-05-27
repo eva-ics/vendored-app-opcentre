@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactNode } from "react";
 import { onEvaError } from "../common";
 import { get_engine, useEvaAPICall, EvaErrorMessage } from "@eva-ics/webengine-react";
 import { Eva } from "@eva-ics/webengine";
@@ -13,13 +13,18 @@ import PauseOutlinedIcon from "@mui/icons-material/PauseOutlined";
 import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
 import AdvancedModalDialog from "../components/mui/AdvancedModalDialog.tsx";
 
+interface StepInfo {
+    name: string;
+    input: ReactNode;
+}
+
 const DashboardIDC = () => {
     const [controllers, setControllers] = useState([]);
     const [activeController, setActiveController] = useState("");
     const [lineFilter, setLineFilter] = useState("");
     const [lineFilterInputValue, setLineFilterInputValue] = useState(lineFilter ?? "");
     const [stepInfoOpen, setStepInfoOpen] = useState(false);
-    const [stepInfo, setStepInfo] = useState<Step | null>(null);
+    const [stepInfo, setStepInfo] = useState<StepInfo | null>(null);
 
     const snapshotRes = useEvaAPICall(
         {
