@@ -3,6 +3,14 @@
 
 .header {
     padding: 11px 0;
+
+    @include media(desktop) {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        flex-direction: column;
+    }
+
     @media print {
         padding-top: 0px;
         padding-bottom: 3em;
@@ -24,18 +32,36 @@
     }
 }
 
+.header-top {
+    @include media(desktop) {
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        width: 100%;
+    }
+}
+
 nav#header {
     position: absolute;
     top: 2px;
     right: 40px;
     border-bottom: 1px solid #323741;
     display: none;
+
     @include media(desktop) {
+        position: relative;
+        top: 2px;
         display: block;
+        border-bottom: 1px solid #323741;
+        margin-left: auto;
+        text-align: end;
+        flex: 1;
     }
+
     > ul > li {
         display: inline;
     }
+
     @media print {
         display: none;
     }
