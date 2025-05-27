@@ -324,7 +324,7 @@ const DashboardTrends = () => {
     const items_sd = useRef<Timeout | undefined>(undefined);
     const items_sdata = useRef<Array<ChartItem> | null>(null);
 
-    const [inputValue, setInputValue] = useState<string>(props.rp ?? "");
+    const [rpInputValue, setRpInputValue] = useState<string>(props.rp ?? "");
 
     const chartSize = useRef<Coords>(calculateChartSize());
     const [, forceUpdate] = useReducer((x) => x + 1, 0);
@@ -458,6 +458,7 @@ const DashboardTrends = () => {
                 pack_json: true,
                 setter: (p: ChartProps) => {
                     setProps(p);
+                    setRpInputValue(p.rp || "");
                     setPrevUpdate(p.update);
                 },
             },
@@ -506,11 +507,11 @@ const DashboardTrends = () => {
         };
     };
 
-    const saveChange = () => {
-        if (inputValue !== props.rp) {
+    const saveRpValue = () => {
+        if (rpInputValue !== props.rp) {
             setPropsDelayed({
                 ...(props_sdata.current || props),
-                rp: inputValue,
+                rp: rpInputValue,
             });
         }
     };
@@ -700,14 +701,14 @@ const DashboardTrends = () => {
                                 <TextField
                                     variant="outlined"
                                     size="small"
-                                    value={inputValue}
-                                    onChange={(e) => setInputValue(e.target.value)}
-                                    onBlur={saveChange}
+                                    value={rpInputValue}
+                                    onChange={(e) => setRpInputValue(e.target.value)}
+                                    onBlur={saveRpValue}
                                     onKeyDown={(
                                         e: React.KeyboardEvent<HTMLInputElement>
                                     ) => {
                                         if (e.key === "Enter") {
-                                            saveChange();
+                                            saveRpValue();
                                             e.currentTarget.blur();
                                         }
                                     }}
