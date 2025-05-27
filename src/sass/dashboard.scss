@@ -979,6 +979,10 @@ td {
     }
 }
 
+.overview-padded {
+  padding: 10px;
+}
+
 .logicline_line-container {
   background-color: #191d22;
   border: 0px;
@@ -1032,4 +1036,12 @@ td {
 .logicline_external-arrow-tip {
   top: -2px;
   left: 8px;
+}
+
+.ll-controller-select {
+  width: 250px;
+}
+
+.rec-active {
+  color: #55bb55;
 }

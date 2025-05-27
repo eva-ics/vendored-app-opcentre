@@ -54,8 +54,10 @@ eva.load_config().then((_config: any) => {
     eva.set_interval(IntervalKind.Heartbeat, 1);
     ReactDOM.createRoot(document.getElementById("root")!).render(
         <>
+            <React.StrictMode>
                 <ToasterProvider />
                 <HMIApp Dashboard={OpCentre} login_props={login_props} />
+            </React.StrictMode>
         </>
     );
 });

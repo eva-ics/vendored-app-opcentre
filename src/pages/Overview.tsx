@@ -118,7 +118,7 @@ const DashboardOverview = () => {
                                                 <CoreInfoRow
                                                     key={n}
                                                     n={n}
-                                                    description={d}
+                                                    description={d || ""}
                                                     value={v}
                                                 />
                                             );
@@ -135,7 +135,7 @@ const DashboardOverview = () => {
                         {TOOLS.map((t) => {
                             return (
                                 <div className="bmat-dashtable-container" key={t.id}>
-                                    <div className="bmat-dashtable-container-inner">
+                                    <div className="bmat-dashtable-container-inner overview-padded">
                                         <div>
                                             <div className="bmat-dashtable-title title-correct">
                                                 {t.title}
