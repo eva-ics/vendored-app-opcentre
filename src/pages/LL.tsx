@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { onEvaError } from "../common";
-import { get_engine, useEvaAPICall } from "@eva-ics/webengine-react";
+import { get_engine, useEvaAPICall, EvaErrorMessage } from "@eva-ics/webengine-react";
 import { Eva } from "@eva-ics/webengine";
 import { useQueryParams } from "bmat/hooks";
 import MenuItem from "@mui/material/MenuItem";
@@ -35,7 +35,10 @@ const DashboardIDC = () => {
             {
                 name: "lf",
                 value: lineFilter,
-                setter: setLineFilter,
+                setter: (v) => {
+                    setLineFilter(v);
+                    setLineFilterInputValue(v);
+                },
                 pack_json: false,
             },
         ],
@@ -54,11 +57,18 @@ const DashboardIDC = () => {
             });
     }, []);
 
+    const saveLineFilterValue = () => {
+        if (lineFilterInputValue !== lineFilter) {
+            setLineFilter(lineFilterInputValue);
+        }
+    };
+
     return (
         <div>
             <div className="dashboard-main-wrapper dashboard-main-wrapper-big">
                 <div className="dashboard-main-wrapper-content">
                     <div className="dashboard-main-wrapper-content__side-left">
+                        Controller service
                         <Select
                             className="idc-editor-select"
                             value={activeController}
@@ -72,16 +82,32 @@ const DashboardIDC = () => {
                                 </MenuItem>
                             ))}
                         </Select>
+                        Line filter
                         <TextField
+                            variant="outlined"
+                            size="small"
+                            value={lineFilterInputValue}
+                            onChange={(e) => setLineFilterInputValue(e.target.value)}
+                            onBlur={saveLineFilterValue}
+                            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                                if (e.key === "Enter") {
+                                    saveLineFilterValue();
+                                    e.currentTarget.blur();
+                                }
+                            }}
+                            placeholder="line filter"
                             fullWidth
-                            type="text"
-                            value={lineFilter}
-                            // size={params?.size}
-                            onChange={(e) => {
-                                setLineFilter(e.target.value);
+                            sx={{
+                                "& .MuiInputBase-root": {
+                                    padding: "3px 6px",
+                                    fontSize: "12px",
+                                },
                             }}
                         />
-                        {snapshotRes.data ? (
+                        {snapshotRes.error ? (
+                            <EvaErrorMessage error={snapshotRes.error} />
+                        ) : null}
+                        {snapshotRes.data?.lines ? (
                             <>
                                 <RackView data={snapshotRes.data} />
                             </>

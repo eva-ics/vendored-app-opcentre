@@ -458,6 +458,7 @@ const DashboardTrends = () => {
                 pack_json: true,
                 setter: (p: ChartProps) => {
                     setProps(p);
+                    setRpInputValue(p.rp || "");
                     setPrevUpdate(p.update);
                 },
             },
@@ -506,7 +507,7 @@ const DashboardTrends = () => {
         };
     };
 
-    const saveChange = () => {
+    const saveRpValue = () => {
         if (rpInputValue !== props.rp) {
             setPropsDelayed({
                 ...(props_sdata.current || props),
@@ -702,12 +703,12 @@ const DashboardTrends = () => {
                                     size="small"
                                     value={rpInputValue}
                                     onChange={(e) => setRpInputValue(e.target.value)}
-                                    onBlur={saveChange}
+                                    onBlur={saveRpValue}
                                     onKeyDown={(
                                         e: React.KeyboardEvent<HTMLInputElement>
                                     ) => {
                                         if (e.key === "Enter") {
-                                            saveChange();
+                                            saveRpValue();
                                             e.currentTarget.blur();
                                         }
                                     }}
