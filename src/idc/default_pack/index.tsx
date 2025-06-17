@@ -5,6 +5,7 @@ import { SizedIFrame } from "./sized_iframe";
 import { ItemValueWithLabel } from "./item_value_with_label";
 import { SizedCanvas } from "./sized_canvas";
 import { SizedLineChart } from "./sized_line_chart";
+import { LiveVideoPlayer } from "./live_video_player";
 import { Frame } from "./frame";
 import { GaugeColorized } from "./gauge_colorized";
 import { AlarmBell } from "./alarm_bell";
@@ -30,6 +31,7 @@ import TouchAppOutlinedIcon from "@mui/icons-material/TouchAppOutlined";
 import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import GradingIcon from "@mui/icons-material/Grading";
+import VideoCameraBackIcon from "@mui/icons-material/VideoCameraBack";
 
 export enum ElementKind {
     Label = "label",
@@ -38,6 +40,7 @@ export enum ElementKind {
     LineChart = "line_chart",
     Canvas = "canvas",
     Image = "image",
+    LiveVideo = "live_video",
     Frame = "frame",
     Pipe = "pipe",
     IFrame = "iframe",
@@ -51,6 +54,7 @@ export enum ElementKind {
 
 enum ElementGroup {
     UI = "UI elements",
+    Multimedia = "Multimedia",
     Value = "Item values",
     Chart = "Charts",
     Action = "Item actions",
@@ -93,6 +97,10 @@ const ButtonIcon = () => {
 
 const DashboardVariableIcon = () => {
     return <GradingIcon style={{ fontSize: 25 }} />;
+};
+
+const LiveVideoIcon = () => {
+    return <VideoCameraBackIcon style={{ fontSize: 25 }} />;
 };
 
 export const ELEMENT_CLASSES: Map<ElementKind, ElementClass> = new Map();
@@ -277,6 +285,45 @@ ELEMENT_CLASSES.set(ElementKind.Image, {
     default_size: { x: 20, y: 20 },
     boxed: true,
     actions: false,
+});
+ELEMENT_CLASSES.set(ElementKind.LiveVideo, {
+    description: "Live video",
+    group: ElementGroup.Multimedia,
+    IconDraw: LiveVideoIcon,
+    defaults: {
+        width: 320,
+        height: 180,
+        on_click: "none",
+    },
+    props: [
+        {
+            id: uuidv4(),
+            name: "oid",
+            kind: PropertyKind.OID,
+            params: { size: 40 },
+        },
+        {
+            id: uuidv4(),
+            name: "width",
+            kind: PropertyKind.Number,
+            params: { size: 5, min: 50 },
+        },
+        {
+            id: uuidv4(),
+            name: "height",
+            kind: PropertyKind.Number,
+            params: { size: 5, min: 50 },
+        },
+        {
+            id: uuidv4(),
+            name: "on_click",
+            kind: PropertyKind.SelectString,
+            params: ["none", "pause"],
+        },
+    ],
+    default_size: { x: 320, y: 180 },
+    boxed: true,
+    actions: true,
 });
 ELEMENT_CLASSES.set(ElementKind.IFrame, {
     description: "IFrame",
@@ -993,6 +1040,8 @@ const Viewer = ({
             return <Frame {...(params as any)} />;
         case ElementKind.Image:
             return <SizedImage {...(params as any)} />;
+        case ElementKind.LiveVideo:
+            return <LiveVideoPlayer {...(params as any)} />;
         case ElementKind.IFrame:
             return <SizedIFrame {...(params as any)} />;
         case ElementKind.Button:
