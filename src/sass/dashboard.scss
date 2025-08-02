@@ -134,9 +134,10 @@
 .bmat-dashtable {
     border: 0.5px solid $border-color;
 
-    & button {
-        background-color: $connection-color;
-    }
+  & button {
+    background-color: $connection-color;
+    color: black;
+  }
 
     & button.btn-delete {
         background-color: #aa0000;

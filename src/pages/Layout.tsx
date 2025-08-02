@@ -257,9 +257,7 @@ const Layout = ({ logout }: LayoutProps) => {
                 case "edit":
                     if (currentDashboard !== i) setCurrentDashboard(i);
                     if (dashboardData) {
-                        document.body.style.overscrollBehavior = "contain";
                         return (
-                            <>
                                 <DashboardEditor
                                     element_pack={element_pack}
                                     session_id={uuidv4()}
@@ -271,7 +269,6 @@ const Layout = ({ logout }: LayoutProps) => {
                                     onError={onError}
                                     data={dashboardData}
                                 />
-                            </>
                         );
                     } else {
                         return (
@@ -324,8 +321,6 @@ const Layout = ({ logout }: LayoutProps) => {
             current_page = "Overview";
             content = <DashboardOverview />;
     }
-
-    document.body.style.overscrollBehavior = "auto";
 
     const nav = [
         { value: "Overview", to: "?" },

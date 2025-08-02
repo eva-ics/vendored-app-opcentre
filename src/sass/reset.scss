@@ -55,6 +55,8 @@ html {
   -webkit-text-size-adjust: 100%; /* 2. Prevent adjustments of font size after orientation changes in iOS. */
   -moz-tab-size: 4; /* 3. Use a more readable tab size (opinionated). */
   tab-size: 4; /* 3 */
+  margin: 0;
+  overscroll-behavior: none;
 }
 
 /*

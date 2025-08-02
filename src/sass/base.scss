@@ -17,7 +17,7 @@ body {
     background-color: $body-bg-color;
     color: $main-text-color;
     overflow-x: hidden;
-    overscroll-behavior: auto;
+    overscroll-behavior-y: contain;
 }
 
 button {
