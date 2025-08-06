@@ -17,7 +17,6 @@ body {
     background-color: $body-bg-color;
     color: $main-text-color;
     overflow-x: hidden;
-    overscroll-behavior-y: contain;
 }
 
 button {
@@ -197,3 +196,11 @@ div.eva.login.header {
         display: block !important;
     }
 }
+
+.bmat-dashtable-filter-label-container + input,
+.bmat-dashtable-filter-label-container + select,
+.filter-field {
+    outline: none;
+    color: black;
+}
+

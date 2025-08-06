@@ -10,6 +10,11 @@ import { get_engine } from "@eva-ics/webengine-react";
 import { Eva, EvaError } from "@eva-ics/webengine";
 import { useQueryParams } from "bmat/hooks";
 
+const iconStyles = {
+  fontSize: 16,
+  color: "black"
+}
+
 const DashboardIDC = () => {
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
   const [dashboards, setDashboards] = useState([]);
@@ -65,11 +70,11 @@ const DashboardIDC = () => {
             navigate(`?d=idc&i=&m=edit`);
           }}
         >
-          <AddBoxIcon style={{ fontSize: 15 }} />
+          <AddBoxIcon style={iconStyles} />
           new dashboard
         </button>
         <button onClick={forceUpdate} className="idc-button">
-          <CachedIcon style={{ fontSize: 16 }} />
+          <CachedIcon style={iconStyles} />
         </button>
       </div>
     ]

@@ -131,7 +131,7 @@ const ItemWatch = ({ oid, unwatch }: { oid: string; unwatch: (oid: string) => vo
 
     const sampleData = useCallback(() => {
         const eva = get_engine() as Eva;
-        let st = [...states];
+        const st = [...states];
         st.shift();
         const state = eva.state(oid) as ItemState;
         if (state) {
@@ -161,7 +161,7 @@ const ItemWatch = ({ oid, unwatch }: { oid: string; unwatch: (oid: string) => vo
 
     const data = useMemo(() => {
         const color = "#99CCFF";
-        let labels = [];
+        const labels = [];
         for (let i = states.length; i > 0; i--) {
             labels.push(new Date(sampleTime.getTime() - i * SAMPLING_INTERVAL * 1000));
         }
@@ -283,7 +283,7 @@ const DashboardItems = () => {
     );
 
     const setItemsParams = (p: object) => {
-        let np: any = { ...params };
+        const np: any = { ...params };
         Object.keys(p).forEach((k) => {
             np[k] = (p as any)[k];
         });
@@ -362,6 +362,8 @@ const DashboardItems = () => {
             <select
                 value={params.kind}
                 onChange={(e) => setItemsParams({ kind: e.target.value })}
+                className="filter-field"
+                name="oid"
             >
                 {item_kinds.map((v) => (
                     <option key={v}>{v}</option>
@@ -375,6 +377,8 @@ const DashboardItems = () => {
                     size={45}
                     value={params.full_id || ""}
                     onChange={(e) => setFullId(e.target.value)}
+                    className="filter-field"
+                    name="input-oid"
                 />
                 <ButtonStyled variant="outlined" onClick={copyOID}>
                     <ContentCopyIcon style={{ fontSize: 15 }} />
@@ -402,7 +406,7 @@ const DashboardItems = () => {
         (oid: string) => {
             const pos = watchedItems.indexOf(oid);
             if (pos !== -1) {
-                let w = [...watchedItems];
+                const w = [...watchedItems];
                 w.splice(pos, 1);
                 setWatchedItems(w);
             }
@@ -424,7 +428,7 @@ const DashboardItems = () => {
     };
 
     const setStateFilterParams = (p: object) => {
-        let np: any = { ...filterParams };
+        const np: any = { ...filterParams };
         Object.keys(p).forEach((k) => {
             np[k] = (p as any)[k];
         });
