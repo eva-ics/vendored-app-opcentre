@@ -136,7 +136,7 @@ const importCustomElement = async (el: any) => {
         console.debug(`Loading element module ${el.path}`);
         const mod_uri = `/pvt/vendored-apps/opcentre/idc/elements/${el.path}`;
         //const mod_uri = `${(window as any).$eva.api_uri}/pvt/vendored-apps/opcentre/idc/elements/${el.path}?k=${(window as any).$eva.api_token}`;
-        await import(/* @vite-ignore */mod_uri);
+        await import(/* @vite-ignore */ mod_uri);
         const mod: any = window[module_name as any];
         const module: Map<string, ElementClass> = mod?.default ? mod.default : mod;
         if (!module) {
@@ -219,7 +219,7 @@ const Layout = ({ logout }: LayoutProps) => {
     let content;
     let current_page;
 
-    document.body.style.overscrollBehavior = "auto";
+    //document.body.style.overscrollBehaviorY = "auto";
 
     switch (searchParams.get("d")) {
         case "idc":
@@ -260,18 +260,19 @@ const Layout = ({ logout }: LayoutProps) => {
                     if (currentDashboard !== i) setCurrentDashboard(i);
                     if (dashboardData) {
                         document.body.style.overscrollBehaviorY = "none";
+                        document.documentElement.style.overscrollBehaviorY = "none";
                         return (
-                                <DashboardEditor
-                                    element_pack={element_pack}
-                                    session_id={uuidv4()}
-                                    offsetX={0}
-                                    offsetY={0}
-                                    save={saveIDC}
-                                    finish={finishIDC}
-                                    onSuccess={onSuccess}
-                                    onError={onError}
-                                    data={dashboardData}
-                                />
+                            <DashboardEditor
+                                element_pack={element_pack}
+                                session_id={uuidv4()}
+                                offsetX={0}
+                                offsetY={0}
+                                save={saveIDC}
+                                finish={finishIDC}
+                                onSuccess={onSuccess}
+                                onError={onError}
+                                data={dashboardData}
+                            />
                         );
                     } else {
                         return (
