@@ -1,25 +1,18 @@
-import { useState, useEffect } from "react";
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { DashboardData, DashboardEditor, DashboardViewer, ElementClass } from "idc-core";
+import { get_engine, useEvaAPICall } from "@eva-ics/webengine-react";
+import * as EvaWER from "@eva-ics/webengine-react";
+import { Eva } from "@eva-ics/webengine";
+import * as EvaWE from "@eva-ics/webengine";
+import { v4 as uuidv4 } from "uuid";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
+
 import Header from "../components/Header";
 import SideMenu from "../components/SideMenu";
+import { BookmarkButton } from "../components";
 import { LayoutProps } from "../types";
-import { useSearchParams } from "react-router-dom";
-import DashboardOverview from "../pages/Overview.tsx";
-import DashboardItems from "../pages/Items.tsx";
-import DashboardAlarmState from "../pages/AlarmState.tsx";
-import DashboardAlarmHistory from "../pages/AlarmHistory.tsx";
-import DashboardDataObjects from "../pages/DataObjects.tsx";
-import DashboardTrends from "../pages/Trends.tsx";
-import DashboardIDC from "../pages/IDC.tsx";
-import DashboardLL from "../pages/LL.tsx";
 import { element_pack, ElementKind } from "../idc/default_pack";
-import { v4 as uuidv4 } from "uuid";
-import { DashboardData, DashboardEditor, DashboardViewer } from "idc-core";
-import { get_engine, useEvaAPICall } from "@eva-ics/webengine-react";
-import { Eva } from "@eva-ics/webengine";
-import { ElementClass } from "idc-core";
-import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import {
     onSuccess,
     onError,
@@ -30,9 +23,16 @@ import {
     onActionFail,
     DEFAULT_ALARM_SVC,
 } from "../common";
+import DashboardOverview from "../pages/Overview.tsx";
+import DashboardItems from "../pages/Items.tsx";
+import DashboardAlarmState from "../pages/AlarmState.tsx";
+import DashboardAlarmHistory from "../pages/AlarmHistory.tsx";
+import DashboardDataObjects from "../pages/DataObjects.tsx";
+import DashboardTrends from "../pages/Trends.tsx";
+import DashboardIDC from "../pages/IDC.tsx";
+import DashboardLL from "../pages/LL.tsx";
 import Profile from "./Profile.tsx";
-import * as EvaWE from "@eva-ics/webengine";
-import * as EvaWER from "@eva-ics/webengine-react";
+import Bookmarks from "./Bookmarks.tsx";
 
 const allowedDashboardChars = /^[a-zA-Z0-9 ._-]+$/;
 
@@ -167,6 +167,7 @@ const Layout = ({ logout }: LayoutProps) => {
     const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
     const [currentDashboard, setCurrentDashboard] = useState<string | null>(null);
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         setDashboardData(null);
@@ -309,6 +310,10 @@ const Layout = ({ logout }: LayoutProps) => {
             content = <DashboardOverview />;
             current_page = "Navigate";
             break;
+        case "bookmarks":
+            content = <Bookmarks />;
+            current_page = "Navigate";
+            break;
         case "main_app":
             content = <DashboardOverview />;
             current_page = "Main app";
@@ -353,6 +358,7 @@ const Layout = ({ logout }: LayoutProps) => {
                 { value: "Vendored apps", to: "/va/" },
                 { value: "Profile", to: "?d=profile" },
                 { value: "Logout", to: "logout" },
+                { value: "Bookmarks", to: "?d=bookmarks" },
             ],
         },
     ];
@@ -372,6 +378,7 @@ const Layout = ({ logout }: LayoutProps) => {
                 logout={logout}
                 current_page={current_page}
             />
+            {location.search !== "?d=bookmarks" && <BookmarkButton />}
             {content}
         </div>
     );
