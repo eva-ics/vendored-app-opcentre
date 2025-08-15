@@ -2,7 +2,7 @@ import { EvaLivePlayer } from "@eva-ics/webengine-react";
 import { useState } from "react";
 import {
     EvaLivePlayer as EvaLivePlayerC,
-    EvaLivePlayerAutoSize,
+    EvaPlayerAutoSize,
 } from "@eva-ics/webengine-multimedia";
 
 export const LiveVideoPlayer = ({
@@ -59,7 +59,7 @@ export const LiveVideoPlayer = ({
                     oid={oid}
                     style={{ backgroundColor: "black" }}
                     setPlayer={setPlayer}
-                    autoSize={EvaLivePlayerAutoSize.None}
+                    autoSize={EvaPlayerAutoSize.None}
                 />
             </div>
         </>
