@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { NavElement, SideMenuProps } from "../types";
 import { AiOutlineClose } from "react-icons/ai";
 import { useNavigate, useLocation } from "react-router-dom";
+import { BookmarkButton } from "./BookmarkButton";
 
 const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuProps) => {
     const [openSubMenu, setOpenSubMenu] = useState<string | null>(null);
@@ -120,125 +121,120 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
         }
     };
 
-    return (
-        <>
-            {isOpen ? (
-                <div className="side-menu-wrapper open">
-                    <div className="backdrop">
-                        <div className="menu-container" ref={sidebarRef}>
-                            <button className="close-icon-btn" onClick={toggleMenu}>
-                                <AiOutlineClose size={25} />
-                            </button>
-                            <nav id="sidebar">
-                                <ul className="side-menu-list">
-                                    {nav.map((v, idx) => {
-                                        const isCurrent =
-                                            current_page === v.value ||
-                                            current_page === v.to ||
-                                            current_page === v.compare_value ||
-                                            (v.submenus &&
-                                                v.submenus.some(
-                                                    (submenu) =>
-                                                        current_page === submenu.value ||
-                                                        current_page === submenu.to
-                                                ));
+    return isOpen ? (
+        <div className="side-menu-wrapper open">
+            <div className="backdrop">
+                <div className="menu-container" ref={sidebarRef}>
+                    <BookmarkButton
+                        className={
+                            location.search === "?d=bookmarks"
+                                ? "invisible"
+                                : "menu-bookmark"
+                        }
+                    />
+                    <button className="close-icon-btn" onClick={toggleMenu}>
+                        <AiOutlineClose size={25} />
+                    </button>
+                    <nav id="sidebar">
+                        <ul className="side-menu-list">
+                            {nav.map((v, idx) => {
+                                const isCurrent =
+                                    current_page === v.value ||
+                                    current_page === v.to ||
+                                    current_page === v.compare_value ||
+                                    (v.submenus &&
+                                        v.submenus.some(
+                                            (submenu) =>
+                                                current_page === submenu.value ||
+                                                current_page === submenu.to
+                                        ));
 
-                                        return (
-                                            <li
-                                                key={idx}
-                                                className="side-menu-li"
-                                                onClick={(event) => {
-                                                    if (!v.to) event.preventDefault();
-                                                    handleNavClick(event, v);
-                                                    toggleSubMenu(v.value);
-                                                }}
-                                                onKeyDown={(event) => {
-                                                    if (
-                                                        event.key === "Enter" ||
-                                                        event.key === " "
-                                                    ) {
-                                                        handleNavClick(event, v);
-                                                    }
-                                                }}
-                                                onBlur={handleBlur}
-                                            >
-                                                <a
-                                                    href={v.to || "#"}
-                                                    className={
-                                                        isCurrent
-                                                            ? "side-menu-current"
-                                                            : "side-menu-item"
+                                return (
+                                    <li
+                                        key={idx}
+                                        className="side-menu-li"
+                                        onClick={(event) => {
+                                            if (!v.to) event.preventDefault();
+                                            handleNavClick(event, v);
+                                            toggleSubMenu(v.value);
+                                        }}
+                                        onKeyDown={(event) => {
+                                            if (
+                                                event.key === "Enter" ||
+                                                event.key === " "
+                                            ) {
+                                                handleNavClick(event, v);
+                                            }
+                                        }}
+                                        onBlur={handleBlur}
+                                    >
+                                        <a
+                                            href={v.to || "#"}
+                                            className={
+                                                isCurrent
+                                                    ? "side-menu-current"
+                                                    : "side-menu-item"
+                                            }
+                                        >
+                                            {v.value}
+                                        </a>
+
+                                        {openSubMenu === v.value &&
+                                            v.submenus &&
+                                            v.submenus.length > 0 && (
+                                                <ul
+                                                    ref={submenuRef}
+                                                    className="subitem-list"
+                                                    onClick={(event) =>
+                                                        event.stopPropagation()
                                                     }
                                                 >
-                                                    {v.value}
-                                                </a>
-
-                                                {openSubMenu === v.value &&
-                                                    v.submenus &&
-                                                    v.submenus.length > 0 && (
-                                                        <ul
-                                                            ref={submenuRef}
-                                                            className="subitem-list"
-                                                            onClick={(event) =>
-                                                                event.stopPropagation()
+                                                    {v.submenus.map((subItem, i) => (
+                                                        <li
+                                                            key={i}
+                                                            className={
+                                                                location.search ===
+                                                                subItem.to
+                                                                    ? "current"
+                                                                    : ""
+                                                            }
+                                                            onClick={(event) => {
+                                                                event.stopPropagation();
+                                                                handleSubClick(
+                                                                    event as React.MouseEvent<HTMLLIElement>,
+                                                                    subItem.to
+                                                                );
+                                                            }}
+                                                            onKeyDown={(event) =>
+                                                                handleSubKeyDown(
+                                                                    event as React.KeyboardEvent<HTMLLIElement>,
+                                                                    subItem.to
+                                                                )
                                                             }
                                                         >
-                                                            {v.submenus.map(
-                                                                (subItem, i) => (
-                                                                    <li
-                                                                        key={i}
-                                                                        className={
-                                                                            location.search ===
-                                                                            subItem.to
-                                                                                ? "current"
-                                                                                : ""
-                                                                        }
-                                                                        onClick={(
-                                                                            event
-                                                                        ) => {
-                                                                            event.stopPropagation();
-                                                                            handleSubClick(
-                                                                                event as React.MouseEvent<HTMLLIElement>,
-                                                                                subItem.to
-                                                                            );
-                                                                        }}
-                                                                        onKeyDown={(
-                                                                            event
-                                                                        ) =>
-                                                                            handleSubKeyDown(
-                                                                                event as React.KeyboardEvent<HTMLLIElement>,
-                                                                                subItem.to
-                                                                            )
-                                                                        }
-                                                                    >
-                                                                        <a
-                                                                            href={
-                                                                                subItem.to ===
-                                                                                "logout"
-                                                                                    ? "#"
-                                                                                    : subItem.to
-                                                                            }
-                                                                        >
-                                                                            {
-                                                                                subItem.value
-                                                                            }
-                                                                        </a>
-                                                                    </li>
-                                                                )
-                                                            )}
-                                                        </ul>
-                                                    )}
-                                            </li>
-                                        );
-                                    })}
-                                </ul>
-                            </nav>
-                        </div>
-                    </div>
+                                                            <a
+                                                                href={
+                                                                    subItem.to ===
+                                                                    "logout"
+                                                                        ? "#"
+                                                                        : subItem.to
+                                                                }
+                                                            >
+                                                                {subItem.value}
+                                                            </a>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            )}
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </nav>
                 </div>
-            ) : null}
-        </>
-    );
+            </div>
+        </div>
+    ) : null;
 };
 
 export default SideMenu;

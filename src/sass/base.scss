@@ -204,3 +204,42 @@ div.eva.login.header {
     color: black;
 }
 
+.col-link {
+    padding: 0;
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+        color: $main-blue-color;
+        cursor: pointer;
+    }
+
+    & a {
+        display: flex;
+        padding: 10px;
+    }
+}
+
+button.bookmark-button-view {
+    position: fixed;
+    right: 30px;
+    top: 13px;
+    z-index: 10;
+}
+
+button.menu-bookmark {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    margin: 0px;
+}
+
+button.header-bookmark {
+    display: none;
+    @include media(desktop) {
+        display: flex;
+    }
+}
+
+button.invisible {
+    display: none;
+}

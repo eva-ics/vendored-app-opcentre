@@ -37,4 +37,9 @@ export enum StatusType {
     Success = "success",
 }
 
+export type Bookmark = {
+    id: string;
+    title: string;
+};
+
 export const DEFAULT_TITLE = "OpCentre";

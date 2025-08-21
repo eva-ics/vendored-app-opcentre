@@ -1,25 +1,17 @@
-import { useState, useEffect } from "react";
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { DashboardData, DashboardEditor, DashboardViewer, ElementClass } from "idc-core";
+import { get_engine, useEvaAPICall } from "@eva-ics/webengine-react";
+import * as EvaWER from "@eva-ics/webengine-react";
+import { Eva } from "@eva-ics/webengine";
+import * as EvaWE from "@eva-ics/webengine";
+import { v4 as uuidv4 } from "uuid";
+import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
+
 import Header from "../components/Header";
 import SideMenu from "../components/SideMenu";
-import { LayoutProps } from "../types";
-import { useSearchParams } from "react-router-dom";
-import DashboardOverview from "../pages/Overview.tsx";
-import DashboardItems from "../pages/Items.tsx";
-import DashboardAlarmState from "../pages/AlarmState.tsx";
-import DashboardAlarmHistory from "../pages/AlarmHistory.tsx";
-import DashboardDataObjects from "../pages/DataObjects.tsx";
-import DashboardTrends from "../pages/Trends.tsx";
-import DashboardIDC from "../pages/IDC.tsx";
-import DashboardLL from "../pages/LL.tsx";
+import { DEFAULT_TITLE, LayoutProps } from "../types";
 import { element_pack, ElementKind } from "../idc/default_pack";
-import { v4 as uuidv4 } from "uuid";
-import { DashboardData, DashboardEditor, DashboardViewer } from "idc-core";
-import { get_engine, useEvaAPICall } from "@eva-ics/webengine-react";
-import { Eva } from "@eva-ics/webengine";
-import { ElementClass } from "idc-core";
-import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import {
     onSuccess,
     onError,
@@ -30,9 +22,17 @@ import {
     onActionFail,
     DEFAULT_ALARM_SVC,
 } from "../common";
+import DashboardOverview from "../pages/Overview.tsx";
+import DashboardItems from "../pages/Items.tsx";
+import DashboardAlarmState from "../pages/AlarmState.tsx";
+import DashboardAlarmHistory from "../pages/AlarmHistory.tsx";
+import DashboardDataObjects from "../pages/DataObjects.tsx";
+import DashboardTrends from "../pages/Trends.tsx";
+import DashboardIDC from "../pages/IDC.tsx";
+import DashboardLL from "../pages/LL.tsx";
+import { BookmarkButton } from "../components/BookmarkButton.tsx";
 import Profile from "./Profile.tsx";
-import * as EvaWE from "@eva-ics/webengine";
-import * as EvaWER from "@eva-ics/webengine-react";
+import Bookmarks from "./Bookmarks.tsx";
 
 const allowedDashboardChars = /^[a-zA-Z0-9 ._-]+$/;
 
@@ -160,10 +160,23 @@ enum ElementPackUpdated {
     Yes,
 }
 
+const titles = {
+    idc: "IDC",
+    items: "Items",
+    trends: "Trends",
+    dobj: "Data objects",
+    ll: "Logic",
+    profile: "Profile",
+    bookmarks: "Bookmarks",
+    alarm_state: "Alarm states",
+    alarm_history: "Alarm history",
+    overview: "Overview",
+} as const;
+
 const Layout = ({ logout }: LayoutProps) => {
     const [isOpenMenu, setIsOpenMenu] = useState(false);
     const [isElementPackUpdated, setElementPackUpdated] = useState(ElementPackUpdated.No);
-    const [searchParams, _] = useSearchParams();
+    const [searchParams] = useSearchParams();
     const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
     const [currentDashboard, setCurrentDashboard] = useState<string | null>(null);
     const navigate = useNavigate();
@@ -179,6 +192,17 @@ const Layout = ({ logout }: LayoutProps) => {
                 .catch((e) => onEvaError(e));
         }
     }, [currentDashboard]);
+
+    useEffect(() => {
+        const eva = get_engine() as Eva;
+        const system_name = eva.system_name();
+        const d = (searchParams.get("d") || "overview") as keyof typeof titles;
+        const pageTitle = titles[d];
+        document.title = `${pageTitle} - ${system_name} OpCentre`;
+        return () => {
+            document.title = DEFAULT_TITLE;
+        };
+    }, [searchParams]);
 
     const toggleMenu = () => {
         setIsOpenMenu(!isOpenMenu);
@@ -249,6 +273,7 @@ const Layout = ({ logout }: LayoutProps) => {
                                     data={dashboardData}
                                     body_color="#222"
                                 />
+                                <BookmarkButton className="bookmark-button-view" />
                             </>
                         );
                     } else {
@@ -309,6 +334,10 @@ const Layout = ({ logout }: LayoutProps) => {
             content = <DashboardOverview />;
             current_page = "Navigate";
             break;
+        case "bookmarks":
+            content = <Bookmarks />;
+            current_page = "Navigate";
+            break;
         case "main_app":
             content = <DashboardOverview />;
             current_page = "Main app";
@@ -351,6 +380,7 @@ const Layout = ({ logout }: LayoutProps) => {
             submenus: [
                 { value: "Main app", to: "/" },
                 { value: "Vendored apps", to: "/va/" },
+                { value: "Bookmarks", to: "?d=bookmarks" },
                 { value: "Profile", to: "?d=profile" },
                 { value: "Logout", to: "logout" },
             ],

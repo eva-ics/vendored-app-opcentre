@@ -5,6 +5,7 @@ import { get_engine } from "@eva-ics/webengine-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { Timestamp } from "bmat/time";
+import { BookmarkButton } from "./BookmarkButton";
 
 const TimeInfo = () => {
     const [time, setTime] = useState(new Date());
@@ -139,6 +140,13 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                     </div>
                     <TimeInfo />
                 </div>
+                <BookmarkButton
+                    className={
+                        location.search === "?d=bookmarks"
+                            ? "invisible"
+                            : "header-bookmark"
+                    }
+                />
             </div>
             <nav id="header">
                 <ul>
