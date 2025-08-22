@@ -125,6 +125,9 @@ export const BookmarkButton = ({ className }: { className?: string }) => {
                     id: url,
                     title,
                 });
+                bookmarks.sort((a, b) =>
+                    a.title.localeCompare(b.title, undefined, { sensitivity: "base" })
+                );
 
                 await setUserData<Bookmark[]>("va.opcentre.bookmarks", bookmarks);
                 onSuccess("bookmark added");
