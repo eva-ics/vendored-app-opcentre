@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { DashTable, DashTableData, DashTableFilter } from "bmat/dashtable";
 import { EvaError } from "@eva-ics/webengine";
 import { EvaErrorMessage } from "@eva-ics/webengine-react";
@@ -84,7 +83,7 @@ const Bookmarks = () => {
         return {
             data: [
                 {
-                    value: <Link to={url}>{title}</Link>,
+                    value: <a href={url}>{title}</a>,
                     sort_value: title,
                     className: "col-link",
                 },
