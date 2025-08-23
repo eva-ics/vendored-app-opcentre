@@ -18,16 +18,9 @@ import { onEvaError, onSuccess } from "../common";
 
 const cols = ["Name", "", ""];
 const dialogStyles = { "& .MuiDialog-paper": { width: "80%", maxHeight: 435 } };
-const dialogContentStyles = {
-    "& .MuiTextField-root": {
-        ml: 0,
-    },
-};
+const dialogContentStyles = { "& .MuiTextField-root": { ml: 0 } };
 const InputLabelProps = { shrink: true };
-const buttonStyles = {
-    backgroundColor: "#191d22",
-    "&:hover": { backgroundColor: "#3a3c3f" },
-};
+const buttonStyles = { bgcolor: "#191d22", "&:hover": { bgcolor: "#3a3c3f" } };
 
 const Bookmarks = () => {
     const [error, setError] = useState<EvaError | undefined>(undefined);
@@ -125,6 +118,9 @@ const Bookmarks = () => {
         const next = bookmarks.filter(
             (b) => !(b.id === bookmarkToDelete.id && b.title === bookmarkToDelete.title)
         );
+        next.sort((a, b) =>
+            a.title.localeCompare(b.title, undefined, { sensitivity: "base" })
+        );
 
         try {
             await setUserData<Bookmark[]>("va.opcentre.bookmarks", next);
@@ -152,6 +148,9 @@ const Bookmarks = () => {
         const title = String(rawName).trim();
 
         next.push({ id: editingBookmark.id, title });
+        next.sort((a, b) =>
+            a.title.localeCompare(b.title, undefined, { sensitivity: "base" })
+        );
 
         try {
             await setUserData<Bookmark[]>("va.opcentre.bookmarks", next);

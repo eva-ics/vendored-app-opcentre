@@ -17,6 +17,17 @@ const SideMenu = ({ nav, isOpen, toggleMenu, logout, current_page }: SideMenuPro
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
+            const t = event.target as Element | null;
+            if (!t) {
+                return;
+            }
+            if (
+                t.closest(
+                    '.MuiDialog-root,[role="dialog"],.MuiPopover-root,.MuiModal-root'
+                )
+            ) {
+                return;
+            }
             if (
                 sidebarRef.current &&
                 !sidebarRef.current.contains(event.target as Node)
