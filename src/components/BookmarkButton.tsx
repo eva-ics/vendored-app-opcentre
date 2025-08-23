@@ -59,6 +59,7 @@ function useUrl(): string {
 
             const origPush = history.pushState;
             history.pushState = function (...args: any[]) {
+                // @ts-ignore
                 const ret = origPush.apply(this, args);
                 fire();
                 return ret;
@@ -66,6 +67,7 @@ function useUrl(): string {
 
             const origReplace = history.replaceState;
             history.replaceState = function (...args: any[]) {
+                // @ts-ignore
                 const ret = origReplace.apply(this, args);
                 fire();
                 return ret;
