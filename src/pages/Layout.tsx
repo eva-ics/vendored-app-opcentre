@@ -28,6 +28,7 @@ import DashboardAlarmState from "../pages/AlarmState.tsx";
 import DashboardAlarmHistory from "../pages/AlarmHistory.tsx";
 import DashboardDataObjects from "../pages/DataObjects.tsx";
 import DashboardTrends from "../pages/Trends.tsx";
+import DashboardCCTV from "../pages/CCTV.tsx";
 import DashboardIDC from "../pages/IDC.tsx";
 import DashboardLL from "../pages/LL.tsx";
 import { BookmarkButton } from "../components/BookmarkButton.tsx";
@@ -164,6 +165,7 @@ const titles = {
     idc: "IDC",
     items: "Items",
     trends: "Trends",
+    cctv: "CCTV",
     dobj: "Data objects",
     ll: "Logic",
     profile: "Profile",
@@ -318,6 +320,10 @@ const Layout = ({ logout }: LayoutProps) => {
             content = <DashboardTrends />;
             current_page = "Trends";
             break;
+        case "cctv":
+            content = <DashboardCCTV />;
+            current_page = "CCTV";
+            break;
         case "dobj":
             content = <DashboardDataObjects />;
             current_page = "Data objects";
@@ -375,6 +381,7 @@ const Layout = ({ logout }: LayoutProps) => {
         { value: "Data objects", to: "?d=dobj" },
         { value: "Logic", to: "?d=ll" },
         { value: "Trends", to: "?d=trends" },
+        { value: "CCTV", to: "?d=cctv" },
         {
             value: "Navigate",
             submenus: [
