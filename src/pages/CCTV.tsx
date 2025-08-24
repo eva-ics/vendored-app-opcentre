@@ -35,15 +35,6 @@ const DashboardCCTV = () => {
     } else {
         controls = (
             <div className="form-list-wrapper-item">
-                <div>
-                    <EditSelectString
-                        current_value={playbackSpeed}
-                        setParam={(n: string) => {
-                            setPlaybackSpeed(n);
-                        }}
-                        params={FILL_SPEED}
-                    />
-                </div>
                 <ButtonStyled variant="outlined" onClick={() => {}}>
                     <FastRewindOutlinedIcon />
                 </ButtonStyled>
@@ -59,6 +50,23 @@ const DashboardCCTV = () => {
                 <ButtonStyled variant="outlined" onClick={() => {}}>
                     <FastForwardOutlinedIcon />
                 </ButtonStyled>
+                <DateTimePickerSelect
+                    enabled={!live}
+                    element_id="timestamp"
+                    current_value={timestamp.toDate()}
+                    setParam={(d: Date) => {
+                        setTimestamp(new Timestamp(d));
+                    }}
+                />
+                <div>
+                    <EditSelectString
+                        current_value={playbackSpeed}
+                        setParam={(n: string) => {
+                            setPlaybackSpeed(n);
+                        }}
+                        params={FILL_SPEED}
+                    />
+                </div>
             </div>
         );
     }
@@ -81,22 +89,14 @@ const DashboardCCTV = () => {
                                                 }}
                                             />
                                         </div>
-                                        <div className="short-form-wrapper-item">
+                                        <div>
                                             <ButtonStyledText
                                                 onClick={() => {
                                                     setLive(!live);
                                                 }}
                                             >
-                                                {live ? "LIVE" : "REC"}
+                                                {live ? "LIVE" : "RECORDED"}
                                             </ButtonStyledText>
-                                            <DateTimePickerSelect
-                                                enabled={!live}
-                                                element_id="timestamp"
-                                                current_value={timestamp.toDate()}
-                                                setParam={(d: Date) => {
-                                                    setTimestamp(new Timestamp(d));
-                                                }}
-                                            />
                                         </div>
                                         {controls}
                                     </div>
