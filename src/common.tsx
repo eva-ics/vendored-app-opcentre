@@ -28,6 +28,17 @@ export const ButtonStyled = styled(Button)({
     minWidth: "40px",
 });
 
+export const ButtonStyledText = styled(Button)({
+    borderColor: "gray",
+    backgroundColor: "#aaa",
+    color: "#222",
+    padding: "5px",
+    minWidth: "40px",
+    "&:hover": {
+        backgroundColor: "#888",
+    },
+});
+
 const DASHBOARDS_DIR = "vendored-apps/opcentre/idc/dashboards";
 
 export const DEFAULT_ALARM_SVC = "eva.alarm.default";
