@@ -8,6 +8,7 @@ import { set_engine, LoginProps, HMIApp } from "@eva-ics/webengine-react";
 import { DEFAULT_TITLE } from "./types/index.tsx";
 import "chartjs-adapter-date-fns";
 import React from "react";
+import { encode, decode } from "@msgpack/msgpack";
 import ToasterProvider from "./components/ToastsProvider.tsx";
 
 import {
@@ -40,6 +41,7 @@ ChartJS.register(
 disableTabFreeze();
 
 const eva = new Eva();
+eva.external.msgpack = { decode, encode };
 set_engine(eva);
 document.title = DEFAULT_TITLE;
 
@@ -54,10 +56,8 @@ eva.load_config().then((_config: any) => {
     eva.set_interval(IntervalKind.Heartbeat, 1);
     ReactDOM.createRoot(document.getElementById("root")!).render(
         <>
-            <React.StrictMode>
                 <ToasterProvider />
                 <HMIApp Dashboard={OpCentre} login_props={login_props} />
-            </React.StrictMode>
         </>
     );
 });

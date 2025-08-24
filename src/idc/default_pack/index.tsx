@@ -318,7 +318,7 @@ ELEMENT_CLASSES.set(ElementKind.LiveVideo, {
             id: uuidv4(),
             name: "on_click",
             kind: PropertyKind.SelectString,
-            params: ["none", "pause"],
+            params: ["none", "cctv", "pause"],
         },
     ],
     default_size: { x: 320, y: 180 },
