@@ -30,12 +30,12 @@ export const ButtonStyled = styled(Button)({
 
 export const ButtonStyledText = styled(Button)({
     borderColor: "gray",
-    backgroundColor: "#aaa",
-    color: "#222",
+    backgroundColor: "#555",
+    color: "#eee",
     padding: "5px",
     minWidth: "40px",
     "&:hover": {
-        backgroundColor: "#888",
+    backgroundColor: "#444",
     },
 });
 
