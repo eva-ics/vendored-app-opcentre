@@ -9,7 +9,7 @@ import {
 import { EditSelectOID } from "../components/editors/select_oid.tsx";
 import DateTimePickerSelect from "../components/date_time_picker.tsx";
 import { Timestamp } from "bmat/time";
-import { ButtonStyledText, ButtonStyled } from "../common.tsx";
+import { ButtonStyledText, ButtonStyled, onEvaError } from "../common.tsx";
 import PauseOutlinedIcon from "@mui/icons-material/PauseOutlined";
 import PlayArrowOutlinedIcon from "@mui/icons-material/PlayArrowOutlined";
 import FastForwardOutlinedIcon from "@mui/icons-material/FastForwardOutlined";
@@ -55,7 +55,7 @@ const DashboardCCTV = () => {
                 canvas: canvas,
                 name: streamName,
                 engine: get_engine()!,
-                //onError: params.onError,
+                onError: onEvaError,
                 //onFrame: params.onFrame,
                 //onEOS: params.onEOS,
                 //onChange: params.onChange,
