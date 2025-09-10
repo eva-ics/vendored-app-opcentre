@@ -1,4 +1,11 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import {
+    useQueryParams,
+    encoderBoolean,
+    decoderBoolean,
+    encoderFloat,
+    decoderFloat,
+} from "bmat/hooks";
 import { EditSelectOID } from "../components/editors/select_oid.tsx";
 import DateTimePickerSelect from "../components/date_time_picker.tsx";
 import { Timestamp } from "bmat/time";
@@ -10,6 +17,9 @@ import SkipNextOutlinedIcon from "@mui/icons-material/SkipNextOutlined";
 import SkipPreviousOutlinedIcon from "@mui/icons-material/SkipPreviousOutlined";
 import FastRewindOutlinedIcon from "@mui/icons-material/FastRewindOutlined";
 import { EditSelectString } from "../components/editors/select_string.tsx";
+import { EvaLivePlayer, EvaPlayerAutoSize } from "@eva-ics/webengine-multimedia";
+import { get_engine } from "@eva-ics/webengine-react";
+import { v4 as uuidv4 } from "uuid";
 
 const DEFAULT_FRAME_SEC = 3600;
 const SVC_ID = "eva.vidosrv.default";
@@ -23,11 +33,106 @@ const DashboardCCTV = () => {
     const [timestamp, setTimestamp] = useState<Timestamp>(
         new Timestamp().subSec(DEFAULT_FRAME_SEC)
     );
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const videoPlayer = useRef<null | EvaLivePlayer>(null);
+
+    const resetCanvas = () => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+        canvas.width = 1024;
+        canvas.height = 600;
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    };
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas || !oid) return;
+        if (live) {
+            const streamName = `${oid}::${uuidv4()}`;
+            const player = new EvaLivePlayer({
+                canvas: canvas,
+                name: streamName,
+                engine: get_engine()!,
+                //onError: params.onError,
+                //onFrame: params.onFrame,
+                //onEOS: params.onEOS,
+                //onChange: params.onChange,
+                decoderHardwareAcceleration: true,
+                decoderFallbackToSoftware: true,
+                autoSize: EvaPlayerAutoSize.KeepWidth,
+            });
+            videoPlayer.current = player;
+            player.start(oid);
+            setActive(true);
+        }
+        return () => {
+            videoPlayer.current?.close();
+            videoPlayer.current = null;
+            resetCanvas();
+        };
+    }, [live, oid, canvasRef]);
     let controls;
+    const loaded = useQueryParams(
+        [
+            {
+                name: "oid",
+                value: oid,
+                setter: setOid,
+            },
+            {
+                name: "live",
+                value: live,
+                setter: setLive,
+                encoder: encoderBoolean,
+                decoder: decoderBoolean,
+            },
+            {
+                name: "speed",
+                value: playbackSpeed,
+                setter: setPlaybackSpeed,
+            },
+            {
+                name: "speed",
+                value: playbackSpeed,
+                setter: setPlaybackSpeed,
+            },
+            {
+                name: "t",
+                value: timestamp.t,
+                encoder: (v: Timestamp) => encoderFloat(v.t),
+                decoder: (v: string) => {
+                    if (v) {
+                        const f = decoderFloat(v);
+                        if (f) {
+                            return new Timestamp(f);
+                        }
+                    }
+                    return new Timestamp().subSec(DEFAULT_FRAME_SEC);
+                },
+                setter: setTimestamp,
+            },
+        ],
+        [oid, live, playbackSpeed]
+    );
+
+    if (!loaded) {
+        return <></>;
+    }
+
     if (live) {
         controls = (
             <div className="form-list-wrapper-item" style={{ marginTop: -2 }}>
-                <ButtonStyled variant="outlined" onClick={() => {}}>
+                <ButtonStyled
+                    variant="outlined"
+                    onClick={() => {
+                        if (videoPlayer.current) {
+                            videoPlayer.current.togglePause();
+                            setActive(videoPlayer.current.isPlaying());
+                        }
+                    }}
+                >
                     {active ? <PauseOutlinedIcon /> : <PlayArrowOutlinedIcon />}
                 </ButtonStyled>
             </div>
@@ -105,6 +210,12 @@ const DashboardCCTV = () => {
                                         {controls}
                                     </div>
                                 </div>
+                                <canvas
+                                    width={1024}
+                                    height={600}
+                                    style={{ margin: 10 }}
+                                    ref={canvasRef}
+                                ></canvas>
                             </div>
                         </div>
                     </div>
