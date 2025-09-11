@@ -35,6 +35,13 @@ export const LiveVideoPlayer = ({
                             player.togglePause();
                             setPlaying(player.isPlaying());
                         }
+                        return;
+                    }
+                    if (on_click === "cctv") {
+                        const url =
+                            document.location.pathname +
+                            `?d=cctv&oid=${encodeURIComponent(oid)}&live=Y`;
+                        document.location = url;
                     }
                 }}
             >
