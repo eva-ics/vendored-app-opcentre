@@ -43,8 +43,8 @@ const DashboardCCTV = () => {
 
     const setPlaybackTimestamp = (t: Timestamp) => {
         //console.log(t);
-        forceUpdate();
         timestamp.current = t;
+        forceUpdate();
     };
 
     const resetCanvas = () => {
@@ -103,7 +103,7 @@ const DashboardCCTV = () => {
             videoPlayer.current = null;
             resetCanvas();
         };
-    }, [live, oid, canvasRef, forceUpdate]);
+    }, [live, oid, canvasRef]);
     let controls;
     const loaded = useQueryParams(
         [
@@ -131,8 +131,11 @@ const DashboardCCTV = () => {
             },
             {
                 name: "t",
-                value: timestamp.current.t,
-                encoder: (v: Timestamp) => encoderFloat(v.t),
+                value: timestamp.current,
+                encoder: (v: Timestamp) => {
+                    console.log(v);
+                    return encoderFloat(v.t);
+                },
                 decoder: (v: string) => {
                     if (v) {
                         const f = decoderFloat(v);
@@ -140,12 +143,12 @@ const DashboardCCTV = () => {
                             return new Timestamp(f);
                         }
                     }
-                    return new Timestamp().subSec(DEFAULT_FRAME_SEC);
+                    return defaultTimestamp();
                 },
                 setter: setPlaybackTimestamp,
             },
         ],
-        [oid, live, playbackSpeed]
+        [oid, live, playbackSpeed, forceUpdate]
     );
 
     if (!loaded) {
