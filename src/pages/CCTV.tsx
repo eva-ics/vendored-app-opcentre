@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useReducer } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
     useQueryParams,
     encoderBoolean,
@@ -23,7 +23,7 @@ import { get_engine } from "@eva-ics/webengine-react";
 import { v4 as uuidv4 } from "uuid";
 
 const DEFAULT_FRAME_SEC = 3600;
-const FAST_FORWARD_STEP = 10;
+const FAST_FORWARD_STEP = 30;
 const SVC_ID = "eva.videosrv.default";
 const FILL_SPEED = ["0.25x", "0.5x", "1x", "2x"];
 
@@ -32,19 +32,19 @@ const defaultTimestamp = (): Timestamp => {
 };
 
 const DashboardCCTV = () => {
-    const [, forceUpdate] = useReducer((x: number) => x + 1, 0);
     const [oid, setOid] = useState<string>("");
     const [active, setActive] = useState<boolean>(false);
     const [live, setLive] = useState<boolean>(true);
+    const [timestampUpdater, setTimestampUpdater] = useState<number>(0);
     const [playbackSpeed, setPlaybackSpeed] = useState<string>("1x");
     const timestamp = useRef<Timestamp>(defaultTimestamp());
+    const [savedTimestamp, setSavedTimestamp] = useState<Timestamp>(defaultTimestamp());
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const videoPlayer = useRef<null | EvaLivePlayer | EvaRecPlayer>(null);
 
     const setPlaybackTimestamp = (t: Timestamp) => {
-        //console.log(t);
+        setTimestampUpdater(t.t);
         timestamp.current = t;
-        forceUpdate();
     };
 
     const resetCanvas = () => {
@@ -131,9 +131,8 @@ const DashboardCCTV = () => {
             },
             {
                 name: "t",
-                value: timestamp.current,
+                value: savedTimestamp,
                 encoder: (v: Timestamp) => {
-                    console.log(v);
                     return encoderFloat(v.t);
                 },
                 decoder: (v: string) => {
@@ -148,7 +147,7 @@ const DashboardCCTV = () => {
                 setter: setPlaybackTimestamp,
             },
         ],
-        [oid, live, playbackSpeed, forceUpdate]
+        [oid, live, playbackSpeed, savedTimestamp]
     );
 
     if (!loaded) {
@@ -239,9 +238,16 @@ const DashboardCCTV = () => {
                     <DateTimePickerSelect
                         enabled={!live}
                         element_id="timestamp"
+                        update_key={timestampUpdater}
                         current_value={timestamp.current.toDate()}
                         setParam={(d: Date) => {
-                            setPlaybackTimestamp(new Timestamp(d));
+                            const t = new Timestamp(d);
+                            setPlaybackTimestamp(t);
+                            setSavedTimestamp(t);
+                            if (videoPlayer.current && !live) {
+                                (videoPlayer.current as EvaRecPlayer).goto(t.t);
+                                setActive(videoPlayer.current.isPlaying());
+                            }
                         }}
                     />
                     <div>
