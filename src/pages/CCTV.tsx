@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useReducer } from "react";
 import {
     useQueryParams,
     encoderBoolean,
@@ -17,24 +17,35 @@ import SkipNextOutlinedIcon from "@mui/icons-material/SkipNextOutlined";
 import SkipPreviousOutlinedIcon from "@mui/icons-material/SkipPreviousOutlined";
 import FastRewindOutlinedIcon from "@mui/icons-material/FastRewindOutlined";
 import { EditSelectString } from "../components/editors/select_string.tsx";
+import { EvaRecPlayer } from "../components/VideoPlayerRec.tsx";
 import { EvaLivePlayer, EvaPlayerAutoSize } from "@eva-ics/webengine-multimedia";
 import { get_engine } from "@eva-ics/webengine-react";
 import { v4 as uuidv4 } from "uuid";
 
 const DEFAULT_FRAME_SEC = 3600;
-const SVC_ID = "eva.vidosrv.default";
-const FILL_SPEED = ["0.25x", "0.5x", "1x", "2x", "4x", "8x"];
+const FAST_FORWARD_STEP = 10;
+const SVC_ID = "eva.videosrv.default";
+const FILL_SPEED = ["0.25x", "0.5x", "1x", "2x"];
+
+const defaultTimestamp = (): Timestamp => {
+    return new Timestamp().subSec(DEFAULT_FRAME_SEC);
+};
 
 const DashboardCCTV = () => {
+    const [, forceUpdate] = useReducer((x: number) => x + 1, 0);
     const [oid, setOid] = useState<string>("");
     const [active, setActive] = useState<boolean>(false);
     const [live, setLive] = useState<boolean>(true);
     const [playbackSpeed, setPlaybackSpeed] = useState<string>("1x");
-    const [timestamp, setTimestamp] = useState<Timestamp>(
-        new Timestamp().subSec(DEFAULT_FRAME_SEC)
-    );
+    const timestamp = useRef<Timestamp>(defaultTimestamp());
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const videoPlayer = useRef<null | EvaLivePlayer>(null);
+    const videoPlayer = useRef<null | EvaLivePlayer | EvaRecPlayer>(null);
+
+    const setPlaybackTimestamp = (t: Timestamp) => {
+        //console.log(t);
+        forceUpdate();
+        timestamp.current = t;
+    };
 
     const resetCanvas = () => {
         const canvas = canvasRef.current;
@@ -66,13 +77,33 @@ const DashboardCCTV = () => {
             videoPlayer.current = player;
             player.start(oid);
             setActive(true);
+        } else {
+            const player = new EvaRecPlayer({
+                canvas,
+                oid,
+                t_start: timestamp.current.t,
+                svc: SVC_ID,
+                engine: get_engine()!,
+                onError: onEvaError,
+                onNextFrame: (t: number) => {
+                    //current_timestamp = t;
+                    setPlaybackTimestamp(new Timestamp(t));
+                },
+                decoderHardwareAcceleration: true,
+                decoderFallbackToSoftware: true,
+                autoSize: EvaPlayerAutoSize.KeepWidth,
+            });
+            videoPlayer.current = player;
+            player.setPlaybackSpeed(parseFloat(playbackSpeed.replace("x", "")));
+            player.start();
+            setActive(true);
         }
         return () => {
             videoPlayer.current?.close();
             videoPlayer.current = null;
             resetCanvas();
         };
-    }, [live, oid, canvasRef]);
+    }, [live, oid, canvasRef, forceUpdate]);
     let controls;
     const loaded = useQueryParams(
         [
@@ -100,7 +131,7 @@ const DashboardCCTV = () => {
             },
             {
                 name: "t",
-                value: timestamp.t,
+                value: timestamp.current.t,
                 encoder: (v: Timestamp) => encoderFloat(v.t),
                 decoder: (v: string) => {
                     if (v) {
@@ -111,7 +142,7 @@ const DashboardCCTV = () => {
                     }
                     return new Timestamp().subSec(DEFAULT_FRAME_SEC);
                 },
-                setter: setTimestamp,
+                setter: setPlaybackTimestamp,
             },
         ],
         [oid, live, playbackSpeed]
@@ -141,19 +172,63 @@ const DashboardCCTV = () => {
         controls = (
             <>
                 <div className="form-list-wrapper-item" style={{ marginTop: -2 }}>
-                    <ButtonStyled variant="outlined" onClick={() => {}}>
+                    <ButtonStyled
+                        variant="outlined"
+                        onClick={() => {
+                            if (videoPlayer.current && !live) {
+                                (videoPlayer.current as EvaRecPlayer).goto(
+                                    timestamp.current.t - FAST_FORWARD_STEP
+                                );
+                                setActive(videoPlayer.current.isPlaying());
+                            }
+                        }}
+                    >
                         <FastRewindOutlinedIcon />
                     </ButtonStyled>
-                    <ButtonStyled variant="outlined" onClick={() => {}}>
+                    <ButtonStyled
+                        variant="outlined"
+                        onClick={() => {
+                            if (videoPlayer.current && !live) {
+                                (videoPlayer.current as EvaRecPlayer).stepFrameBackward();
+                                setActive(videoPlayer.current.isPlaying());
+                            }
+                        }}
+                    >
                         <SkipPreviousOutlinedIcon />
                     </ButtonStyled>
-                    <ButtonStyled variant="outlined" onClick={() => {}}>
+                    <ButtonStyled
+                        variant="outlined"
+                        onClick={() => {
+                            if (videoPlayer.current) {
+                                videoPlayer.current.togglePause();
+                                setActive(videoPlayer.current.isPlaying());
+                            }
+                        }}
+                    >
                         {active ? <PauseOutlinedIcon /> : <PlayArrowOutlinedIcon />}
                     </ButtonStyled>
-                    <ButtonStyled variant="outlined" onClick={() => {}}>
+                    <ButtonStyled
+                        variant="outlined"
+                        onClick={() => {
+                            if (videoPlayer.current && !live) {
+                                (videoPlayer.current as EvaRecPlayer).stepFrameForward();
+                                setActive(videoPlayer.current.isPlaying());
+                            }
+                        }}
+                    >
                         <SkipNextOutlinedIcon />
                     </ButtonStyled>
-                    <ButtonStyled variant="outlined" onClick={() => {}}>
+                    <ButtonStyled
+                        variant="outlined"
+                        onClick={() => {
+                            if (videoPlayer.current && !live) {
+                                (videoPlayer.current as EvaRecPlayer).goto(
+                                    timestamp.current.t + FAST_FORWARD_STEP
+                                );
+                                setActive(videoPlayer.current.isPlaying());
+                            }
+                        }}
+                    >
                         <FastForwardOutlinedIcon />
                     </ButtonStyled>
                 </div>
@@ -161,9 +236,9 @@ const DashboardCCTV = () => {
                     <DateTimePickerSelect
                         enabled={!live}
                         element_id="timestamp"
-                        current_value={timestamp.toDate()}
+                        current_value={timestamp.current.toDate()}
                         setParam={(d: Date) => {
-                            setTimestamp(new Timestamp(d));
+                            setPlaybackTimestamp(new Timestamp(d));
                         }}
                     />
                     <div>
@@ -171,6 +246,12 @@ const DashboardCCTV = () => {
                             current_value={playbackSpeed}
                             setParam={(n: string) => {
                                 setPlaybackSpeed(n);
+                                if (videoPlayer.current && !live) {
+                                    const speed = parseFloat(n.replace("x", ""));
+                                    (
+                                        videoPlayer.current as EvaRecPlayer
+                                    ).setPlaybackSpeed(speed);
+                                }
                             }}
                             params={FILL_SPEED}
                         />
