@@ -173,7 +173,10 @@ const DashboardCCTV = () => {
     } else {
         controls = (
             <>
-                <div className="form-list-wrapper-item" style={{ marginTop: -2 }}>
+                <div
+                    className="form-list-wrapper-item print-hidden"
+                    style={{ marginTop: -2 }}
+                >
                     <ButtonStyled
                         variant="outlined"
                         onClick={() => {
@@ -277,6 +280,7 @@ const DashboardCCTV = () => {
                         <div className="bmat-dashtable-container">
                             <div className="bmat-dashtable-container-inner">
                                 <div className="cctv-container">
+                                    <div className="cctv-camera-id">{oid}</div>
                                     <div className="page-title">CCTV</div>
                                     <div className="form-list-wrapper">
                                         <div className="short-form-wrapper-item">
@@ -300,12 +304,7 @@ const DashboardCCTV = () => {
                                         {controls}
                                     </div>
                                 </div>
-                                <canvas
-                                    width={1024}
-                                    height={600}
-                                    style={{ margin: 10 }}
-                                    ref={canvasRef}
-                                ></canvas>
+                                <canvas className="cctv-view" ref={canvasRef}></canvas>
                             </div>
                         </div>
                     </div>
