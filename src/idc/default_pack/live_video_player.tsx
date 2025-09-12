@@ -41,6 +41,16 @@ export const LiveVideoPlayer = ({
                         const url =
                             document.location.pathname +
                             `?d=cctv&oid=${encodeURIComponent(oid)}&live=Y`;
+                        // if Ctrl or Cmd key is pressed, open in new tab
+                        if (
+                            window.event &&
+                            (window.event.ctrlKey ||
+                                window.event.metaKey ||
+                                window.event.shiftKey)
+                        ) {
+                            window.open(url, "_blank");
+                            return;
+                        }
                         document.location = url;
                     }
                 }}
