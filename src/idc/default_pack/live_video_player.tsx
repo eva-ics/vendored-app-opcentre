@@ -44,9 +44,9 @@ export const LiveVideoPlayer = ({
                         // if Ctrl or Cmd key is pressed, open in new tab
                         if (
                             window.event &&
-                            (window.event.ctrlKey ||
-                                window.event.metaKey ||
-                                window.event.shiftKey)
+                            ((window.event as any).ctrlKey ||
+                                (window.event as any).metaKey ||
+                                (window.event as any).shiftKey)
                         ) {
                             window.open(url, "_blank");
                             return;
