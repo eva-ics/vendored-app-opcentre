@@ -13,7 +13,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@eva-ics/webengine": "^0.9.12",
-    "@eva-ics/webengine-react": "^0.5.19",
+    "@eva-ics/webengine-react": "^0.5.20",
     "@eva-ics/webengine-multimedia": "^0.1.5",
     "@msgpack/msgpack": "^3.1.2",
     "@mui/icons-material": "^5.14.16",
