@@ -72,7 +72,7 @@ const DashboardCCTV = () => {
                 //onChange: params.onChange,
                 decoderHardwareAcceleration: true,
                 decoderFallbackToSoftware: true,
-                autoSize: EvaPlayerAutoSize.KeepWidth,
+                autoSize: EvaPlayerAutoSize.Resize,
             });
             videoPlayer.current = player;
             player.start(oid);
