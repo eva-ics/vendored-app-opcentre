@@ -60,6 +60,12 @@ export const ItemValueWithLabel = ({
                     }
                 }
             };
+        } else {
+            (props as any).format_with = (value: any) => {
+                if (Array.isArray(value) || typeof value === "object")
+                    return <pre>{JSON.stringify(value, null, 2)}</pre>;
+                return value;
+            };
         }
         (props as any).set_class_name_with = (value: any) => {
             const val = Number(value);
