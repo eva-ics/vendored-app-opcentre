@@ -18,7 +18,12 @@ import SkipPreviousOutlinedIcon from "@mui/icons-material/SkipPreviousOutlined";
 import FastRewindOutlinedIcon from "@mui/icons-material/FastRewindOutlined";
 import { EditSelectString } from "../components/editors/select_string.tsx";
 import { EvaRecPlayer } from "../components/VideoPlayerRec.tsx";
-import { EvaLivePlayer, EvaPlayerAutoSize } from "@eva-ics/webengine-multimedia";
+import {
+    EvaLivePlayer,
+    EvaPlayerAutoSize,
+    EvaVideoStreamInfo,
+    VideoCodec,
+} from "@eva-ics/webengine-multimedia";
 import { get_engine } from "@eva-ics/webengine-react";
 import { v4 as uuidv4 } from "uuid";
 
@@ -41,6 +46,7 @@ const DashboardCCTV = () => {
     const [savedTimestamp, setSavedTimestamp] = useState<Timestamp>(defaultTimestamp());
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const videoPlayer = useRef<null | EvaLivePlayer | EvaRecPlayer>(null);
+    const [streamInfo, setStreamInfo] = useState<EvaVideoStreamInfo | null>(null);
 
     const setPlaybackTimestamp = (t: Timestamp) => {
         setTimestampUpdater(t.t);
@@ -68,8 +74,9 @@ const DashboardCCTV = () => {
                 engine: get_engine()!,
                 onError: onEvaError,
                 //onFrame: params.onFrame,
-                //onEOS: params.onEOS,
-                //onChange: params.onChange,
+                onChange: (info: EvaVideoStreamInfo | null) => {
+                    setStreamInfo(info);
+                },
                 decoderHardwareAcceleration: true,
                 decoderFallbackToSoftware: true,
                 autoSize: EvaPlayerAutoSize.Resize,
@@ -88,6 +95,9 @@ const DashboardCCTV = () => {
                 onNextFrame: (t: number) => {
                     //current_timestamp = t;
                     setPlaybackTimestamp(new Timestamp(t));
+                },
+                onChange: (info: EvaVideoStreamInfo | null) => {
+                    setStreamInfo(info);
                 },
                 decoderHardwareAcceleration: true,
                 decoderFallbackToSoftware: true,
@@ -288,6 +298,7 @@ const DashboardCCTV = () => {
                                                 current_value={oid}
                                                 params={{ i: ["sensor:#"] }}
                                                 setParam={(val) => {
+                                                    setStreamInfo(null);
                                                     setOid(val);
                                                 }}
                                             />
@@ -295,6 +306,7 @@ const DashboardCCTV = () => {
                                         <div>
                                             <ButtonStyledText
                                                 onClick={() => {
+                                                    setStreamInfo(null);
                                                     setLive(!live);
                                                 }}
                                             >
@@ -305,12 +317,43 @@ const DashboardCCTV = () => {
                                     </div>
                                 </div>
                                 <canvas className="cctv-view" ref={canvasRef}></canvas>
+                                <div className="cctv-stream-info">
+                                    <StreamInfo info={streamInfo} />
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    );
+};
+
+const codecName = (codec: VideoCodec) => {
+  switch (codec) {
+    case VideoCodec.AV1:
+      return "AV1";
+    case VideoCodec.H264:
+      return "H.264";
+    case VideoCodec.H265:
+      return "H.265";
+    case VideoCodec.VP8:
+      return "VP8";
+    case VideoCodec.VP9:
+      return "VP9";
+    case VideoCodec.Raw:
+      return "RAW";
+    default:
+      return "Unknown";
+  }
+}
+
+const StreamInfo = ({ info }: { info: EvaVideoStreamInfo | null }) => {
+    if (!info) return <></>;
+    return (
+        <>
+            {info.width}x{info.height} {codecName(info.codec)}
+        </>
     );
 };
 

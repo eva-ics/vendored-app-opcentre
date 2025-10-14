@@ -1074,3 +1074,12 @@ td {
       display: block;
   }
 }
+
+.cctv-stream-info {
+  margin-left: 10px;
+  margin-bottom: 10px;
+  font-size: 8px;
+  @include media(tablet) {
+      font-size: 10px;
+  }
+}
