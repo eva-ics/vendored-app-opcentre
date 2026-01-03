@@ -2,6 +2,7 @@ import { useEvaAPICall, EvaErrorMessage } from "@eva-ics/webengine-react";
 import { useState, useMemo } from "react";
 import { Timestamp } from "bmat/time";
 import { downloadCSV } from "bmat/dom";
+import { Bar } from "react-chartjs-2";
 import {
     DashTable,
     DashTableFilter,
@@ -20,6 +21,7 @@ import PrintOutlinedIcon from "@mui/icons-material/PrintOutlined";
 import { addButton, removeButton } from "../components/common.tsx";
 import { ButtonStyled, DEFAULT_ALARM_SVC } from "../common.tsx";
 import { formatAlarmValue, formatAlarmSourceKind } from "./AlarmState.tsx";
+import { buildAlarmSeries } from "../components/AlarmDF.tsx";
 import {
     FilterParams,
     defaultHistoryFilterParams,
@@ -27,6 +29,47 @@ import {
 } from "../components/alarms.tsx";
 
 const DEFAULT_FRAME_SEC = 3600;
+
+const calculateCt = (t_start: number, t_end: number) => {
+    const t_range = t_end - t_start;
+    let t_unit;
+    if (t_range < 3600 * 2) {
+        t_unit = "T";
+    } else if (t_range < 86400 * 2) {
+        t_unit = "H";
+    } else if (t_range < 86400 * 30) {
+        t_unit = "D";
+    } else if (t_range < 86400 * 365) {
+        t_unit = "W";
+    } else {
+        t_unit = "M";
+    }
+    let ct_unit;
+    let ct_format;
+    switch (t_unit) {
+        case "T":
+        case "S":
+            ct_unit = "second";
+            ct_format = "mm:ss";
+            break;
+        case "W":
+            ct_unit = "day";
+            ct_format = "MM/dd HH:mm";
+            break;
+        case "M":
+            ct_unit = "month";
+            ct_format = "yyyy/MM/dd";
+            break;
+        case "D":
+            ct_unit = "hour";
+            ct_format = "MM/dd HH:mm:ss";
+            break;
+        default:
+            ct_unit = "minute";
+            ct_format = "HH:mm:ss";
+    }
+    return { ct_unit, ct_format };
+};
 
 const DashboardAlarmHistory = () => {
     const [filterParams, setFilterParams] = useState<FilterParams>(
@@ -105,6 +148,131 @@ const DashboardAlarmHistory = () => {
         },
         [loaded, callParams, updateInterval]
     );
+
+    const df = useMemo(() => {
+        if (filterParams.t_start === null) {
+            return {
+                timestamps: [],
+                series: new Map<string, (0 | 1)[]>(),
+            };
+        }
+        return buildAlarmSeries(records.data || [], {
+            fromTs: filterParams.t_start * 1000,
+            toTs: filterParams.t_end ? filterParams.t_end * 1000 : Date.now(),
+            maxPoints: 100,
+        });
+    }, [records.data, filterParams]);
+
+    const { ct_unit, ct_format } = useMemo(() => {
+        return calculateCt(
+            filterParams.t_start || 0,
+            filterParams.t_end || Date.now() / 1000
+        );
+    }, [filterParams]);
+
+    const chart_opts = {
+        responsive: true,
+        animation: false,
+        barPercentage: 1.5,
+
+        maintainAspectRatio: false,
+        scales: {
+            y: {
+                type: "linear",
+                display: true,
+                position: "left",
+                min: 0,
+                max: 1,
+                ticks: {
+                    stepSize: 1,
+                    precision: 0,
+
+                    callback: (value: any) => {
+                        if (value === 1) return "T";
+                        if (value === 0) return " ";
+                        return "";
+                    },
+                },
+            },
+            y1: {
+                type: "linear",
+                display: true,
+                position: "right",
+
+                grid: {
+                    drawOnChartArea: false, // only want the grid lines for one axis to show up
+                },
+                ticks: {
+                    stepSize: 1,
+                    precision: 0,
+
+                    callback: (value: any) => {
+                        if (value === 1) return "T";
+                        if (value === 0) return " ";
+                        return "";
+                    },
+                },
+            },
+            x: {
+                type: "time",
+                time: {
+                    unit: ct_unit,
+                    unitStepSize: 1,
+                    round: ct_unit,
+                    tooltipFormat: ct_format,
+                },
+
+                ticks: {
+                    fontSize: 12,
+                    fontColor: "#ccc",
+                    maxTicksLimit: 8,
+                    maxRotation: 0,
+                    autoSkip: true,
+                    callback: function (
+                        value: any,
+                        index: number,
+                        values: Array<any>
+                    ): any {
+                        if (index === values.length - 1) {
+                            return "";
+                        } else {
+                            return (this as any).getLabelForValue(value).split(" ");
+                        }
+                    },
+                },
+            },
+        },
+        plugins: {
+            tooltip: {
+                callbacks: {
+                    label: (ctx: any) => {
+                        const v = ctx.parsed.y;
+                        return v === 1 ? "T" : " ";
+                    },
+                },
+            },
+            legend: {
+                display: true,
+            },
+            filler: {
+                propagate: true,
+            },
+        },
+    };
+
+    const chart_data = useMemo(() => {
+        return {
+            labels: df.timestamps.map((ts) => new Timestamp(ts / 1000).toRFC3339(true)),
+            datasets: Array.from(df.series.entries()).map(([name, series], idx) => ({
+                label: name,
+                data: series,
+                borderColor: `hsl(${(idx * 137.5) % 360}, 70%, 50%)`,
+                backgroundColor: `hsl(${(idx * 137.5) % 360}, 70%, 50%)`,
+                fill: false,
+                stepped: true,
+            })),
+        };
+    }, [df]);
 
     const setLogFilterParams = (p: object) => {
         let np: any = { ...filterParams };
@@ -313,6 +481,9 @@ const DashboardAlarmHistory = () => {
                 >
                     <PrintOutlinedIcon fontSize="small" />
                 </ButtonStyled>
+            </div>
+            <div style={{ height: 200 }} className="eva chart container">
+                <Bar data={chart_data} options={chart_opts as any} />
             </div>
         </>
     );

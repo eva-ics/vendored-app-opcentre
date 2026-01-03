@@ -224,7 +224,7 @@ const DashboardTrends = () => {
 
     const chart_opts = {
         responsive: true,
-        animations: false,
+        animation: false,
         plugins: {
             legend: {
                 display: true,
