@@ -50,6 +50,15 @@ export const formatAlarmValue = (value: string, _current?: boolean) => {
     }
 };
 
+export const formatAlarmValueText = (value: string, _current?: boolean) => {
+    if (ALARM_OPS.includes(value)) {
+        const name = ALARM_OP_NAMES.get(value);
+        return `${name} (${value})`;
+    } else {
+        return value;
+    }
+};
+
 export const formatAlarmSourceKind = (value: string) => {
     const name = ALARM_SOURCE_KIND_NAMES.get(value);
     return name ? `${name} (${value})` : value;

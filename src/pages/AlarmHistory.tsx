@@ -20,7 +20,11 @@ import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import PrintOutlinedIcon from "@mui/icons-material/PrintOutlined";
 import { addButton, removeButton } from "../components/common.tsx";
 import { ButtonStyled, DEFAULT_ALARM_SVC } from "../common.tsx";
-import { formatAlarmValue, formatAlarmSourceKind } from "./AlarmState.tsx";
+import {
+    formatAlarmValue,
+    formatAlarmValueText,
+    formatAlarmSourceKind,
+} from "./AlarmState.tsx";
 import { buildAlarmSeries } from "../components/AlarmDF.tsx";
 import {
     FilterParams,
@@ -29,6 +33,63 @@ import {
 } from "../components/alarms.tsx";
 
 const DEFAULT_FRAME_SEC = 3600;
+
+const ALARM_COLORS = [
+    "#FF0000",
+    "#FF6A00",
+    "#FFD700",
+    "#FF1493",
+    "#FF00FF",
+    "#E60000",
+    "#E65F00",
+    "#E6C300",
+    "#E61283",
+    "#E600E6",
+    "#CC0000",
+    "#CC5500",
+    "#CCAF00",
+    "#CC1074",
+    "#CC00CC",
+    "#B30000",
+    "#B34A00",
+    "#B39B00",
+    "#B30E65",
+    "#B300B3",
+    "#990000",
+    "#993F00",
+    "#998700",
+    "#990C56",
+    "#990099",
+    "#FF3333",
+    "#FF8533",
+    "#FFEB3B",
+    "#FF5FA2",
+    "#FF33FF",
+    "#FF1A1A",
+    "#FF751A",
+    "#FFF176",
+    "#FF77B3",
+    "#FF4DFF",
+    "#FF4D4D",
+    "#FF944D",
+    "#FFF59D",
+    "#FF8FC4",
+    "#FF66FF",
+    "#FF6666",
+    "#FFA366",
+    "#FFF9C4",
+    "#FFA7D5",
+    "#FF80FF",
+    "#FF8080",
+    "#FFB380",
+    "#FFFDE7",
+    "#FFBFE6",
+    "#FF99FF",
+];
+
+const getAlarmColor = (idx: number) => {
+    return ALARM_COLORS[idx % ALARM_COLORS.length];
+};
 
 const calculateCt = (t_start: number, t_end: number) => {
     const t_range = t_end - t_start;
@@ -163,111 +224,136 @@ const DashboardAlarmHistory = () => {
         });
     }, [records.data, filterParams]);
 
-    const { ct_unit, ct_format } = useMemo(() => {
+    const { ct_unit, ct_format: _ } = useMemo(() => {
         return calculateCt(
             filterParams.t_start || 0,
             filterParams.t_end || Date.now() / 1000
         );
     }, [filterParams]);
 
-    const chart_opts = {
-        responsive: true,
-        animation: false,
-        barPercentage: 1.5,
+    const chart_opts = useMemo(() => {
+        return {
+            responsive: true,
+            animation: false,
+            barPercentage: 1.5,
 
-        maintainAspectRatio: false,
-        scales: {
-            y: {
-                type: "linear",
-                display: true,
-                position: "left",
-                min: 0,
-                max: 1,
-                ticks: {
-                    stepSize: 1,
-                    precision: 0,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    type: "linear",
+                    display: true,
+                    position: "left",
+                    min: 0,
+                    max: df.series.size,
+                    ticks: {
+                        stepSize: 1,
+                        precision: 0,
 
-                    callback: (value: any) => {
-                        if (value === 1) return "T";
-                        if (value === 0) return " ";
-                        return "";
-                    },
-                },
-            },
-            y1: {
-                type: "linear",
-                display: true,
-                position: "right",
-
-                grid: {
-                    drawOnChartArea: false, // only want the grid lines for one axis to show up
-                },
-                ticks: {
-                    stepSize: 1,
-                    precision: 0,
-
-                    callback: (value: any) => {
-                        if (value === 1) return "T";
-                        if (value === 0) return " ";
-                        return "";
-                    },
-                },
-            },
-            x: {
-                type: "time",
-                time: {
-                    unit: ct_unit,
-                    unitStepSize: 1,
-                    round: ct_unit,
-                    tooltipFormat: ct_format,
-                },
-
-                ticks: {
-                    fontSize: 12,
-                    fontColor: "#ccc",
-                    maxTicksLimit: 8,
-                    maxRotation: 0,
-                    autoSkip: true,
-                    callback: function (
-                        value: any,
-                        index: number,
-                        values: Array<any>
-                    ): any {
-                        if (index === values.length - 1) {
+                        callback: () => {
                             return "";
-                        } else {
-                            return (this as any).getLabelForValue(value).split(" ");
-                        }
+                        },
+                    },
+                },
+                y1: {
+                    type: "linear",
+                    display: true,
+                    position: "right",
+
+                    grid: {
+                        drawOnChartArea: false, // only want the grid lines for one axis to show up
+                    },
+                    ticks: {
+                        stepSize: 1,
+                        precision: 0,
+
+                        callback: () => {
+                            return "";
+                        },
+                    },
+                },
+                x: {
+                    type: "time",
+                    time: {
+                        unit: ct_unit,
+                        unitStepSize: 1,
+                        round: ct_unit,
+                        tooltipFormat: "yyyy-MM-dd HH:mm:ss",
+                    },
+
+                    ticks: {
+                        fontSize: 12,
+                        fontColor: "#ccc",
+                        maxTicksLimit: 8,
+                        maxRotation: 0,
+                        autoSkip: true,
+                        callback: function (
+                            value: any,
+                            index: number,
+                            values: Array<any>
+                        ): any {
+                            if (index === values.length - 1) {
+                                return "";
+                            } else {
+                                return (this as any).getLabelForValue(value).split(" ");
+                            }
+                        },
                     },
                 },
             },
-        },
-        plugins: {
-            tooltip: {
-                callbacks: {
-                    label: (ctx: any) => {
-                        const v = ctx.parsed.y;
-                        return v === 1 ? "T" : " ";
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: (ctx: any) => {
+                            const label = ctx[0].dataset.label;
+                            const dataIndex = ctx[0].dataIndex;
+                            const t_start = df.timestamps[dataIndex];
+                            const t_end = df.timestamps[dataIndex + 1];
+                            // find all records in this time range
+                            const events = [];
+                            for (const record of records.data || []) {
+                                const t = record.t * 1000;
+                                const a_label = record.group + "/" + record.id;
+                                if (a_label !== label) {
+                                    continue;
+                                }
+                                if (
+                                    record.lo != "TT" &&
+                                    record.lo != "TL" &&
+                                    record.lo != "IS"
+                                ) {
+                                    continue;
+                                }
+                                if (t >= t_start && t < t_end) {
+                                    const lo = formatAlarmValueText(record.lo, true);
+                                    events.push(
+                                        `${new Timestamp(record.t).toRFC3339(true)} ${lo}`
+                                    );
+                                }
+                            }
+                            return events.join("\n");
+                        },
+                        label: (ctx: any) => {
+                            return ctx.dataset.label;
+                        },
                     },
                 },
+                legend: {
+                    display: true,
+                },
+                filler: {
+                    propagate: true,
+                },
             },
-            legend: {
-                display: true,
-            },
-            filler: {
-                propagate: true,
-            },
-        },
-    };
+        };
+    }, [df, records, ct_unit]);
 
     const chart_data = useMemo(() => {
         return {
             labels: df.timestamps.map((ts) => new Timestamp(ts / 1000).toRFC3339(true)),
             datasets: Array.from(df.series.entries()).map(([name, series], idx) => ({
                 label: name,
-                data: series,
-                borderColor: `hsl(${(idx * 137.5) % 360}, 70%, 50%)`,
-                backgroundColor: `hsl(${(idx * 137.5) % 360}, 70%, 50%)`,
+                data: series.map((v) => (v ? [idx, idx + 1] : 0)),
+                backgroundColor: getAlarmColor(idx),
                 fill: false,
                 stepped: true,
             })),
@@ -482,9 +568,14 @@ const DashboardAlarmHistory = () => {
                     <PrintOutlinedIcon fontSize="small" />
                 </ButtonStyled>
             </div>
-            <div style={{ height: 200 }} className="eva chart container">
-                <Bar data={chart_data} options={chart_opts as any} />
-            </div>
+            {df.series.size ? (
+                <div
+                    style={{ height: 60 + 35 * df.series.size }}
+                    className="eva chart container"
+                >
+                    <Bar data={chart_data} options={chart_opts as any} />
+                </div>
+            ) : null}
         </>
     );
     return (
