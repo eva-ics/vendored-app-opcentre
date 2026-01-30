@@ -37,7 +37,7 @@ import Bookmarks from "./Bookmarks.tsx";
 
 const allowedDashboardChars = /^[a-zA-Z0-9 ._-]+$/;
 
-export const AlarmSummary = () => {
+export const AlarmSummary = ({ alwaysDisplay }: { alwaysDisplay?: boolean }) => {
     const navigate = useNavigate();
     const [method, setMethod] = useState<string | undefined>(
         `x::${DEFAULT_ALARM_SVC}::summary`
@@ -66,10 +66,12 @@ export const AlarmSummary = () => {
             // service not registered
             setMethod(undefined);
         }
-        return (
+        return alwaysDisplay ? (
             <div className="alarm-count" style={{ visibility: "hidden" }}>
                 <NotificationsActiveIcon style={{ fontSize: 16 }} /> {0}
             </div>
+        ) : (
+            <></>
         );
     }
 };

@@ -138,7 +138,7 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                                 [{eva?.server_info?.aci.u}]
                             </span>
                             <div className="alarm-summary-header">
-                            <AlarmSummary />
+                            <AlarmSummary alwaysDisplay={true} />
                             </div>
                         </div>
                     </div>
