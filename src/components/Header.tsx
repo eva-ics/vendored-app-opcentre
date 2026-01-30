@@ -6,6 +6,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { Timestamp } from "bmat/time";
 import { BookmarkButton } from "./BookmarkButton";
+import { AlarmSummary } from "../pages/Layout.tsx";
 
 const TimeInfo = () => {
     const [time, setTime] = useState(new Date());
@@ -136,6 +137,9 @@ const Header = ({ toggleMenu, nav, logout, current_page }: HeaderProps) => {
                             <span className="current-user">
                                 [{eva?.server_info?.aci.u}]
                             </span>
+                            <div className="alarm-summary-header">
+                            <AlarmSummary />
+                            </div>
                         </div>
                     </div>
                     <TimeInfo />

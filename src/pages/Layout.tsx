@@ -37,7 +37,8 @@ import Bookmarks from "./Bookmarks.tsx";
 
 const allowedDashboardChars = /^[a-zA-Z0-9 ._-]+$/;
 
-const AlarmSummary = () => {
+export const AlarmSummary = () => {
+    const navigate = useNavigate();
     const [method, setMethod] = useState<string | undefined>(
         `x::${DEFAULT_ALARM_SVC}::summary`
     );
@@ -50,7 +51,13 @@ const AlarmSummary = () => {
     );
     if (summary?.data?.active > 0) {
         return (
-            <div className="alarm-count">
+            <div
+                className="alarm-count"
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                    navigate("?d=alarm_state");
+                }}
+            >
                 <NotificationsActiveIcon style={{ fontSize: 16 }} /> {summary.data.active}
             </div>
         );
@@ -59,7 +66,11 @@ const AlarmSummary = () => {
             // service not registered
             setMethod(undefined);
         }
-        return <></>;
+        return (
+            <div className="alarm-count" style={{ visibility: "hidden" }}>
+                <NotificationsActiveIcon style={{ fontSize: 16 }} /> {0}
+            </div>
+        );
     }
 };
 

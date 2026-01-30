@@ -889,6 +889,16 @@ td {
     }
 }
 
+.alarm-summary-header {
+  display: inline-block;
+  @include media(print) {
+      display: none;
+  }
+  @include media(desktop) {
+    display: none;
+  }
+}
+
 .alarm-count {
     display: inline-block;
     color: red;
