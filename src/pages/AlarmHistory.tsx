@@ -533,7 +533,7 @@ const DashboardAlarmHistory = () => {
                         Unable to call {DEFAULT_ALARM_SVC} service. Read{" "}
                         <a
                             target="_blank"
-                            href="https://info.bma.ai/en/actual/eva4/svc/eva-aaa-accounting.html"
+                            href="https://info.bma.ai/en/actual/eva4/svc/eva-svc-alarms.html"
                         >
                             how to deploy a service instance
                         </a>
