@@ -319,7 +319,7 @@ const DashboardAlarmHistory = () => {
                                 if (
                                     record.lo != "TT" &&
                                     record.lo != "TL" &&
-                                    record.lo != "IS"
+                                    record.lo != "CC"
                                 ) {
                                     continue;
                                 }

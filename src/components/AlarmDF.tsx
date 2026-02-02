@@ -3,8 +3,8 @@
  *
  * Semantics:
  * - TL / TT => state = 1 (immediate)
- * - IS at bucket start => bucket = 0, future = 0
- * - IS inside bucket   => bucket = 1, future = 0
+ * - CC at bucket start => bucket = 0, future = 0
+ * - CC inside bucket   => bucket = 1, future = 0
  * - State persists otherwise
  * ============================================================
  */
@@ -15,7 +15,7 @@ export interface AlarmEvent {
   t: number;          // unix timestamp in seconds
   group: string;
   id: string;
-  lo: string;         // TL | TT | IS | ...
+  lo: string;         // TL | TT | CC | ...
 }
 
 export interface AlarmSeriesResult {
@@ -35,7 +35,7 @@ const BASE_STEP_MS = 1000; // 1 second
 const MAX_POINTS_DEFAULT = 100;
 
 const SET_STATES = new Set(['TL', 'TT']);
-const CLEAR_STATE = 'IS';
+const CLEAR_STATE = 'CC';
 
 /* ---------- Utilities ---------- */
 
@@ -128,7 +128,7 @@ export function buildAlarmSeries(
         eventIdx++;
       }
 
-      // Apply IS semantics
+      // Apply CC semantics
       if (isAtStart) {
         state = 0;
         values.push(0);
