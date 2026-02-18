@@ -49,6 +49,7 @@ const login_props: LoginProps = {
     cache_login: true,
     cache_auth: true,
     register_globals: true,
+    use_gateryx_api: true,
 };
 
 eva.load_config().then((_config: any) => {
