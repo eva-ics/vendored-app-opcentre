@@ -26,7 +26,7 @@ import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import { ButtonStyled } from "../common.tsx";
 import { addButton, removeButton } from "../components/common.tsx";
 
-const item_kinds = ["", "+", "lvar", "sensor", "unit", "#"];
+const item_kinds = ["+", "lvar", "sensor", "unit", "#"];
 
 const watch_opts = {
     responsive: true,
@@ -66,14 +66,20 @@ const watch_opts = {
     },
 };
 
-const formatItemList = (kind: string, full_id: string): Array<string> => {
+const formatItemListAndRegex = (
+    kind: string,
+    full_id: string
+): [Array<string>, string | null] => {
     switch (kind) {
         case "#":
-            return ["#"];
+            return [["#"], null];
         case "":
-            return [];
+            if (full_id && full_id.length > 2) {
+                return [["#"], full_id];
+            }
+            return [[], null];
         default:
-            return full_id ? [`${kind}:${full_id}`] : [];
+            return [full_id ? [`${kind}:${full_id}`] : [], null];
     }
 };
 
@@ -201,6 +207,7 @@ const ItemWatch = ({ oid, unwatch }: { oid: string; unwatch: (oid: string) => vo
 interface ItemStateParams {
     i: Array<string>;
     full: boolean;
+    regex: string | null;
 }
 
 const DashboardItems = () => {
@@ -215,7 +222,11 @@ const DashboardItems = () => {
         value: null as string | null,
     });
 
-    const [callParams, setCallParams] = useState<ItemStateParams>({ i: [], full: true });
+    const [callParams, setCallParams] = useState<ItemStateParams>({
+        i: [],
+        full: true,
+        regex: null,
+    });
 
     const [watchedItems, setWatchedItems] = useState<string[]>([]);
 
@@ -288,7 +299,8 @@ const DashboardItems = () => {
             np[k] = (p as any)[k];
         });
         setParams(np);
-        setCallParams({ i: formatItemList(np.kind, np.full_id), full: true });
+        const [item_list, regex] = formatItemListAndRegex(np.kind, np.full_id);
+        setCallParams({ i: item_list, regex, full: true });
     };
 
     const formatOID = () => {
@@ -365,6 +377,7 @@ const DashboardItems = () => {
                 className="filter-field"
                 name="oid"
             >
+                <option value="">(regex)</option>
                 {item_kinds.map((v) => (
                     <option key={v}>{v}</option>
                 ))}
